@@ -1,0 +1,51 @@
+GREEDY 
+El conjunto de archivos de datos ford01 tiene un coste de 3941 con un tiempo de ejecucion de: 0 milisegundos y es el siguiente: 
+1  7  9  6  10  11  12  5  0  3  13  17  8  19  4  18  15  14  16  2  
+GREEDY 
+El conjunto de archivos de datos ford02 tiene un coste de 33954 con un tiempo de ejecucion de: 0 milisegundos y es el siguiente: 
+5  1  2  8  3  10  7  9  17  6  11  12  0  13  4  18  16  19  15  14  
+GREEDY 
+El conjunto de archivos de datos ford03 tiene un coste de 13806 con un tiempo de ejecucion de: 1 milisegundos y es el siguiente: 
+3  27  26  0  5  12  14  20  7  17  22  6  29  9  4  24  11  8  25  23  2  16  10  18  21  1  28  13  15  19  
+GREEDY 
+El conjunto de archivos de datos ford04 tiene un coste de 191745 con un tiempo de ejecucion de: 0 milisegundos y es el siguiente: 
+26  1  16  3  4  0  20  12  2  6  10  24  14  28  7  13  25  17  18  19  22  21  29  8  11  23  5  27  15  9  
+
+PRIMERO EL MEJOR IT 
+El conjunto de archivos de datos ford01 tiene un coste de 3791 con un tiempo de ejecucion de: 5 milisegundos y es el siguiente: 
+4  15  6  9  7  3  0  18  5  2  8  13  17  19  1  14  10  11  16  12  
+PRIMERO EL MEJOR IT 
+El conjunto de archivos de datos ford02 tiene un coste de 31432 con un tiempo de ejecucion de: 1 milisegundos y es el siguiente: 
+14  1  2  3  8  18  7  17  10  13  11  19  9  12  0  6  16  4  5  15  
+PRIMERO EL MEJOR IT 
+El conjunto de archivos de datos ford03 tiene un coste de 13398 con un tiempo de ejecucion de: 4 milisegundos y es el siguiente: 
+16  0  4  13  23  26  15  19  7  22  1  10  8  3  24  9  25  14  2  11  28  20  6  29  27  12  5  18  17  21  
+PRIMERO EL MEJOR IT 
+El conjunto de archivos de datos ford04 tiene un coste de 177505 con un tiempo de ejecucion de: 3 milisegundos y es el siguiente: 
+2  1  26  3  11  0  5  22  25  9  10  24  20  28  14  13  17  7  4  19  16  21  8  12  6  23  18  27  15  29  
+
+PRIMERO EL MEJOR RANDOM 
+El conjunto de archivos de datos ford01 tiene un coste de 3803 con un tiempo de ejecucion de: 5 milisegundos y es el siguiente: 
+18  7  2  6  17  8  14  5  1  15  12  11  3  13  19  9  0  16  10  4  
+PRIMERO EL MEJOR RANDOM 
+El conjunto de archivos de datos ford02 tiene un coste de 31071 con un tiempo de ejecucion de: 1 milisegundos y es el siguiente: 
+8  1  5  6  3  11  2  19  0  4  13  17  7  12  14  16  10  9  18  15  
+PRIMERO EL MEJOR RANDOM 
+El conjunto de archivos de datos ford03 tiene un coste de 13469 con un tiempo de ejecucion de: 3 milisegundos y es el siguiente: 
+3  14  19  28  18  7  24  26  12  20  22  5  29  11  8  21  1  4  0  16  23  6  17  27  9  15  2  13  25  10  
+PRIMERO EL MEJOR RANDOM 
+El conjunto de archivos de datos ford04 tiene un coste de 177932 con un tiempo de ejecucion de: 3 milisegundos y es el siguiente: 
+9  1  14  23  3  26  6  2  28  7  13  10  5  25  20  15  11  19  21  22  17  24  29  18  16  4  0  12  27  8  
+
+MULTIARRANQUE 
+El conjunto de archivos de datos ford01 tiene un coste de 3941 con un tiempo de ejecucion de: 45 milisegundos y es el siguiente: 
+4  15  18  9  7  3  0  1  2  17  8  14  5  19  10  13  6  11  16  12  
+MULTIARRANQUE 
+El conjunto de archivos de datos ford02 tiene un coste de 33954 con un tiempo de ejecucion de: 5 milisegundos y es el siguiente: 
+8  1  16  15  3  4  11  9  6  5  12  17  7  13  18  0  2  10  19  14  
+MULTIARRANQUE 
+El conjunto de archivos de datos ford03 tiene un coste de 13806 con un tiempo de ejecucion de: 7 milisegundos y es el siguiente: 
+0  5  17  2  6  3  1  18  21  23  8  15  29  27  20  9  25  4  12  10  24  11  22  7  19  14  13  28  26  16  
+MULTIARRANQUE 
+El conjunto de archivos de datos ford04 tiene un coste de 191745 con un tiempo de ejecucion de: 7 milisegundos y es el siguiente: 
+2  1  26  27  24  0  22  20  16  7  18  28  12  23  5  13  17  25  10  19  11  6  8  4  21  9  14  3  15  29  
