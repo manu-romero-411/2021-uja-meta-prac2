@@ -80,4 +80,20 @@ public class AGE_Clase3_Grupo9 {
     private void evolucion() {
 
     }
+
+    private void seleccion() {
+
+    }
+
+    private void reemplazamiento() {
+
+    }
+
+    private void cruce() {
+
+    }
+
+    private void mutacion() {
+
+    }
 }
