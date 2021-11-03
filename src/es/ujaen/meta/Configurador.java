@@ -41,7 +41,7 @@ public class Configurador {
                     case "Archivos":
                         String[] v = split[1].split(" ");
                         for (int i = 0; i < v.length; i++) {
-                            archivos.add(v[i]);
+                            archivos.add("data/" + v[i]);
                         }
                         break;
 

@@ -40,7 +40,7 @@ public class AlgGRE_Clase3_Grupo9 {
         for (int i = 0; i < conjunto.size(); i++) {
             aux += conjunto.get(i) + "  ";
         }
-        System.out.println();
+        //System.out.println();
         return "GREEDY \nEl conjunto de archivos de datos " + archivo.getNombre() + " tiene un coste de " + costeConjunto
                 + " con un tiempo de ejecucion de: " + (fin - inicio) + " milisegundos y es el siguiente: \n" + aux + "\n";
     }
