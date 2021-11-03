@@ -25,6 +25,12 @@ public class Configurador {
     private Integer candidatosGreedy;
     private Integer tamLista;
     private String salidaLog;
+    
+    private int gen_tamPoblacion;
+    private int gen_numEvaluaciones;
+    private float gen_probCruceGeneracional;
+    private float gen_probCruceEstacionario;
+    private float gen_probMutacion;
 
     public Configurador(String ruta) {
         archivos = new ArrayList<>();
@@ -41,7 +47,7 @@ public class Configurador {
                     case "Archivos":
                         String[] v = split[1].split(" ");
                         for (int i = 0; i < v.length; i++) {
-                            archivos.add(v[i]);
+                            archivos.add("data/" + v[i]);
                         }
                         break;
 
@@ -78,6 +84,21 @@ public class Configurador {
 
                     case "SalidaLog":
                         salidaLog = split[1];
+                        break;
+                    case "Gen-TamPoblacion":
+                        gen_tamPoblacion = Integer.parseInt(split[1]);
+                        break;
+                    case "Gen-NumEvaluaciones":
+                        gen_numEvaluaciones = Integer.parseInt(split[1]);
+                        break;
+                    case "Gen-ProbCruceGeneracional":
+                        gen_probCruceGeneracional = Float.parseFloat(split[1]);
+                        break;
+                    case "Gen-ProbCruceEstacionario":
+                        gen_probCruceEstacionario = Float.parseFloat(split[1]);
+                        break;
+                    case "Gen-FactorProbabilidadMutacion":
+                        gen_probMutacion = Float.parseFloat(split[1]) * gen_tamPoblacion;
                         break;
                 }
             }
@@ -122,4 +143,43 @@ public class Configurador {
     public Float getOscilacionEstrategica() {
         return oscilacionEstrategica;
     }
+    
+    /**
+     * @return the gen_tamPoblacion
+     */
+    public int getGenTamPoblacion() {
+        return gen_tamPoblacion;
+    }
+
+    /**
+     * @return the gen_numEvaluaciones
+     */
+    public int getGenNumEvaluaciones() {
+        return gen_numEvaluaciones;
+    }
+
+
+    /**
+     * @return the gen_probCruceGeneracional
+     */
+    public float getGenProbCruceGeneracional() {
+        return gen_probCruceGeneracional;
+    }
+
+    /**
+     * @return the gen_probCruceEstacionario
+     */
+    public float getGenProbCruceEstacionario() {
+        return gen_probCruceEstacionario;
+    }
+
+    /**
+     * @return the gen_probMutacion
+     */
+    public float getGenProbMutacion() {
+        return gen_probMutacion;
+    }
+
+
+
 }
