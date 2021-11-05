@@ -93,22 +93,41 @@ public class AGE_Clase3_Grupo9 {
         }
     }
 
-    private int calculaCosteConjunto(ArrayList<Integer> conjunto, int matrizFlujo[][], int matrizDistancia[][]) {
+    private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
         int coste = 0;
         for (int i = 0; i < conjunto.size(); i++) {
             for (int j = 0; j < conjunto.size(); j++) {
-                coste += matrizFlujo[i][j] * matrizDistancia[conjunto.get(i)][conjunto.get(j)];
+                coste += archivo.getMatriz1()[i][j] * archivo.getMatriz2()[conjunto.get(i)][conjunto.get(j)];
             }
         }
         return coste;
     }
 
-    private void evolucion() {
-
+    private Pair<ArrayList<Integer>,ArrayList<Integer>> evolucion() {
+        ArrayList<Integer> arrayMenor1 = new ArrayList<>();
+        ArrayList<Integer> arrayMenor2 = new ArrayList<>();
+        int menor1 = Integer.MAX_VALUE;
+        int menor2 = Integer.MAX_VALUE;
+        for (int i = 0; i < tamPoblacion; i++) {
+            ArrayList<Integer> aux = new ArrayList<>(poblacion.get(i));
+            if (calculaCosteConjunto(aux) < menor1 && !arrayMenor1.containsAll(arrayMenor2)) {
+                menor1 = calculaCosteConjunto(aux);
+                for (int j = 0; j < aux.size(); j++) {
+                    arrayMenor1.set(i, aux.get(i));
+                }
+            }
+            if (calculaCosteConjunto(aux) < menor2 && !arrayMenor2.containsAll(arrayMenor1)) {
+                menor2 = calculaCosteConjunto(aux);
+                for (int j = 0; j < aux.size(); j++) {
+                    arrayMenor2.set(i, aux.get(i));
+                }
+            }
+        }
+        return new Pair<ArrayList<Integer>,ArrayList<Integer>>(arrayMenor1,arrayMenor2);
     }
 
     private void seleccion() {
-
+        
     }
 
     private void reemplazamiento() {
