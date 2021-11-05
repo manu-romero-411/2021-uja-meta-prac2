@@ -42,6 +42,10 @@ public class AGE_Clase3_Grupo9 {
         creaPoblacionInicial();
         Pair<ArrayList<Integer>,ArrayList<Integer>> aux = new Pair<>(evolucion());
         seleccion(aux.getKey(), aux.getValue());
+        reemplazamiento();
+        cruce();
+        mutacion();
+        
     }
 
     private void iniciaConjunto() {
