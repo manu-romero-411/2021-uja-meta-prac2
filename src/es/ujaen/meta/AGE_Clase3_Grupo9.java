@@ -40,13 +40,13 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-        Pair<ArrayList<Integer>,ArrayList<Integer>> aux = new Pair<>(evolucion());
+        Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
         seleccion(aux.getKey(), aux.getValue());
         reemplazamiento();
         cruceOX();
         crucePMX();
         mutacion();
-        
+
     }
 
     private void iniciaConjunto() {
@@ -110,7 +110,7 @@ public class AGE_Clase3_Grupo9 {
         return coste;
     }
 
-    private Pair<ArrayList<Integer>,ArrayList<Integer>> evolucion() {
+    private Pair<ArrayList<Integer>, ArrayList<Integer>> evolucion() {
         ArrayList<Integer> arrayMenor1 = new ArrayList<>();
         ArrayList<Integer> arrayMenor2 = new ArrayList<>();
         int menor1 = Integer.MAX_VALUE;
@@ -130,11 +130,11 @@ public class AGE_Clase3_Grupo9 {
                 }
             }
         }
-        return new Pair<ArrayList<Integer>,ArrayList<Integer>>(arrayMenor1,arrayMenor2);
+        return new Pair<ArrayList<Integer>, ArrayList<Integer>>(arrayMenor1, arrayMenor2);
     }
 
     private void seleccion(ArrayList<Integer> peor1, ArrayList<Integer> peor2) {
-        
+
     }
 
     private void reemplazamiento() {
@@ -144,7 +144,7 @@ public class AGE_Clase3_Grupo9 {
     private void cruceOX() {
 
     }
-    
+
     private void crucePMX() {
 
     }
