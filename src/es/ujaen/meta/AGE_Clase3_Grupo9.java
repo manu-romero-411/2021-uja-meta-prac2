@@ -40,6 +40,8 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
+        Pair<ArrayList<Integer>,ArrayList<Integer>> aux = new Pair<>(evolucion());
+        seleccion(aux.getKey(), aux.getValue());
     }
 
     private void iniciaConjunto() {
@@ -126,7 +128,7 @@ public class AGE_Clase3_Grupo9 {
         return new Pair<ArrayList<Integer>,ArrayList<Integer>>(arrayMenor1,arrayMenor2);
     }
 
-    private void seleccion() {
+    private void seleccion(ArrayList<Integer> peor1, ArrayList<Integer> peor2) {
         
     }
 
