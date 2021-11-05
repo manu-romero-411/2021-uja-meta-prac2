@@ -43,7 +43,8 @@ public class AGE_Clase3_Grupo9 {
         Pair<ArrayList<Integer>,ArrayList<Integer>> aux = new Pair<>(evolucion());
         seleccion(aux.getKey(), aux.getValue());
         reemplazamiento();
-        cruce();
+        cruceOX();
+        crucePMX();
         mutacion();
         
     }
@@ -140,7 +141,11 @@ public class AGE_Clase3_Grupo9 {
 
     }
 
-    private void cruce() {
+    private void cruceOX() {
+
+    }
+    
+    private void crucePMX() {
 
     }
 
