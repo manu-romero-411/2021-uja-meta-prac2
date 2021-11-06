@@ -26,8 +26,9 @@ public class AGE_Clase3_Grupo9 {
     private final int evaluaciones;
     private final float probCruce;
     private final float probMutacion;
+    private final int vecesSeleccion; //Incluir en config
 
-    public AGE_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion) {
+    public AGE_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion, int vecesSeleccion) {
         this.random = random;
         this.longitudLRC = longitudLRC;
         this.archivo = archivo;
@@ -35,6 +36,7 @@ public class AGE_Clase3_Grupo9 {
         this.evaluaciones = evaluaciones;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
+        this.vecesSeleccion = vecesSeleccion;
     }
 
     public void hazGeneticoEstacionario() {
@@ -42,7 +44,7 @@ public class AGE_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
-        seleccion(aux.fst, aux.snd);
+        ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
         cruceOX();
         crucePMX();
@@ -134,8 +136,30 @@ public class AGE_Clase3_Grupo9 {
         return new Pair<ArrayList<Integer>, ArrayList<Integer>>(arrayMenor1, arrayMenor2);
     }
 
-    private void seleccion(ArrayList<Integer> peor1, ArrayList<Integer> peor2) {
+    private ArrayList<ArrayList<Integer>> seleccion() {
+        ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
+        for (int i = 0; i < vecesSeleccion; i++) {
 
+            int aleatorio1;
+            int aleatorio2;
+            int aleatorio3;
+            do {
+                aleatorio1 = random.nextInt(tamPoblacion);
+                aleatorio2 = random.nextInt(tamPoblacion);
+                aleatorio3 = random.nextInt(tamPoblacion);
+            } while (aleatorio1 == aleatorio2 && aleatorio2 == aleatorio3 && aleatorio1 == aleatorio3);
+            ArrayList<Integer> torneo1 = new ArrayList<>(poblacion.get(aleatorio1));
+            ArrayList<Integer> torneo2 = new ArrayList<>(poblacion.get(aleatorio2));
+            ArrayList<Integer> torneo3 = new ArrayList<>(poblacion.get(aleatorio3));
+            mejorTorneo(torneo1, torneo2, torneo3);
+        }
+        return seleccionados;
+    }
+
+    private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneo1, ArrayList<Integer> torneo2, ArrayList<Integer> torneo3) {
+
+        ArrayList<Integer> mejor = new ArrayList<>();
+        return mejor;
     }
 
     private void reemplazamiento() {
