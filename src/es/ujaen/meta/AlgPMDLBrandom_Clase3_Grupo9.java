@@ -45,7 +45,7 @@ public class AlgPMDLBrandom_Clase3_Grupo9 {
         mejora();
         mejorCoste = calculaCosteConjunto(conjunto);
     }
-    
+
     private void iniciaDLB() {
         for (int i = 0; i < conjunto.size(); i++) {
             dlb.add(false);
@@ -95,7 +95,7 @@ public class AlgPMDLBrandom_Clase3_Grupo9 {
         }
         return coste;
     }
-    
+
     public String muestraDatos() {
         fin = System.currentTimeMillis();
         String aux = new String();

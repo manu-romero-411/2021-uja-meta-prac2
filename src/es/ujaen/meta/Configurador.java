@@ -25,7 +25,7 @@ public class Configurador {
     private Integer candidatosGreedy;
     private Integer tamLista;
     private String salidaLog;
-    
+
     private int gen_tamPoblacion;
     private int gen_numEvaluaciones;
     private float gen_probCruceGeneracional;
@@ -143,7 +143,7 @@ public class Configurador {
     public Float getOscilacionEstrategica() {
         return oscilacionEstrategica;
     }
-    
+
     /**
      * @return the gen_tamPoblacion
      */

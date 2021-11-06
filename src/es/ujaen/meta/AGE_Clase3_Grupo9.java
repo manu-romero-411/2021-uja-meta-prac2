@@ -5,9 +5,10 @@
  */
 package es.ujaen.meta;
 
+import com.sun.tools.javac.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Random;
-import javafx.util.Pair;
 
 /**
  *
@@ -41,7 +42,7 @@ public class AGE_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
-        seleccion(aux.getKey(), aux.getValue());
+        seleccion(aux.fst, aux.snd);
         reemplazamiento();
         cruceOX();
         crucePMX();
@@ -79,9 +80,9 @@ public class AGE_Clase3_Grupo9 {
             int i = 0;
             for (i = 0; i < longitudLRC; i++) {
                 Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.getKey(), aux.getValue());
-                repetidos.add(aux.getValue());
-                posicion.add(aux.getKey());
+                individuos.set(aux.fst, aux.snd);
+                repetidos.add(aux.snd);
+                posicion.add(aux.fst);
             }
             i = 0;
             while (i < conjunto.size()) {
