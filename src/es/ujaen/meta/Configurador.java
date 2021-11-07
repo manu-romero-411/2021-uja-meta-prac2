@@ -26,11 +26,14 @@ public class Configurador {
     private Integer tamLista;
     private String salidaLog;
 
-    private int gen_tamPoblacion;
-    private int gen_numEvaluaciones;
-    private float gen_probCruceGeneracional;
-    private float gen_probCruceEstacionario;
-    private float gen_probMutacion;
+    private Integer gen_tamPoblacion;
+    private Integer gen_numEvaluaciones;
+    private Float gen_probCruceGeneracional;
+    private Float gen_probCruceEstacionario;
+    private Float gen_probMutacion;
+    private Integer gen_tamSeleccionEstacionario;
+    private Integer gen_tamTorneoSeleccionEstacionario;
+    private Integer gen_tamTorneoReemplazamientoEstacionario;
 
     public Configurador(String ruta) {
         archivos = new ArrayList<>();
@@ -100,6 +103,15 @@ public class Configurador {
                     case "Gen-FactorProbabilidadMutacion":
                         gen_probMutacion = Float.parseFloat(split[1]) * gen_tamPoblacion;
                         break;
+                    case "Gen-TamSeleccionGeneracional":
+                        gen_tamSeleccionEstacionario = Integer.parseInt(split[1]);
+                        break;
+                    case "Gen-TamTorneoSeleccionGeneracional":
+                        gen_tamTorneoSeleccionEstacionario = Integer.parseInt(split[1]);
+                        break;
+                    case "Gen-TamTorneoReemplazamientoGeneracional":
+                        gen_tamTorneoReemplazamientoEstacionario = Integer.parseInt(split[1]);
+                        break;
                 }
             }
 
@@ -147,39 +159,48 @@ public class Configurador {
     /**
      * @return the gen_tamPoblacion
      */
-    public int getGenTamPoblacion() {
+    public Integer getGenTamPoblacion() {
         return gen_tamPoblacion;
     }
 
     /**
      * @return the gen_numEvaluaciones
      */
-    public int getGenNumEvaluaciones() {
+    public Integer getGenNumEvaluaciones() {
         return gen_numEvaluaciones;
     }
-
 
     /**
      * @return the gen_probCruceGeneracional
      */
-    public float getGenProbCruceGeneracional() {
+    public Float getGenProbCruceGeneracional() {
         return gen_probCruceGeneracional;
     }
 
     /**
      * @return the gen_probCruceEstacionario
      */
-    public float getGenProbCruceEstacionario() {
+    public Float getGenProbCruceEstacionario() {
         return gen_probCruceEstacionario;
     }
 
     /**
      * @return the gen_probMutacion
      */
-    public float getGenProbMutacion() {
+    public Float getGenProbMutacion() {
         return gen_probMutacion;
     }
 
+    public Integer getGen_tamSeleccionEstacionario() {
+        return gen_tamSeleccionEstacionario;
+    }
 
+    public Integer getGen_tamTorneoSeleccionEstacionario() {
+        return gen_tamTorneoSeleccionEstacionario;
+    }
+
+    public Integer getGen_tamTorneoReemplazamientoEstacionario() {
+        return gen_tamTorneoReemplazamientoEstacionario;
+    }
 
 }

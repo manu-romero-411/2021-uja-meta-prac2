@@ -14,4 +14,6 @@ Gen-NumEvaluaciones=50000
 Gen-ProbCruceGeneracional=1
 Gen-ProbCruceEstacionario=0.7
 Gen-FactorProbabilidadMutacion=0.001
-
+Gen-TamSeleccionEstacionario=2
+Gen-TamTorneoSeleccionEstacionario=3
+Gen-TamTorneoReemplazamientoEstacionario=4
