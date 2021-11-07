@@ -103,13 +103,13 @@ public class Configurador {
                     case "Gen-FactorProbabilidadMutacion":
                         gen_probMutacion = Float.parseFloat(split[1]) * gen_tamPoblacion;
                         break;
-                    case "Gen-TamSeleccionGeneracional":
+                    case "Gen-TamSeleccionEstacionario":
                         gen_tamSeleccionEstacionario = Integer.parseInt(split[1]);
                         break;
-                    case "Gen-TamTorneoSeleccionGeneracional":
+                    case "Gen-TamTorneoSeleccionEstacionario":
                         gen_tamTorneoSeleccionEstacionario = Integer.parseInt(split[1]);
                         break;
-                    case "Gen-TamTorneoReemplazamientoGeneracional":
+                    case "Gen-TamTorneoReemplazamientoEstacionario":
                         gen_tamTorneoReemplazamientoEstacionario = Integer.parseInt(split[1]);
                         break;
                 }

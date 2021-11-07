@@ -43,6 +43,9 @@ public class AGE_Clase3_Grupo9 {
         this.vecesSeleccion = vecesSeleccion;
         this.tamTorneoSeleccion = tamTorneoSeleccion;
         this.tamTorneoReemplazamiento = tamTorneoReemplazamiento;
+        this.conjunto = new ArrayList<>();
+        this.poblacion = new ArrayList<>();
+        this.LRC = new ArrayList<>();
     }
 
     public void hazGeneticoEstacionario() {
@@ -150,12 +153,16 @@ public class AGE_Clase3_Grupo9 {
             while (!aleatorioDiferentes) {
                 for (int j = 0; j < tamTorneoSeleccion; j++) {
                     torneos.add(random.nextInt(tamPoblacion));
+                    System.out.println(random.nextInt(tamPoblacion));
                 }
                 aleatorioDiferentes = true;
+
                 for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
-                    for (int k = 0; k < tamTorneoSeleccion && aleatorioDiferentes; k++) {
-                        if (Objects.equals(torneos.get(j), torneos.get(k))) {
+                    int cont = tamTorneoSeleccion - 1;
+                    for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
+                        if (Objects.equals(torneos.get(j), torneos.get(k % tamTorneoSeleccion))) {
                             aleatorioDiferentes = false;
+                            System.out.println(torneos.get(j) + " " + torneos.get(k));
                         }
                     }
                 }
