@@ -8,6 +8,7 @@ package es.ujaen.meta;
 import com.sun.tools.javac.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -26,8 +27,12 @@ public class AGE_Clase3_Grupo9 {
     private final int evaluaciones;
     private final float probCruce;
     private final float probMutacion;
+    private final int vecesSeleccion;
+    private final int tamTorneoSeleccion;
+    private final int tamTorneoReemplazamiento;
 
-    public AGE_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion) {
+    public AGE_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
+            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento) {
         this.random = random;
         this.longitudLRC = longitudLRC;
         this.archivo = archivo;
@@ -35,6 +40,12 @@ public class AGE_Clase3_Grupo9 {
         this.evaluaciones = evaluaciones;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
+        this.vecesSeleccion = vecesSeleccion;
+        this.tamTorneoSeleccion = tamTorneoSeleccion;
+        this.tamTorneoReemplazamiento = tamTorneoReemplazamiento;
+        this.conjunto = new ArrayList<>();
+        this.poblacion = new ArrayList<>();
+        this.LRC = new ArrayList<>();
     }
 
     public void hazGeneticoEstacionario() {
@@ -42,7 +53,7 @@ public class AGE_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
-        seleccion(aux.fst, aux.snd);
+        ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
         cruceOX();
         crucePMX();
@@ -131,11 +142,51 @@ public class AGE_Clase3_Grupo9 {
                 }
             }
         }
-        return new Pair<ArrayList<Integer>, ArrayList<Integer>>(arrayMenor1, arrayMenor2);
+        return new Pair<>(arrayMenor1, arrayMenor2);
     }
 
-    private void seleccion(ArrayList<Integer> peor1, ArrayList<Integer> peor2) {
+    private ArrayList<ArrayList<Integer>> seleccion() {
+        ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
+        for (int i = 0; i < vecesSeleccion; i++) {
+            ArrayList<Integer> torneos = new ArrayList<>();
+            boolean aleatorioDiferentes = false;
+            while (!aleatorioDiferentes) {
+                for (int j = 0; j < tamTorneoSeleccion; j++) {
+                    torneos.add(random.nextInt(tamPoblacion));
+                    System.out.println(random.nextInt(tamPoblacion));
+                }
+                aleatorioDiferentes = true;
 
+                for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
+                    int cont = tamTorneoSeleccion - 1;
+                    for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
+                        if (Objects.equals(torneos.get(j), torneos.get(k % tamTorneoSeleccion))) {
+                            aleatorioDiferentes = false;
+                            System.out.println(torneos.get(j) + " " + torneos.get(k));
+                        }
+                    }
+                }
+            }
+            seleccionados.add(mejorTorneo(torneos));
+        }
+        return seleccionados;
+    }
+
+    private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
+        ArrayList<Integer> mejor = new ArrayList<>();
+        for (int i = 0; i < conjunto.size(); i++) {
+            mejor.add(0);
+        }
+        int mejorCoste = Integer.MIN_VALUE;
+        for (int i = 0; i < torneos.size(); i++) {
+            if (calculaCosteConjunto(poblacion.get(torneos.get(i))) > mejorCoste) {
+                for (int j = 0; j < poblacion.get(torneos.get(i)).size(); j++) {
+                    mejor.set(j, poblacion.get(torneos.get(i)).get(j));
+                }
+                mejorCoste = calculaCosteConjunto(poblacion.get(torneos.get(i)));
+            }
+        }
+        return mejor;
     }
 
     private void reemplazamiento() {
