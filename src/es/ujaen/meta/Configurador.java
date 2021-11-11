@@ -31,9 +31,13 @@ public class Configurador {
     private Float gen_probCruceGeneracional;
     private Float gen_probCruceEstacionario;
     private Float gen_probMutacion;
+    private Integer gen_tamSeleccionGeneracional;
     private Integer gen_tamSeleccionEstacionario;
+    private Integer gen_tamTorneoSeleccionGeneracional;
     private Integer gen_tamTorneoSeleccionEstacionario;
+    private Integer gen_tamReemplazamientoGeneracional;
     private Integer gen_tamTorneoReemplazamientoEstacionario;
+    private Integer gen_vecesTorneoReemplazamientoEstacionario;
 
     public Configurador(String ruta) {
         archivos = new ArrayList<>();
@@ -103,14 +107,26 @@ public class Configurador {
                     case "Gen-FactorProbabilidadMutacion":
                         gen_probMutacion = Float.parseFloat(split[1]) * gen_tamPoblacion;
                         break;
+                    case "Gen-TamSeleccionGeneracional":
+                        gen_tamSeleccionGeneracional = Integer.parseInt(split[1]);
+                        break;
                     case "Gen-TamSeleccionEstacionario":
                         gen_tamSeleccionEstacionario = Integer.parseInt(split[1]);
+                        break;
+                    case "Gen-TamTorneoSeleccionGeneracional":
+                        gen_tamTorneoSeleccionGeneracional = Integer.parseInt(split[1]);
                         break;
                     case "Gen-TamTorneoSeleccionEstacionario":
                         gen_tamTorneoSeleccionEstacionario = Integer.parseInt(split[1]);
                         break;
+                    case "Gen-TamReemplazamientoGeneracional":
+                        gen_tamReemplazamientoGeneracional = Integer.parseInt(split[1]);
+                        break;
                     case "Gen-TamTorneoReemplazamientoEstacionario":
                         gen_tamTorneoReemplazamientoEstacionario = Integer.parseInt(split[1]);
+                        break;
+                    case "Gen-VecesTorneoReemplazamientoEstacionario":
+                        gen_vecesTorneoReemplazamientoEstacionario = Integer.parseInt(split[1]);
                         break;
                 }
             }
@@ -160,35 +176,35 @@ public class Configurador {
      * @return the gen_tamPoblacion
      */
     public Integer getGenTamPoblacion() {
-        return gen_tamPoblacion;
+        return getGen_tamPoblacion();
     }
 
     /**
      * @return the gen_numEvaluaciones
      */
     public Integer getGenNumEvaluaciones() {
-        return gen_numEvaluaciones;
+        return getGen_numEvaluaciones();
     }
 
     /**
      * @return the gen_probCruceGeneracional
      */
     public Float getGenProbCruceGeneracional() {
-        return gen_probCruceGeneracional;
+        return getGen_probCruceGeneracional();
     }
 
     /**
      * @return the gen_probCruceEstacionario
      */
     public Float getGenProbCruceEstacionario() {
-        return gen_probCruceEstacionario;
+        return getGen_probCruceEstacionario();
     }
 
     /**
      * @return the gen_probMutacion
      */
     public Float getGenProbMutacion() {
-        return gen_probMutacion;
+        return getGen_probMutacion();
     }
 
     public Integer getGen_tamSeleccionEstacionario() {
@@ -202,5 +218,69 @@ public class Configurador {
     public Integer getGen_tamTorneoReemplazamientoEstacionario() {
         return gen_tamTorneoReemplazamientoEstacionario;
     }
+    
+    /**
+     * @return the gen_tamPoblacion
+     */
+    public Integer getGen_tamPoblacion() {
+        return gen_tamPoblacion;
+    }
 
+    /**
+     * @return the gen_numEvaluaciones
+     */
+    public Integer getGen_numEvaluaciones() {
+        return gen_numEvaluaciones;
+    }
+
+    /**
+     * @return the gen_probCruceGeneracional
+     */
+    public Float getGen_probCruceGeneracional() {
+        return gen_probCruceGeneracional;
+    }
+
+    /**
+     * @return the gen_probCruceEstacionario
+     */
+    public Float getGen_probCruceEstacionario() {
+        return gen_probCruceEstacionario;
+    }
+
+    /**
+     * @return the gen_probMutacion
+     */
+    public Float getGen_probMutacion() {
+        return gen_probMutacion;
+    }
+
+    /**
+     * @return the gen_tamSeleccionGeneracional
+     */
+    public Integer getGen_tamSeleccionGeneracional() {
+        return gen_tamSeleccionGeneracional;
+    }
+
+    /**
+     * @return the gen_tamTorneoSeleccionGeneracional
+     */
+    public Integer getGen_tamTorneoSeleccionGeneracional() {
+        return gen_tamTorneoSeleccionGeneracional;
+    }
+
+    /**
+     * @return the gen_tamReemplazamientoGeneracional
+     */
+    public Integer getGen_tamReemplazamientoGeneracional() {
+        return gen_tamReemplazamientoGeneracional;
+    }
+
+    /**
+     * @return the gen_vecesTorneoReemplazamientoEstacionario
+     */
+    public Integer getGen_vecesTorneoReemplazamientoEstacionario() {
+        return gen_vecesTorneoReemplazamientoEstacionario;
+    }
+
+    
 }

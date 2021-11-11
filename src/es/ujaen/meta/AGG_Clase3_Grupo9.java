@@ -15,7 +15,7 @@ import java.util.Random;
  *
  * @author admin
  */
-public class AGE_Clase3_Grupo9 {
+public class AGG_Clase3_Grupo9 {
 
     private final Random random;
     private final int longitudLRC;
@@ -30,10 +30,9 @@ public class AGE_Clase3_Grupo9 {
     private final int vecesSeleccion;
     private final int tamTorneoSeleccion;
     private final int tamTorneoReemplazamiento;
-    private final int vecesTorneoReemplazamiento;
 
-    public AGE_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, int vecesTorneoReemplazamiento) {
+    public AGG_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
+            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento) {
         this.random = random;
         this.longitudLRC = longitudLRC;
         this.archivo = archivo;
@@ -44,7 +43,6 @@ public class AGE_Clase3_Grupo9 {
         this.vecesSeleccion = vecesSeleccion;
         this.tamTorneoSeleccion = tamTorneoSeleccion;
         this.tamTorneoReemplazamiento = tamTorneoReemplazamiento;
-        this.vecesTorneoReemplazamiento = vecesTorneoReemplazamiento;
         this.conjunto = new ArrayList<>();
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
@@ -54,10 +52,10 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-        Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
+        ArrayList<Integer> aux = evolucion();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
-        cruceOX();
+        cruceOX2();
         crucePMX();
         mutacion();
 
@@ -124,27 +122,18 @@ public class AGE_Clase3_Grupo9 {
         return coste;
     }
 
-    private Pair<ArrayList<Integer>, ArrayList<Integer>> evolucion() {
-        ArrayList<Integer> arrayMenor1 = new ArrayList<>();
-        ArrayList<Integer> arrayMenor2 = new ArrayList<>();
-        int menor1 = Integer.MAX_VALUE;
-        int menor2 = Integer.MAX_VALUE;
+    private ArrayList<Integer> evolucion() {
+        ArrayList<Integer> elite = new ArrayList<>(conjunto);
+        int mejorValorElite = calculaCosteConjunto(elite);
         for (int i = 0; i < tamPoblacion; i++) {
-            ArrayList<Integer> aux = new ArrayList<>(poblacion.get(i));
-            if (calculaCosteConjunto(aux) < menor1 && !arrayMenor1.containsAll(arrayMenor2)) {
-                menor1 = calculaCosteConjunto(aux);
-                for (int j = 0; j < aux.size(); j++) {
-                    arrayMenor1.set(i, aux.get(i));
-                }
-            }
-            if (calculaCosteConjunto(aux) < menor2 && !arrayMenor2.containsAll(arrayMenor1)) {
-                menor2 = calculaCosteConjunto(aux);
-                for (int j = 0; j < aux.size(); j++) {
-                    arrayMenor2.set(i, aux.get(i));
+            if (calculaCosteConjunto(poblacion.get(i)) > mejorValorElite) {
+                for (int j = 0; j < elite.size(); j++) {
+                    elite.set(i, poblacion.get(i).get(j));
+                    mejorValorElite = calculaCosteConjunto(elite);
                 }
             }
         }
-        return new Pair<>(arrayMenor1, arrayMenor2);
+        return elite;
     }
 
     private ArrayList<ArrayList<Integer>> seleccion() {
@@ -195,7 +184,7 @@ public class AGE_Clase3_Grupo9 {
 
     }
 
-    private void cruceOX() {
+    private void cruceOX2() {
 
     }
 
