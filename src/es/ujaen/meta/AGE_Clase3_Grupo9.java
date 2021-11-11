@@ -67,6 +67,12 @@ public class AGE_Clase3_Grupo9 {
         for (int i = 0; i < archivo.getMatriz1().length; i++) {
             conjunto.add(0);
         }
+
+        //DEBUG
+        System.out.print("Inicializando conjunto solución: ");
+        for (int i = 0; i < conjunto.size(); ++i){
+            System.out.print(conjunto.get(i) + " | ");
+        }
     }
 
     private void creaLRC() {
@@ -80,6 +86,11 @@ public class AGE_Clase3_Grupo9 {
                 i++;
             }
         }
+
+        System.out.println("\nLRC: ");
+        for (int j = 0; j < longitudLRC; ++j){
+            System.out.println(LRC.get(j).fst + " | "+ LRC.get(j).snd);
+        }
     }
 
     private void creaPoblacionInicial() {
@@ -88,6 +99,13 @@ public class AGE_Clase3_Grupo9 {
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(0);
             }
+
+            //DEBUG
+            System.out.print("\nIniciar individuos: ");
+            for (int i = 0; i < individuos.size(); ++i){
+                System.out.print(individuos.get(i) + " | ");
+            }
+
             ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> posicion = new ArrayList<>();
             int i = 0;
@@ -97,11 +115,44 @@ public class AGE_Clase3_Grupo9 {
                 repetidos.add(aux.snd);
                 posicion.add(aux.fst);
             }
+
+
+            //DEBUG
+            System.out.print("\nRepetidos: ");
+            for (int k = 0; k < repetidos.size(); ++k){
+                System.out.print(repetidos.get(k) + " | ");
+            }
+
+            //DEBUG
+            System.out.print("\nPosicion: ");
+            for (int k = 0; k < posicion.size(); ++k){
+                System.out.print(posicion.get(k) + " | ");
+            }
+
+            //DEBUG
+            System.out.print("\nIndividuos ahora: ");
+            for (int k = 0; k < individuos.size(); ++k){
+                System.out.print(individuos.get(k) + " | ");
+            }
+
             i = 0;
             while (i < conjunto.size()) {
                 if (!posicion.contains(i)) {
+                    //DEBUG
+                    System.out.println("\nPosición " + i + " no contenida en LRC. Lanzar aleatorio");
+
                     int aleatorio = random.nextInt(conjunto.size());
+                    if (i == 17){
+                        System.out.println();
+                    }
+                    //DEBUG
+                    System.out.println("Escogida posición " + aleatorio);
+
                     if (!repetidos.contains(aleatorio)) {
+                        //DEBUG
+                        System.out.println(aleatorio);
+                        System.out.println("Posición " + aleatorio + " no contenida en LRC. Poner en posición " + i + " de individuos");
+
                         individuos.set(i, aleatorio);
                         repetidos.add(aleatorio);
                         i++;
@@ -111,7 +162,17 @@ public class AGE_Clase3_Grupo9 {
                 }
             }
             poblacion.add(individuos);
+
         }
+        //DEBUG
+        System.out.print("\nPoblación: ");
+        for (int k = 0; k < poblacion.size(); ++k){
+            for(int l = 0; l < poblacion.get(k).size(); ++l) {
+                System.out.print(poblacion.get(k).get(l) + " | ");
+            }
+            System.out.println();
+        }
+        System.out.print("");
     }
 
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
@@ -121,6 +182,12 @@ public class AGE_Clase3_Grupo9 {
                 coste += archivo.getMatriz1()[i][j] * archivo.getMatriz2()[conjunto.get(i)][conjunto.get(j)];
             }
         }
+        //DEBUG
+        System.out.println("Coste de este conjunto: " + coste);
+        for (int i = 0; i < conjunto.size(); ++i){
+            System.out.print(conjunto.get(i) + " | ");
+        }
+        System.out.println();
         return coste;
     }
 
@@ -144,6 +211,16 @@ public class AGE_Clase3_Grupo9 {
                 }
             }
         }
+        //DEBUG
+        System.out.println("Array1 evolución:");
+        for (int i = 0; i < arrayMenor1.size(); ++i){
+            System.out.print(arrayMenor1.get(i) + " | ");
+        }
+        System.out.println("Array2 evolución:");
+        for (int i = 0; i < arrayMenor2.size(); ++i){
+            System.out.print(arrayMenor2.get(i) + " | ");
+        }
+
         return new Pair<>(arrayMenor1, arrayMenor2);
     }
 
@@ -171,6 +248,16 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(mejorTorneo(torneos));
         }
+
+        //DEBUG
+        System.out.println("Seleccionados en torneo:");
+        for (int k = 0; k < poblacion.size(); ++k){
+            for(int l = 0; l < poblacion.get(k).size(); ++l) {
+                System.out.print(poblacion.get(k).get(l) + " | ");
+            }
+            System.out.println();
+        }
+        System.out.print("");
         return seleccionados;
     }
 
