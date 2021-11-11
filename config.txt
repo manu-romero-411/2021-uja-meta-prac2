@@ -20,4 +20,4 @@ Gen-TamTorneoSeleccionGeneracional=2
 Gen-TamTorneoSeleccionEstacionario=3
 Gen-TamReemplazamientoGeneracional=50
 Gen-TamTorneoReemplazamientoEstacionario=4
-Gen-VecesTorneoReemplazamientoEstacionario=4
+Gen-VecesTorneoReemplazamientoEstacionario=2
