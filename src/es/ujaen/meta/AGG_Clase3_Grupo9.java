@@ -181,12 +181,40 @@ public class AGG_Clase3_Grupo9 {
 
     }
 
-    private void cruceOX2() {
+    private void cruceOX2(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
+        ArrayList<Integer> listaAleatorios = new ArrayList<>();
+        for (int i = 0; i < 3; ++i){
+            listaAleatorios.set(i,random.nextInt(padre1.size()));
+            for (int j = 0; j < i; ++j){
+                while(listaAleatorios.get(i) == listaAleatorios.get(j)){
+                    listaAleatorios.set(i,random.nextInt(conjunto.size()));
+                }
+            }
+        }
 
+        // ES POSIBLE QUE ESTE BLOQUE SEA REDUNDANTE
+        ArrayList<Integer> elementosCorte = new ArrayList<>();
+        for(int i = 0; i < padre1.size(); ++i){
+            if(listaAleatorios.contains(padre1.get(i))){
+                elementosCorte.add(padre1.get(i));
+            }
+        }
+
+        for(int i = 0; i < padre2.size(); ++i){
+            if(elementosCorte.contains(padre2.get(i))){
+                padre2.set(i,-1);
+            }
+        }
+        for(int i = 0; i < padre2.size(); ++i){
+            if(padre2.get(i) == -1){
+                padre2.set(i, elementosCorte.get(0);
+                elementosCorte.remove(0);
+            }
+        }
     }
 
-    private void crucePMX() {
-
+    private void crucePMX(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
+        
     }
 
     private void mutacion() {

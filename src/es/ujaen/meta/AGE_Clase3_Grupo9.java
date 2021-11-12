@@ -98,8 +98,8 @@ public class AGE_Clase3_Grupo9 {
             }
 
             for (int i = 0; i < longitudLRC; i++) {
-                individuos.set(LRC.get(i).getKey(), LRC.get(i).getValue());
-                repetidos.add(LRC.get(i).getKey());
+                individuos.set(LRC.get(i).fst, LRC.get(i).snd);
+                repetidos.add(LRC.get(i).fst);
             }
 
             int i = 0;
@@ -216,6 +216,9 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
+        int aleatorio;
+
+
         mutacion();
     }
 
