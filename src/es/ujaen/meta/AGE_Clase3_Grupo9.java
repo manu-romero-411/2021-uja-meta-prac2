@@ -5,11 +5,10 @@
  */
 package es.ujaen.meta;
 
-import com.sun.tools.javac.util.Pair;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
+import javafx.util.Pair;
 
 /**
  *
@@ -56,10 +55,10 @@ public class AGE_Clase3_Grupo9 {
         creaPoblacionInicial();
         Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-        reemplazamiento();
-        cruceOX();
+        cruceOX(); //Cruces y mutacion a la vez
         crucePMX();
         mutacion();
+        reemplazamiento();
 
     }
 
@@ -67,51 +66,92 @@ public class AGE_Clase3_Grupo9 {
         for (int i = 0; i < archivo.getMatriz1().length; i++) {
             conjunto.add(0);
         }
+
+        //DEBUG
+        System.out.print("Inicializando conjunto solución: ");
+        for (int i = 0; i < conjunto.size(); ++i) {
+            System.out.print(conjunto.get(i) + " | ");
+        }
     }
 
     private void creaLRC() {
         int i = 0;
         while (i < longitudLRC) {
+            boolean contenido = false;
             int flujo = random.nextInt(archivo.getMatriz1().length);
             int distancia = random.nextInt(archivo.getMatriz2().length);
             Pair<Integer, Integer> aux = new Pair<>(flujo, distancia);
-            if (!LRC.contains(aux)) {
+            for (int j = 0; j < LRC.size() && !contenido; j++) {
+                if (LRC.get(j).getKey() == aux.getKey() || LRC.get(j).getValue() == aux.getValue()) {
+                    contenido = true;
+                }
+            }
+            if (!contenido) {
                 LRC.add(aux);
                 i++;
             }
         }
+//
+//        System.out.println("\nLRC: ");
+//        for (int j = 0; j < LRC.size(); j++) {
+//            System.out.println("A: " + LRC.get(j).getKey() + " B: " + LRC.get(j).getValue());
+//        }
     }
 
     private void creaPoblacionInicial() {
+
         for (int j = 0; j < tamPoblacion; j++) {
+            ArrayList<Pair<Integer, Integer>> repetidos = new ArrayList<>();
+            for (int i = 0; i < conjunto.size(); i++) {
+                repetidos.add(new Pair<>(-1, -1));
+            }
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(0);
             }
-            ArrayList<Integer> repetidos = new ArrayList<>();
-            ArrayList<Integer> posicion = new ArrayList<>();
-            int i = 0;
-            for (i = 0; i < longitudLRC; i++) {
+
+            for (int i = 0; i < longitudLRC; i++) {
                 Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.fst, aux.snd);
-                repetidos.add(aux.snd);
-                posicion.add(aux.fst);
+                individuos.set(aux.getKey(), aux.getValue());
+                repetidos.set(i, new Pair<>(aux.getKey(), aux.getValue()));
             }
-            i = 0;
+
+            System.out.println("Repetidos: ");
+            for (int i = 0; i < repetidos.size(); i++) {
+                System.out.println("A: " + repetidos.get(i).getKey() + " B: " + repetidos.get(i).getValue());
+            }
+            
+            System.out.println("Individuos: ");
+            for (int i = 0; i < individuos.size(); i++) {
+                System.out.print(individuos.get(i)+ " ");
+            }
+
+            int i = 0;
             while (i < conjunto.size()) {
-                if (!posicion.contains(i)) {
+                if (repetidos.get(i).getKey() != -1) {
+
                     int aleatorio = random.nextInt(conjunto.size());
-                    if (!repetidos.contains(aleatorio)) {
-                        individuos.set(i, aleatorio);
-                        repetidos.add(aleatorio);
-                        i++;
-                    }
+                    individuos.set(i, aleatorio);
+
+                    repetidos.set(i, new Pair<>(individuos.get(i), i));
+                    i++;
+
                 } else {
                     i++;
                 }
             }
             poblacion.add(individuos);
+
         }
+        //DEBUG
+        System.out.print("\nPoblación: ");
+        for (int k = 0; k < poblacion.size(); ++k) {
+            for (int l = 0; l < poblacion.get(k).size(); ++l) {
+                System.out.print(poblacion.get(k).get(l) + " | ");
+            }
+            System.out.println();
+        }
+        System.out.print("");
     }
 
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
@@ -121,6 +161,12 @@ public class AGE_Clase3_Grupo9 {
                 coste += archivo.getMatriz1()[i][j] * archivo.getMatriz2()[conjunto.get(i)][conjunto.get(j)];
             }
         }
+        //DEBUG
+        System.out.println("Coste de este conjunto: " + coste);
+        for (int i = 0; i < conjunto.size(); ++i) {
+            System.out.print(conjunto.get(i) + " | ");
+        }
+        System.out.println();
         return coste;
     }
 
@@ -144,6 +190,16 @@ public class AGE_Clase3_Grupo9 {
                 }
             }
         }
+        //DEBUG
+        System.out.println("Array1 evolución:");
+        for (int i = 0; i < arrayMenor1.size(); ++i) {
+            System.out.print(arrayMenor1.get(i) + " | ");
+        }
+        System.out.println("Array2 evolución:");
+        for (int i = 0; i < arrayMenor2.size(); ++i) {
+            System.out.print(arrayMenor2.get(i) + " | ");
+        }
+
         return new Pair<>(arrayMenor1, arrayMenor2);
     }
 
@@ -171,6 +227,16 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(mejorTorneo(torneos));
         }
+
+        //DEBUG
+        System.out.println("Seleccionados en torneo:");
+        for (int k = 0; k < poblacion.size(); ++k) {
+            for (int l = 0; l < poblacion.get(k).size(); ++l) {
+                System.out.print(poblacion.get(k).get(l) + " | ");
+            }
+            System.out.println();
+        }
+        System.out.print("");
         return seleccionados;
     }
 

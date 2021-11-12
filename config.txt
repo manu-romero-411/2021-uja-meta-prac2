@@ -1,4 +1,4 @@
-Archivos=ford01.dat ford02.dat ford03.dat ford04.dat nissan01.dat nissan02.dat nissan03.dat nissan04.dat
+Archivos=ford01.dat ford02.dat
 Semillas=77371841
 Algoritmos=Greedy
 Guardar=log
@@ -14,7 +14,7 @@ Gen-NumEvaluaciones=50000
 Gen-ProbCruceGeneracional=1
 Gen-ProbCruceEstacionario=0.7
 Gen-FactorProbabilidadMutacion=0.001
-Gen-TamSeleccionGeneracional=2
+Gen-TamSeleccionGeneracional=50
 Gen-TamSeleccionEstacionario=2
 Gen-TamTorneoSeleccionGeneracional=2
 Gen-TamTorneoSeleccionEstacionario=3
