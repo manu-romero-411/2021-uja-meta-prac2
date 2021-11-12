@@ -8,7 +8,8 @@ package es.ujaen.meta;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import javafx.util.Pair;
+
+import com.sun.tools.javac.util.Pair;
 
 /**
  *
@@ -82,7 +83,7 @@ public class AGE_Clase3_Grupo9 {
             int distancia = random.nextInt(archivo.getMatriz2().length);
             Pair<Integer, Integer> aux = new Pair<>(flujo, distancia);
             for (int j = 0; j < LRC.size() && !contenido; j++) {
-                if (LRC.get(j).getKey() == aux.getKey() || LRC.get(j).getValue() == aux.getValue()) {
+                if (LRC.get(j).fst == aux.fst || LRC.get(j).snd == aux.snd) {
                     contenido = true;
                 }
             }
@@ -94,7 +95,7 @@ public class AGE_Clase3_Grupo9 {
 //
 //        System.out.println("\nLRC: ");
 //        for (int j = 0; j < LRC.size(); j++) {
-//            System.out.println("A: " + LRC.get(j).getKey() + " B: " + LRC.get(j).getValue());
+//            System.out.println("A: " + LRC.get(j).fst + " B: " + LRC.get(j).snd);
 //        }
     }
 
@@ -112,13 +113,13 @@ public class AGE_Clase3_Grupo9 {
 
             for (int i = 0; i < longitudLRC; i++) {
                 Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.getKey(), aux.getValue());
-                repetidos.set(i, new Pair<>(aux.getKey(), aux.getValue()));
+                individuos.set(aux.fst, aux.snd);
+                repetidos.set(i, new Pair<>(aux.fst, aux.snd));
             }
 
             System.out.println("Repetidos: ");
             for (int i = 0; i < repetidos.size(); i++) {
-                System.out.println("A: " + repetidos.get(i).getKey() + " B: " + repetidos.get(i).getValue());
+                System.out.println("A: " + repetidos.get(i).fst + " B: " + repetidos.get(i).snd);
             }
             
             System.out.println("Individuos: ");
@@ -128,7 +129,7 @@ public class AGE_Clase3_Grupo9 {
 
             int i = 0;
             while (i < conjunto.size()) {
-                if (repetidos.get(i).getKey() != -1) {
+                if (repetidos.get(i).fst != -1) {
 
                     int aleatorio = random.nextInt(conjunto.size());
                     individuos.set(i, aleatorio);

@@ -8,14 +8,13 @@ package es.ujaen.meta;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
 
 /**
  *
  * @author admin
  */
 public class AGG_Clase3_Grupo9 {
-
     private final Random random;
     private final int longitudLRC;
     private ArrayList<Pair<Integer, Integer>> LRC;
@@ -57,7 +56,6 @@ public class AGG_Clase3_Grupo9 {
         cruceOX2();
         crucePMX();
         mutacion();
-
     }
 
     private void iniciaConjunto() {
@@ -90,9 +88,9 @@ public class AGG_Clase3_Grupo9 {
             int i = 0;
             for (i = 0; i < longitudLRC; i++) {
                 Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.getKey(), aux.getValue());
-                repetidos.add(aux.getValue());
-                posicion.add(aux.getKey());
+                individuos.set(aux.fst, aux.snd);
+                repetidos.add(aux.snd);
+                posicion.add(aux.fst);
             }
             i = 0;
             while (i < conjunto.size()) {
