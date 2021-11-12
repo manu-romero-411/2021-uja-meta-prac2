@@ -66,12 +66,6 @@ public class AGE_Clase3_Grupo9 {
         for (int i = 0; i < archivo.getMatriz1().length; i++) {
             conjunto.add(0);
         }
-
-        //DEBUG
-        System.out.print("Inicializando conjunto solución: ");
-        for (int i = 0; i < conjunto.size(); ++i) {
-            System.out.print(conjunto.get(i) + " | ");
-        }
     }
 
     private void creaLRC() {
@@ -91,49 +85,56 @@ public class AGE_Clase3_Grupo9 {
                 i++;
             }
         }
-//
-//        System.out.println("\nLRC: ");
-//        for (int j = 0; j < LRC.size(); j++) {
-//            System.out.println("A: " + LRC.get(j).getKey() + " B: " + LRC.get(j).getValue());
-//        }
+
+        System.out.println("\nLRC: ");
+        for (int j = 0; j < LRC.size(); j++) {
+            System.out.println("A: " + LRC.get(j).getKey() + " B: " + LRC.get(j).getValue());
+        }
     }
 
     private void creaPoblacionInicial() {
 
         for (int j = 0; j < tamPoblacion; j++) {
-            ArrayList<Pair<Integer, Integer>> repetidos = new ArrayList<>();
-            for (int i = 0; i < conjunto.size(); i++) {
-                repetidos.add(new Pair<>(-1, -1));
-            }
+            ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
-                individuos.add(0);
+                individuos.add(-1);
             }
 
             for (int i = 0; i < longitudLRC; i++) {
-                Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.getKey(), aux.getValue());
-                repetidos.set(i, new Pair<>(aux.getKey(), aux.getValue()));
+                individuos.set(LRC.get(i).getKey(), LRC.get(i).getValue());
+                repetidos.add(LRC.get(i).getKey());
             }
 
             System.out.println("Repetidos: ");
             for (int i = 0; i < repetidos.size(); i++) {
-                System.out.println("A: " + repetidos.get(i).getKey() + " B: " + repetidos.get(i).getValue());
+                System.out.print(repetidos.get(i) + " ");
             }
-            
+            System.out.println();
+
             System.out.println("Individuos: ");
             for (int i = 0; i < individuos.size(); i++) {
-                System.out.print(individuos.get(i)+ " ");
+                System.out.print(individuos.get(i) + " ");
             }
+            System.out.println();
 
             int i = 0;
             while (i < conjunto.size()) {
-                if (repetidos.get(i).getKey() != -1) {
+                if (!repetidos.contains(i)) {
+                    boolean diferente = false;
+                    int aleatorio = 0;
+                    while (!diferente) {
+                        aleatorio = random.nextInt(conjunto.size());
+                        diferente = true;
+                        for (int k = 0; k < individuos.size() && diferente; k++) {
+                            if (aleatorio == individuos.get(k)) {
+                                diferente = false;
+                            }
+                        }
 
-                    int aleatorio = random.nextInt(conjunto.size());
+                    }
                     individuos.set(i, aleatorio);
-
-                    repetidos.set(i, new Pair<>(individuos.get(i), i));
+                    repetidos.add(i);
                     i++;
 
                 } else {
@@ -161,12 +162,6 @@ public class AGE_Clase3_Grupo9 {
                 coste += archivo.getMatriz1()[i][j] * archivo.getMatriz2()[conjunto.get(i)][conjunto.get(j)];
             }
         }
-        //DEBUG
-        System.out.println("Coste de este conjunto: " + coste);
-        for (int i = 0; i < conjunto.size(); ++i) {
-            System.out.print(conjunto.get(i) + " | ");
-        }
-        System.out.println();
         return coste;
     }
 
@@ -189,15 +184,6 @@ public class AGE_Clase3_Grupo9 {
                     arrayMenor2.set(i, aux.get(i));
                 }
             }
-        }
-        //DEBUG
-        System.out.println("Array1 evolución:");
-        for (int i = 0; i < arrayMenor1.size(); ++i) {
-            System.out.print(arrayMenor1.get(i) + " | ");
-        }
-        System.out.println("Array2 evolución:");
-        for (int i = 0; i < arrayMenor2.size(); ++i) {
-            System.out.print(arrayMenor2.get(i) + " | ");
         }
 
         return new Pair<>(arrayMenor1, arrayMenor2);
@@ -228,15 +214,6 @@ public class AGE_Clase3_Grupo9 {
             seleccionados.add(mejorTorneo(torneos));
         }
 
-        //DEBUG
-        System.out.println("Seleccionados en torneo:");
-        for (int k = 0; k < poblacion.size(); ++k) {
-            for (int l = 0; l < poblacion.get(k).size(); ++l) {
-                System.out.print(poblacion.get(k).get(l) + " | ");
-            }
-            System.out.println();
-        }
-        System.out.print("");
         return seleccionados;
     }
 
