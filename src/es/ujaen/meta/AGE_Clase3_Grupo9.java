@@ -54,11 +54,11 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-        Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
+//        Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-        cruceOX(); //Cruces y mutacion a la vez
-        crucePMX();
-        mutacion();
+
+        cruceOX(seleccionados); //Cruces y mutacion a la vez
+        crucePMX(seleccionados);
         reemplazamiento();
 
     }
@@ -66,12 +66,6 @@ public class AGE_Clase3_Grupo9 {
     private void iniciaConjunto() {
         for (int i = 0; i < archivo.getMatriz1().length; i++) {
             conjunto.add(0);
-        }
-
-        //DEBUG
-        System.out.print("Inicializando conjunto solución: ");
-        for (int i = 0; i < conjunto.size(); ++i) {
-            System.out.print(conjunto.get(i) + " | ");
         }
     }
 
@@ -92,49 +86,38 @@ public class AGE_Clase3_Grupo9 {
                 i++;
             }
         }
-//
-//        System.out.println("\nLRC: ");
-//        for (int j = 0; j < LRC.size(); j++) {
-//            System.out.println("A: " + LRC.get(j).fst + " B: " + LRC.get(j).snd);
-//        }
     }
 
     private void creaPoblacionInicial() {
 
         for (int j = 0; j < tamPoblacion; j++) {
-            ArrayList<Pair<Integer, Integer>> repetidos = new ArrayList<>();
-            for (int i = 0; i < conjunto.size(); i++) {
-                repetidos.add(new Pair<>(-1, -1));
-            }
+            ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
-                individuos.add(0);
+                individuos.add(-1);
             }
 
             for (int i = 0; i < longitudLRC; i++) {
-                Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.fst, aux.snd);
-                repetidos.set(i, new Pair<>(aux.fst, aux.snd));
-            }
-
-            System.out.println("Repetidos: ");
-            for (int i = 0; i < repetidos.size(); i++) {
-                System.out.println("A: " + repetidos.get(i).fst + " B: " + repetidos.get(i).snd);
-            }
-            
-            System.out.println("Individuos: ");
-            for (int i = 0; i < individuos.size(); i++) {
-                System.out.print(individuos.get(i)+ " ");
+                individuos.set(LRC.get(i).getKey(), LRC.get(i).getValue());
+                repetidos.add(LRC.get(i).getKey());
             }
 
             int i = 0;
             while (i < conjunto.size()) {
-                if (repetidos.get(i).fst != -1) {
-
-                    int aleatorio = random.nextInt(conjunto.size());
+                if (!repetidos.contains(i)) {
+                    boolean diferente = false;
+                    int aleatorio = 0;
+                    while (!diferente) {
+                        aleatorio = random.nextInt(conjunto.size());
+                        diferente = true;
+                        for (int k = 0; k < individuos.size() && diferente; k++) {
+                            if (aleatorio == individuos.get(k)) {
+                                diferente = false;
+                            }
+                        }
+                    }
                     individuos.set(i, aleatorio);
-
-                    repetidos.set(i, new Pair<>(individuos.get(i), i));
+                    repetidos.add(i);
                     i++;
 
                 } else {
@@ -144,15 +127,6 @@ public class AGE_Clase3_Grupo9 {
             poblacion.add(individuos);
 
         }
-        //DEBUG
-        System.out.print("\nPoblación: ");
-        for (int k = 0; k < poblacion.size(); ++k) {
-            for (int l = 0; l < poblacion.get(k).size(); ++l) {
-                System.out.print(poblacion.get(k).get(l) + " | ");
-            }
-            System.out.println();
-        }
-        System.out.print("");
     }
 
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
@@ -162,48 +136,32 @@ public class AGE_Clase3_Grupo9 {
                 coste += archivo.getMatriz1()[i][j] * archivo.getMatriz2()[conjunto.get(i)][conjunto.get(j)];
             }
         }
-        //DEBUG
-        System.out.println("Coste de este conjunto: " + coste);
-        for (int i = 0; i < conjunto.size(); ++i) {
-            System.out.print(conjunto.get(i) + " | ");
-        }
-        System.out.println();
         return coste;
     }
 
-    private Pair<ArrayList<Integer>, ArrayList<Integer>> evolucion() {
-        ArrayList<Integer> arrayMenor1 = new ArrayList<>();
-        ArrayList<Integer> arrayMenor2 = new ArrayList<>();
-        int menor1 = Integer.MAX_VALUE;
-        int menor2 = Integer.MAX_VALUE;
-        for (int i = 0; i < tamPoblacion; i++) {
-            ArrayList<Integer> aux = new ArrayList<>(poblacion.get(i));
-            if (calculaCosteConjunto(aux) < menor1 && !arrayMenor1.containsAll(arrayMenor2)) {
-                menor1 = calculaCosteConjunto(aux);
-                for (int j = 0; j < aux.size(); j++) {
-                    arrayMenor1.set(i, aux.get(i));
-                }
-            }
-            if (calculaCosteConjunto(aux) < menor2 && !arrayMenor2.containsAll(arrayMenor1)) {
-                menor2 = calculaCosteConjunto(aux);
-                for (int j = 0; j < aux.size(); j++) {
-                    arrayMenor2.set(i, aux.get(i));
-                }
-            }
-        }
-        //DEBUG
-        System.out.println("Array1 evolución:");
-        for (int i = 0; i < arrayMenor1.size(); ++i) {
-            System.out.print(arrayMenor1.get(i) + " | ");
-        }
-        System.out.println("Array2 evolución:");
-        for (int i = 0; i < arrayMenor2.size(); ++i) {
-            System.out.print(arrayMenor2.get(i) + " | ");
-        }
-
-        return new Pair<>(arrayMenor1, arrayMenor2);
-    }
-
+//    private Pair<ArrayList<Integer>, ArrayList<Integer>> evolucion() {
+//        ArrayList<Integer> arrayMenor1 = new ArrayList<>();
+//        ArrayList<Integer> arrayMenor2 = new ArrayList<>();
+//        int menor1 = Integer.MAX_VALUE;
+//        int menor2 = Integer.MAX_VALUE;
+//        for (int i = 0; i < tamPoblacion; i++) {
+//            ArrayList<Integer> aux = new ArrayList<>(poblacion.get(i));
+//            if (calculaCosteConjunto(aux) < menor1 && !arrayMenor1.containsAll(arrayMenor2)) {
+//                menor1 = calculaCosteConjunto(aux);
+//                for (int j = 0; j < aux.size(); j++) {
+//                    arrayMenor1.set(i, aux.get(i));
+//                }
+//            }
+//            if (calculaCosteConjunto(aux) < menor2 && !arrayMenor2.containsAll(arrayMenor1)) {
+//                menor2 = calculaCosteConjunto(aux);
+//                for (int j = 0; j < aux.size(); j++) {
+//                    arrayMenor2.set(i, aux.get(i));
+//                }
+//            }
+//        }
+//
+//        return new Pair<>(arrayMenor1, arrayMenor2);
+//    }
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesSeleccion; i++) {
@@ -212,32 +170,20 @@ public class AGE_Clase3_Grupo9 {
             while (!aleatorioDiferentes) {
                 for (int j = 0; j < tamTorneoSeleccion; j++) {
                     torneos.add(random.nextInt(tamPoblacion));
-                    System.out.println(random.nextInt(tamPoblacion));
                 }
                 aleatorioDiferentes = true;
 
                 for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
                     int cont = tamTorneoSeleccion - 1;
                     for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
-                        if (Objects.equals(torneos.get(j), torneos.get(k % tamTorneoSeleccion))) {
+                        if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
                             aleatorioDiferentes = false;
-                            System.out.println(torneos.get(j) + " " + torneos.get(k));
                         }
                     }
                 }
             }
             seleccionados.add(mejorTorneo(torneos));
         }
-
-        //DEBUG
-        System.out.println("Seleccionados en torneo:");
-        for (int k = 0; k < poblacion.size(); ++k) {
-            for (int l = 0; l < poblacion.get(k).size(); ++l) {
-                System.out.print(poblacion.get(k).get(l) + " | ");
-            }
-            System.out.println();
-        }
-        System.out.print("");
         return seleccionados;
     }
 
@@ -258,16 +204,23 @@ public class AGE_Clase3_Grupo9 {
         return mejor;
     }
 
+    private void debugMuestraArray(ArrayList<Integer> debug) {
+        for (int i = 0; i < debug.size(); i++) {
+            System.out.print(debug.get(i) + " ");
+        }
+        System.out.println("");
+    }
+
     private void reemplazamiento() {
 
     }
 
-    private void cruceOX() {
-
+    private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
+        mutacion();
     }
 
-    private void crucePMX() {
-
+    private void crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
+        mutacion();
     }
 
     private void mutacion() {
