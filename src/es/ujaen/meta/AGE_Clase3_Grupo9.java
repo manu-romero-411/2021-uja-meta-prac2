@@ -6,9 +6,9 @@
 package es.ujaen.meta;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
-import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
+
 
 /**
  *
@@ -18,7 +18,7 @@ public class AGE_Clase3_Grupo9 {
 
     private final Random random;
     private final int longitudLRC;
-    private ArrayList<Pair<Integer, Integer>> LRC;
+    private final ArrayList<Pair<Integer, Integer>> LRC;
     private ArrayList<Integer> conjunto;
     private ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
@@ -76,7 +76,7 @@ public class AGE_Clase3_Grupo9 {
             int distancia = random.nextInt(archivo.getMatriz2().length);
             Pair<Integer, Integer> aux = new Pair<>(flujo, distancia);
             for (int j = 0; j < LRC.size() && !contenido; j++) {
-                if (LRC.get(j).getKey() == aux.getKey() || LRC.get(j).getValue() == aux.getValue()) {
+                if (LRC.get(j).fst == aux.fst || LRC.get(j).snd == aux.snd) {
                     contenido = true;
                 }
             }
@@ -97,8 +97,8 @@ public class AGE_Clase3_Grupo9 {
             }
 
             for (int i = 0; i < longitudLRC; i++) {
-                individuos.set(LRC.get(i).getKey(), LRC.get(i).getValue());
-                repetidos.add(LRC.get(i).getKey());
+                individuos.set(LRC.get(i).fst, LRC.get(i).snd);
+                repetidos.add(LRC.get(i).fst);
             }
 
             int i = 0;
@@ -138,29 +138,6 @@ public class AGE_Clase3_Grupo9 {
         return coste;
     }
 
-//    private Pair<ArrayList<Integer>, ArrayList<Integer>> evolucion() {
-//        ArrayList<Integer> arrayMenor1 = new ArrayList<>();
-//        ArrayList<Integer> arrayMenor2 = new ArrayList<>();
-//        int menor1 = Integer.MAX_VALUE;
-//        int menor2 = Integer.MAX_VALUE;
-//        for (int i = 0; i < tamPoblacion; i++) {
-//            ArrayList<Integer> aux = new ArrayList<>(poblacion.get(i));
-//            if (calculaCosteConjunto(aux) < menor1 && !arrayMenor1.containsAll(arrayMenor2)) {
-//                menor1 = calculaCosteConjunto(aux);
-//                for (int j = 0; j < aux.size(); j++) {
-//                    arrayMenor1.set(i, aux.get(i));
-//                }
-//            }
-//            if (calculaCosteConjunto(aux) < menor2 && !arrayMenor2.containsAll(arrayMenor1)) {
-//                menor2 = calculaCosteConjunto(aux);
-//                for (int j = 0; j < aux.size(); j++) {
-//                    arrayMenor2.set(i, aux.get(i));
-//                }
-//            }
-//        }
-//
-//        return new Pair<>(arrayMenor1, arrayMenor2);
-//    }
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesSeleccion; i++) {

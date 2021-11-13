@@ -7,7 +7,7 @@ package es.ujaen.meta;
 
 import java.util.ArrayList;
 import java.util.Random;
-import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
 
 /**
  *
@@ -84,7 +84,7 @@ public class AlgMA_Clase3_Grupo9 {
         ArrayList<Integer> auxConjunto = new ArrayList<>(conjunto);
         ArrayList<Integer> mejorPeor = new ArrayList<>(conjunto);
         int costeMejorPeor = calculaCosteConjunto(mejorPeor);
-        cambiaConjunto(par.getKey(), par.getValue(), auxConjunto);
+        cambiaConjunto(par.fst, par.snd, auxConjunto);
 
         mejora(auxConjunto, mejorPeor, costeMejorPeor);
         return auxConjunto;
@@ -150,7 +150,7 @@ public class AlgMA_Clase3_Grupo9 {
     private void oscilacionEstrategica(ArrayList<Integer> conjuntoAux) {
         int aleatorio = random.nextInt(3);
         Pair<Integer, Integer> aux = listaTabu.get(aleatorio);
-        cambiaConjunto(aux.getKey(), aux.getValue(), conjuntoAux);
+        cambiaConjunto(aux.fst, aux.snd, conjuntoAux);
     }
 
     private void iniciaLargoPlazo() {
@@ -215,7 +215,7 @@ public class AlgMA_Clase3_Grupo9 {
 
     private boolean estaTabu(int r, int s, ArrayList<Integer> conjuntoAux) {
         for (int i = 0; i < listaTabu.size(); i++) {
-            if (listaTabu.get(i).getKey() == r && listaTabu.get(i).getValue() == s) {
+            if (listaTabu.get(i).fst == r && listaTabu.get(i).snd == s) {
                 return true;
             }
         }
@@ -293,9 +293,9 @@ public class AlgMA_Clase3_Grupo9 {
     }
 
     private void incrementaLargoPlazo(Pair<Integer, Integer> elemento) {
-        int aux = memLargoPlazo.get(elemento.getKey()).get(elemento.getValue());
+        int aux = memLargoPlazo.get(elemento.fst).get(elemento.snd);
         aux++;
-        memLargoPlazo.get(elemento.getKey()).set(elemento.getValue(), aux);
+        memLargoPlazo.get(elemento.fst).set(elemento.snd, aux);
     }
 
     public ArrayList<Integer> getMayorDistancia() {
