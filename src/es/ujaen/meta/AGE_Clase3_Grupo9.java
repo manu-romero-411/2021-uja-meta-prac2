@@ -5,6 +5,7 @@
  */
 package es.ujaen.meta;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -191,7 +192,7 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
-        for (int i = 0; i < seleccionados.size(); i++) {
+        for (int i = 0; i < seleccionados.size() - 1; i++) {
             boolean diferente = false;
             int aleatorioA = 0;
             int aleatorioB = 0;
@@ -208,8 +209,22 @@ public class AGE_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioB = aux;
             }
-        }
 
+            ArrayList<Integer> auxVec = new ArrayList<>();
+            for (int k = aleatorioA; k < aleatorioB; ++k){
+                auxVec.add(seleccionados.get(i+1).get(k));
+            }
+            for (int k = 0; k < seleccionados.get(i).size(); ++k) {
+                if (!(k >= aleatorioA && k < aleatorioB)) {
+                    seleccionados.get(i + 1).set(k, -1);
+                }
+                if (!(k >= aleatorioA && k < aleatorioB)) {
+                    if (!(auxVec.contains(seleccionados.get(i).get(k)))) {
+                        seleccionados.get(i + 1).set(k, seleccionados.get(i).get(k));
+                    }
+                }
+            }
+        }
         mutacion();
     }
 
