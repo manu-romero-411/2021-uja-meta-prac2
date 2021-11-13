@@ -7,8 +7,8 @@ package es.ujaen.meta;
 
 import java.util.ArrayList;
 import java.util.Random;
-import com.sun.tools.javac.util.Pair;
 
+import com.sun.tools.javac.util.Pair;
 
 /**
  *
@@ -191,6 +191,9 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
+        int aleatorio;
+
+
         mutacion();
     }
 
