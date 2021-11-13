@@ -6,7 +6,6 @@
 package es.ujaen.meta;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 import com.sun.tools.javac.util.Pair;
@@ -19,7 +18,7 @@ public class AGE_Clase3_Grupo9 {
 
     private final Random random;
     private final int longitudLRC;
-    private ArrayList<Pair<Integer, Integer>> LRC;
+    private final ArrayList<Pair<Integer, Integer>> LRC;
     private ArrayList<Integer> conjunto;
     private ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
@@ -54,7 +53,6 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-//        Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
 
         cruceOX(seleccionados); //Cruces y mutacion a la vez
@@ -139,29 +137,6 @@ public class AGE_Clase3_Grupo9 {
         return coste;
     }
 
-//    private Pair<ArrayList<Integer>, ArrayList<Integer>> evolucion() {
-//        ArrayList<Integer> arrayMenor1 = new ArrayList<>();
-//        ArrayList<Integer> arrayMenor2 = new ArrayList<>();
-//        int menor1 = Integer.MAX_VALUE;
-//        int menor2 = Integer.MAX_VALUE;
-//        for (int i = 0; i < tamPoblacion; i++) {
-//            ArrayList<Integer> aux = new ArrayList<>(poblacion.get(i));
-//            if (calculaCosteConjunto(aux) < menor1 && !arrayMenor1.containsAll(arrayMenor2)) {
-//                menor1 = calculaCosteConjunto(aux);
-//                for (int j = 0; j < aux.size(); j++) {
-//                    arrayMenor1.set(i, aux.get(i));
-//                }
-//            }
-//            if (calculaCosteConjunto(aux) < menor2 && !arrayMenor2.containsAll(arrayMenor1)) {
-//                menor2 = calculaCosteConjunto(aux);
-//                for (int j = 0; j < aux.size(); j++) {
-//                    arrayMenor2.set(i, aux.get(i));
-//                }
-//            }
-//        }
-//
-//        return new Pair<>(arrayMenor1, arrayMenor2);
-//    }
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesSeleccion; i++) {
@@ -216,8 +191,24 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
-        int aleatorio;
-
+        for (int i = 0; i < seleccionados.size(); i++) {
+            boolean diferente = false;
+            int aleatorioA = 0;
+            int aleatorioB = 0;
+            int aux;
+            while (!diferente) {
+                aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                if (aleatorioB != aleatorioA) {
+                    diferente = true;
+                }
+            }
+            if (aleatorioA > aleatorioB) {
+                aux = aleatorioA;
+                aleatorioB = aleatorioA;
+                aleatorioB = aux;
+            }
+        }
 
         mutacion();
     }
