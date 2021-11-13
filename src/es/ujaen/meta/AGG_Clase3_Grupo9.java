@@ -69,10 +69,16 @@ public class AGG_Clase3_Grupo9 {
     private void creaLRC() {
         int i = 0;
         while (i < longitudLRC) {
+            boolean contenido = false;
             int flujo = random.nextInt(archivo.getMatriz1().length);
             int distancia = random.nextInt(archivo.getMatriz2().length);
             Pair<Integer, Integer> aux = new Pair<>(flujo, distancia);
-            if (!LRC.contains(aux)) {
+            for (int j = 0; j < LRC.size() && !contenido; j++) {
+                if (LRC.get(j).fst == aux.fst || LRC.get(j).snd == aux.snd) {
+                    contenido = true;
+                }
+            }
+            if (!contenido) {
                 LRC.add(aux);
                 i++;
             }
@@ -80,34 +86,43 @@ public class AGG_Clase3_Grupo9 {
     }
 
     private void creaPoblacionInicial() {
+
         for (int j = 0; j < tamPoblacion; j++) {
+            ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
-                individuos.add(0);
+                individuos.add(-1);
             }
-            ArrayList<Integer> repetidos = new ArrayList<>();
-            ArrayList<Integer> posicion = new ArrayList<>();
+
+            for (int i = 0; i < longitudLRC; i++) {
+                individuos.set(LRC.get(i).fst, LRC.get(i).snd);
+                repetidos.add(LRC.get(i).fst);
+            }
+
             int i = 0;
-            for (i = 0; i < longitudLRC; i++) {
-                Pair<Integer, Integer> aux = LRC.get(i);
-                individuos.set(aux.fst, aux.snd);
-                repetidos.add(aux.snd);
-                posicion.add(aux.fst);
-            }
-            i = 0;
             while (i < conjunto.size()) {
-                if (!posicion.contains(i)) {
-                    int aleatorio = random.nextInt(conjunto.size());
-                    if (!repetidos.contains(aleatorio)) {
-                        individuos.set(i, aleatorio);
-                        repetidos.add(aleatorio);
-                        i++;
+                if (!repetidos.contains(i)) {
+                    boolean diferente = false;
+                    int aleatorio = 0;
+                    while (!diferente) {
+                        aleatorio = random.nextInt(conjunto.size());
+                        diferente = true;
+                        for (int k = 0; k < individuos.size() && diferente; k++) {
+                            if (aleatorio == individuos.get(k)) {
+                                diferente = false;
+                            }
+                        }
                     }
+                    individuos.set(i, aleatorio);
+                    repetidos.add(i);
+                    i++;
+
                 } else {
                     i++;
                 }
             }
             poblacion.add(individuos);
+
         }
     }
 
@@ -137,28 +152,25 @@ public class AGG_Clase3_Grupo9 {
 
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
-        for (int i = 0; i < vecesSeleccion; i++) {
-            ArrayList<Integer> torneos = new ArrayList<>();
-            boolean aleatorioDiferentes = false;
-            while (!aleatorioDiferentes) {
-                for (int j = 0; j < tamTorneoSeleccion; j++) {
-                    torneos.add(random.nextInt(tamPoblacion));
-                    System.out.println(random.nextInt(tamPoblacion));
-                }
-                aleatorioDiferentes = true;
+        ArrayList<Integer> torneos = new ArrayList<>();
+        boolean aleatorioDiferentes = false;
+        while (!aleatorioDiferentes) {
+            for (int j = 0; j < tamTorneoSeleccion; j++) {
+                torneos.add(random.nextInt(tamPoblacion));
+            }
+            aleatorioDiferentes = true;
 
-                for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
-                    int cont = tamTorneoSeleccion - 1;
-                    for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
-                        if (Objects.equals(torneos.get(j), torneos.get(k % tamTorneoSeleccion))) {
-                            aleatorioDiferentes = false;
-                            System.out.println(torneos.get(j) + " " + torneos.get(k));
-                        }
+            for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
+                int cont = tamTorneoSeleccion - 1;
+                for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
+                    if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
+                        aleatorioDiferentes = false;
                     }
                 }
             }
-            seleccionados.add(mejorTorneo(torneos));
         }
+        seleccionados.add(mejorTorneo(torneos));
+
         return seleccionados;
     }
 

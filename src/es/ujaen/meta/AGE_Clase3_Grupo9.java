@@ -53,7 +53,6 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-//        Pair<ArrayList<Integer>, ArrayList<Integer>> aux = evolucion();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
 
         cruceOX(seleccionados); //Cruces y mutacion a la vez

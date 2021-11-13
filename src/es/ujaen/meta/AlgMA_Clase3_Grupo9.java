@@ -16,7 +16,7 @@ import com.sun.tools.javac.util.Pair;
 public class AlgMA_Clase3_Grupo9 {
 
     private final long inicio;
-    private ArrayList<Pair<Integer, Integer>> listaTabu;
+    private final ArrayList<Pair<Integer, Integer>> listaTabu;
     private ArrayList<ArrayList<Integer>> memLargoPlazo;
     private long fin;
     private ArrayList<Integer> conjunto;
@@ -27,10 +27,10 @@ public class AlgMA_Clase3_Grupo9 {
     private final int tamLista;
     private final float iteracionesOscilacion;
     private final Random random;
-    private ArrayList<Pair<Integer, Integer>> LRC;
-    private ArrayList<Integer> mayorFlujo;
-    private ArrayList<Integer> mayorDistancia;
-    private ArrayList<Boolean> dlb;
+    private final ArrayList<Pair<Integer, Integer>> LRC;
+    private final ArrayList<Integer> mayorFlujo;
+    private final ArrayList<Integer> mayorDistancia;
+    private final ArrayList<Boolean> dlb;
     private final int longitudLRC;
     private boolean flagMejora;
 
