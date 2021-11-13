@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.sun.tools.javac.util.Pair;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  *
@@ -192,11 +194,10 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
-        for (int i = 0; i < seleccionados.size() - 1; i++) {
+        for (int i = 0; i < seleccionados.size() - 1; i = i + 2) {
             boolean diferente = false;
             int aleatorioA = 0;
             int aleatorioB = 0;
-            int aux;
             while (!diferente) {
                 aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
                 aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
@@ -205,25 +206,37 @@ public class AGE_Clase3_Grupo9 {
                 }
             }
             if (aleatorioA > aleatorioB) {
+                int aux;
                 aux = aleatorioA;
                 aleatorioB = aleatorioA;
                 aleatorioB = aux;
             }
 
-            ArrayList<Integer> auxVec = new ArrayList<>();
-            for (int k = aleatorioA; k < aleatorioB; ++k){
-                auxVec.add(seleccionados.get(i+1).get(k));
+            Queue<Integer> auxQueue = new LinkedList<>();
+            ArrayList<Integer> auxVec = new ArrayList<>(seleccionados.get(i));
+
+            //Añade los valores de enmedio a la queue
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxQueue.add(seleccionados.get(i).get(j));
             }
-            for (int k = 0; k < seleccionados.get(i).size(); ++k) {
-                if (!(k >= aleatorioA && k < aleatorioB)) {
-                    seleccionados.get(i + 1).set(k, -1);
-                }
-                if (!(k >= aleatorioA && k < aleatorioB)) {
-                    if (!(auxVec.contains(seleccionados.get(i).get(k)))) {
-                        seleccionados.get(i + 1).set(k, seleccionados.get(i).get(k));
-                    }
+
+            //Mete los valores de la queue en un vector auxiliar
+            for (int j = aleatorioA; !auxQueue.isEmpty(); j++) {
+                auxVec.set(j, auxQueue.poll());
+            }
+
+            //Comprueba si los valores estan dentro del vector, si no estan, los añade a la queue por orden
+            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
+                if (!auxVec.contains(seleccionados.get(i + 1).get(j))) {
+                    auxQueue.add(seleccionados.get(i + 1).get(j % seleccionados.get(i).size()));
                 }
             }
+
+            //Saca los valores de la queue y los pone en la posicion que este vacia
+            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
+                auxVec.set(j % seleccionados.get(i + 1).size(), auxQueue.poll());
+            }
+
         }
         mutacion();
     }
