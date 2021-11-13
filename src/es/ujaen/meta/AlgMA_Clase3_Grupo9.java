@@ -5,8 +5,6 @@
  */
 package es.ujaen.meta;
 
-import com.sun.tools.javac.util.Pair;
-
 import java.util.ArrayList;
 import java.util.Random;
 import com.sun.tools.javac.util.Pair;

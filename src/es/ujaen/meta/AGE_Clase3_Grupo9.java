@@ -191,8 +191,24 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
-        int aleatorio;
-
+        for (int i = 0; i < seleccionados.size(); i++) {
+            boolean diferente = false;
+            int aleatorioA = 0;
+            int aleatorioB = 0;
+            int aux;
+            while (!diferente) {
+                aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                if (aleatorioB != aleatorioA) {
+                    diferente = true;
+                }
+            }
+            if (aleatorioA > aleatorioB) {
+                aux = aleatorioA;
+                aleatorioB = aleatorioA;
+                aleatorioB = aux;
+            }
+        }
 
         mutacion();
     }
