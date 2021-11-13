@@ -214,7 +214,7 @@ public class AGG_Clase3_Grupo9 {
     }
 
     private void crucePMX(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
-        
+
     }
 
     private void mutacion() {
