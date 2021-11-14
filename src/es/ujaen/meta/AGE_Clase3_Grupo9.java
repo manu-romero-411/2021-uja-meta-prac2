@@ -58,7 +58,9 @@ public class AGE_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
 
-        cruceOX(seleccionados); //Cruces y mutacion a la vez
+        if (probCruce * 100 > random.nextInt(100)) {
+            cruceOX(seleccionados); //Cruces y mutacion a la vez
+        }
         crucePMX(seleccionados);
         reemplazamiento();
 
@@ -194,7 +196,7 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
-        for (int i = 0; i < seleccionados.size() - 1; i = i + 2) {
+        for (int i = 0; i < seleccionados.size(); i = i + 2) {
             boolean diferente = false;
             int aleatorioA = 0;
             int aleatorioB = 0;
@@ -212,31 +214,57 @@ public class AGE_Clase3_Grupo9 {
                 aleatorioB = aux;
             }
 
-            Queue<Integer> auxQueue = new LinkedList<>();
-            ArrayList<Integer> auxVec = new ArrayList<>(seleccionados.get(i));
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            ArrayList<Integer> auxVec1 = new ArrayList<>(seleccionados.get(i));
+            Queue<Integer> auxQueue2 = new LinkedList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i));
 
             //Añade los valores de enmedio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxQueue.add(seleccionados.get(i).get(j));
+                auxQueue1.add(seleccionados.get(i).get(j));
             }
 
             //Mete los valores de la queue en un vector auxiliar
-            for (int j = aleatorioA; !auxQueue.isEmpty(); j++) {
-                auxVec.set(j, auxQueue.poll());
+            for (int j = aleatorioA; !auxQueue1.isEmpty(); j++) {
+                auxVec1.set(j, auxQueue1.poll());
             }
 
             //Comprueba si los valores estan dentro del vector, si no estan, los añade a la queue por orden
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
-                if (!auxVec.contains(seleccionados.get(i + 1).get(j))) {
-                    auxQueue.add(seleccionados.get(i + 1).get(j % seleccionados.get(i).size()));
+                if (!auxVec1.contains(seleccionados.get(i + 1).get(j))) {
+                    auxQueue1.add(seleccionados.get(i + 1).get(j % seleccionados.get(i).size()));
                 }
             }
 
             //Saca los valores de la queue y los pone en la posicion que este vacia
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
-                auxVec.set(j % seleccionados.get(i + 1).size(), auxQueue.poll());
+                auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
             }
-            mutacion(auxVec);
+            mutacion(auxVec1);
+
+            //Segundo hijo
+            //Añade los valores de enmedio a la queue
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxQueue2.add(seleccionados.get(i + 1).get(j));
+            }
+
+            //Mete los valores de la queue en un vector auxiliar
+            for (int j = aleatorioA; !auxQueue2.isEmpty(); j++) {
+                auxVec2.set(j, auxQueue2.poll());
+            }
+
+            //Comprueba si los valores estan dentro del vector, si no estan, los añade a la queue por orden
+            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioA + aleatorioB); j++, cont++) {
+                if (!auxVec2.contains(seleccionados.get(i).get(j))) {
+                    auxQueue2.add(seleccionados.get(i).get(j % seleccionados.get(i + 1).size()));
+                }
+            }
+
+            //Saca los valores de la queue y los pone en la posicion que este vacia
+            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioA + aleatorioB); j++, cont++) {
+                auxVec2.set(j % seleccionados.get(i).size(), auxQueue1.poll());
+            }
+            mutacion(auxVec2);
         }
 
     }
@@ -245,7 +273,11 @@ public class AGE_Clase3_Grupo9 {
         mutacion(seleccionados.get(1));
     }
 
-    private void mutacion(ArrayList<Integer> aux) {
+    private ArrayList<Integer> mutacion(ArrayList<Integer> cruzado) {
+        ArrayList<Integer> aux = new ArrayList<>(cruzado);
+        for (int i = 0; i < aux.size(); i++) {
 
+        }
+        return aux;
     }
 }
