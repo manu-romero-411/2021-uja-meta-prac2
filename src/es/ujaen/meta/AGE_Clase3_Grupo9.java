@@ -236,16 +236,16 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
                 auxVec.set(j % seleccionados.get(i + 1).size(), auxQueue.poll());
             }
-
+            mutacion(auxVec);
         }
-        mutacion();
+
     }
 
     private void crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
-        mutacion();
+        mutacion(seleccionados.get(1));
     }
 
-    private void mutacion() {
+    private void mutacion(ArrayList<Integer> aux) {
 
     }
 }
