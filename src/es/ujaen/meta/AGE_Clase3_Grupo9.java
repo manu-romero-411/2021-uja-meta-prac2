@@ -267,13 +267,6 @@ public class AGE_Clase3_Grupo9 {
                 auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
             }
 
-            
-//            if (probMutacion * 100 >= random.nextInt(100)) {
-//                seleccionados.set(i + 1, mutacion(auxVec1));
-//            } else {
-//                seleccionados.set(i + 1, auxVec1);
-//            }
-
             //Segundo hijo
             //Añade los valores de enmedio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
@@ -303,12 +296,17 @@ public class AGE_Clase3_Grupo9 {
                 auxVec2.set(j % seleccionados.get(i).size(), auxQueue2.poll());
             }
 
-            
-//            if (probMutacion * 100 >= random.nextInt(100)) {
-//                seleccionados.set(i, mutacion(auxVec2));
-//            } else {
-//                seleccionados.set(i, auxVec2);
-//            }
+            //Mutaciones
+            if (probMutacion * evaluaciones >= random.nextInt(100)) {
+                seleccionados.set(i + 1, mutacion(auxVec1));
+            } else {
+                seleccionados.set(i + 1, auxVec1);
+            }
+            if (probMutacion * evaluaciones >= random.nextInt(100)) {
+                seleccionados.set(i, mutacion(auxVec2));
+            } else {
+                seleccionados.set(i, auxVec2);
+            }
         }
 
     }
