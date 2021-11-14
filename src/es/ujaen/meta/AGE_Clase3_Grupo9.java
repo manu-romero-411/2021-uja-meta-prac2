@@ -58,10 +58,12 @@ public class AGE_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
 
-        if (probCruce * 100 > random.nextInt(100)) {
+        if (probCruce * 100 >= random.nextInt(101)) {
             cruceOX(seleccionados); //Cruces y mutacion a la vez
         }
-        crucePMX(seleccionados);
+        if (probCruce * 100 >= random.nextInt(101)) {
+            crucePMX(seleccionados); //Cruces y mutacion a la vez
+        }
         reemplazamiento();
 
     }
@@ -240,7 +242,11 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
                 auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
             }
-            mutacion(auxVec1);
+            if (probMutacion * 100 >= random.nextInt(100)) {
+                seleccionados.set(i + 1, mutacion(auxVec1));
+            } else {
+                seleccionados.set(i + 1, auxVec1);
+            }
 
             //Segundo hijo
             //Añade los valores de enmedio a la queue
@@ -264,7 +270,11 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioA + aleatorioB); j++, cont++) {
                 auxVec2.set(j % seleccionados.get(i).size(), auxQueue1.poll());
             }
-            mutacion(auxVec2);
+            if (probMutacion * 100 >= random.nextInt(100)) {
+                seleccionados.set(i, mutacion(auxVec2));
+            } else {
+                seleccionados.set(i, auxVec2);
+            }
         }
 
     }
