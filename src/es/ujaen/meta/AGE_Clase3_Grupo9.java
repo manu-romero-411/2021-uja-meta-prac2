@@ -223,11 +223,6 @@ public class AGE_Clase3_Grupo9 {
                 aleatorioA = aux;
             }
 
-            Integer aleatorio1 = aleatorioA;
-            Integer aleatorio2 = aleatorioB;
-            debugMuestraMensaje("AleatorioA = " + aleatorio1.toString());
-            debugMuestraMensaje("AleatorioB = " + aleatorio2.toString());
-
             Queue<Integer> auxQueue1 = new LinkedList<>();
             ArrayList<Integer> auxVec1 = new ArrayList<>();
             for (int j = 0; j < seleccionados.get(i).size(); j++) {
@@ -312,7 +307,25 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private void crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
-        mutacion(seleccionados.get(1));
+        for (int i = 0; i < seleccionados.size(); i = i + 2) {
+            boolean diferente = false;
+            int aleatorioA = 0;
+            int aleatorioB = 0;
+            while (!diferente) {
+                diferente = false;
+                aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                if (aleatorioB != aleatorioA) {
+                    diferente = true;
+                }
+            }
+            if (aleatorioA > aleatorioB) {
+                int aux;
+                aux = aleatorioB;
+                aleatorioB = aleatorioA;
+                aleatorioA = aux;
+            }
+        }
     }
 
     private ArrayList<Integer> mutacion(ArrayList<Integer> cruzado) {
