@@ -325,6 +325,18 @@ public class AGE_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
+
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            for (int j = 0; j < seleccionados.get(i).size(); j++) {
+                auxVec1.add(-1);
+            }
+            Queue<Integer> auxQueue2 = new LinkedList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i + 1));
+            for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
+                auxVec2.add(-1);
+            }
+
         }
     }
 
