@@ -60,6 +60,7 @@ public class AGE_Clase3_Grupo9 {
 
         if (probCruce * 100 >= random.nextInt(101)) {
             cruceOX(seleccionados); //Cruces y mutacion a la vez
+
         }
         if (probCruce * 100 >= random.nextInt(101)) {
             crucePMX(seleccionados); //Cruces y mutacion a la vez
@@ -166,6 +167,7 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(mejorTorneo(torneos));
         }
+
         return seleccionados;
     }
 
@@ -193,6 +195,10 @@ public class AGE_Clase3_Grupo9 {
         System.out.println("");
     }
 
+    private void debugMuestraMensaje(String debug) {
+        System.out.println(debug);
+    }
+
     private void reemplazamiento() {
 
     }
@@ -203,6 +209,7 @@ public class AGE_Clase3_Grupo9 {
             int aleatorioA = 0;
             int aleatorioB = 0;
             while (!diferente) {
+                diferente = false;
                 aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
                 aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
                 if (aleatorioB != aleatorioA) {
@@ -211,15 +218,28 @@ public class AGE_Clase3_Grupo9 {
             }
             if (aleatorioA > aleatorioB) {
                 int aux;
-                aux = aleatorioA;
+                aux = aleatorioB;
                 aleatorioB = aleatorioA;
-                aleatorioB = aux;
+                aleatorioA = aux;
             }
 
+            aleatorioA = 2;
+            aleatorioB = 15;
+            Integer aleatorio1 = aleatorioA;
+            Integer aleatorio2 = aleatorioB;
+            debugMuestraMensaje("AleatorioA = " + aleatorio1.toString());
+            debugMuestraMensaje("AleatorioB = " + aleatorio2.toString());
+
             Queue<Integer> auxQueue1 = new LinkedList<>();
-            ArrayList<Integer> auxVec1 = new ArrayList<>(seleccionados.get(i));
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            for (int j = 0; j < seleccionados.get(i).size(); j++) {
+                auxVec1.add(0);
+            }
             Queue<Integer> auxQueue2 = new LinkedList<>();
-            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i));
+            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i + 1));
+            for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
+                auxVec2.add(0);
+            }
 
             //Añade los valores de enmedio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
@@ -232,9 +252,16 @@ public class AGE_Clase3_Grupo9 {
             }
 
             //Comprueba si los valores estan dentro del vector, si no estan, los añade a la queue por orden
-            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
-                if (!auxVec1.contains(seleccionados.get(i + 1).get(j))) {
-                    auxQueue1.add(seleccionados.get(i + 1).get(j % seleccionados.get(i).size()));
+            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - 1; j++, cont++) {
+                boolean metido = false;
+                for (int k = 0; k < auxVec1.size() && !metido; k++) {
+                    metido = false;
+                    if (auxVec1.get(k) == seleccionados.get(i + 1).get(j % seleccionados.get(i).size())) {
+                        metido = true;
+                        if (!metido) {
+                            auxQueue1.add(seleccionados.get(i + 1).get(j % seleccionados.get(i).size()));
+                        }
+                    }
                 }
             }
 
@@ -242,11 +269,15 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
                 auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
             }
-            if (probMutacion * 100 >= random.nextInt(100)) {
-                seleccionados.set(i + 1, mutacion(auxVec1));
-            } else {
-                seleccionados.set(i + 1, auxVec1);
-            }
+            debugMuestraMensaje("Seleccionados1");
+            debugMuestraArray(seleccionados.get(i));
+            debugMuestraArray(seleccionados.get(i + 1));
+            debugMuestraArray(auxVec2);
+//            if (probMutacion * 100 >= random.nextInt(100)) {
+//                seleccionados.set(i + 1, mutacion(auxVec1));
+//            } else {
+//                seleccionados.set(i + 1, auxVec1);
+//            }
 
             //Segundo hijo
             //Añade los valores de enmedio a la queue
@@ -261,8 +292,10 @@ public class AGE_Clase3_Grupo9 {
 
             //Comprueba si los valores estan dentro del vector, si no estan, los añade a la queue por orden
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioA + aleatorioB); j++, cont++) {
-                if (!auxVec2.contains(seleccionados.get(i).get(j))) {
-                    auxQueue2.add(seleccionados.get(i).get(j % seleccionados.get(i + 1).size()));
+                for (int k = 0; k < auxVec2.size(); k++) {
+                    if (auxVec2.get(k) != seleccionados.get(i).get(j)) {
+                        auxQueue2.add(seleccionados.get(i).get(j % seleccionados.get(i + 1).size()));
+                    }
                 }
             }
 
@@ -270,11 +303,16 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioA + aleatorioB); j++, cont++) {
                 auxVec2.set(j % seleccionados.get(i).size(), auxQueue1.poll());
             }
-            if (probMutacion * 100 >= random.nextInt(100)) {
-                seleccionados.set(i, mutacion(auxVec2));
-            } else {
-                seleccionados.set(i, auxVec2);
-            }
+
+            debugMuestraMensaje("Seleccionados2");
+            debugMuestraArray(seleccionados.get(i + 1));
+            debugMuestraArray(seleccionados.get(i));
+            debugMuestraArray(auxVec1);
+//            if (probMutacion * 100 >= random.nextInt(100)) {
+//                seleccionados.set(i, mutacion(auxVec2));
+//            } else {
+//                seleccionados.set(i, auxVec2);
+//            }
         }
 
     }
@@ -288,6 +326,7 @@ public class AGE_Clase3_Grupo9 {
         for (int i = 0; i < aux.size(); i++) {
 
         }
+        System.out.println("A");
         return aux;
     }
 }
