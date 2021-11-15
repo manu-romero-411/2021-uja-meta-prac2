@@ -55,12 +55,6 @@ public class AGG_Clase3_Grupo9 {
         reemplazamiento();
         cruceOX2(seleccionados.get(1), seleccionados.get(2));
         crucePMX(seleccionados.get(1), seleccionados.get(2));
-<<<<<<< HEAD
-=======
-        for(int i = 0; i < seleccionados.size(); ++i) {
-            mutacion(seleccionados.get(i));
-        }
->>>>>>> manuDev
     }
 
     private void iniciaConjunto() {

@@ -63,15 +63,15 @@ public class AGE_Clase3_Grupo9 {
             crucePMX(seleccionados); //Cruces y mutacion a la vez
         }
         System.out.println("POBLACIÓN ANTES:");
-        for(int i = 0; i < poblacion.size(); ++i){
-            System.out.print("COSTE "+ calculaCosteConjunto(poblacion.get(i)) + " -> ");
+        for (int i = 0; i < poblacion.size(); ++i) {
+            System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
             debugMuestraArray(poblacion.get(i));
         }
         reemplazamiento();
 
         System.out.println("POBLACIÓN AHORA:");
-        for(int i = 0; i < poblacion.size(); ++i){
-            System.out.print("COSTE "+ calculaCosteConjunto(poblacion.get(i)) + " -> ");
+        for (int i = 0; i < poblacion.size(); ++i) {
+            System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
             debugMuestraArray(poblacion.get(i));
         }
 
@@ -211,7 +211,6 @@ public class AGE_Clase3_Grupo9 {
         return peor;
     }
 
-
     private void debugMuestraArray(ArrayList<Integer> debug) {
         for (int i = 0; i < debug.size(); i++) {
             System.out.print(debug.get(i) + " ");
@@ -245,31 +244,31 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(peorTorneo(torneos));
         }
-        ArrayList<Pair<Integer,Integer>> indicesPobActualPeores = new ArrayList<>();
-        for (int m = 0; m < poblacion.size(); ++m){
-            Pair<Integer,Integer> par = new Pair(m,calculaCosteConjunto(poblacion.get(m)));
+        ArrayList<Pair<Integer, Integer>> indicesPobActualPeores = new ArrayList<>();
+        for (int m = 0; m < poblacion.size(); ++m) {
+            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(poblacion.get(m)));
             indicesPobActualPeores.add(par);
         }
         sortPairArray(indicesPobActualPeores);
 
-        ArrayList<Pair<Integer,Integer>> indicesSeleccionados = new ArrayList<>();
-        for (int m = 0; m < seleccionados.size(); ++m){
-            Pair<Integer,Integer> par = new Pair(m,calculaCosteConjunto(seleccionados.get(m)));
+        ArrayList<Pair<Integer, Integer>> indicesSeleccionados = new ArrayList<>();
+        for (int m = 0; m < seleccionados.size(); ++m) {
+            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(seleccionados.get(m)));
             indicesSeleccionados.add(par);
         }
         sortPairArray(indicesSeleccionados);
 
         //LOS PEORES VAN AL FINAL
-        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m){
+        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m) {
             boolean noreemplazado = true;
-            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j){
+            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j) {
                 // LA CONDICIÓN QUE SE DEBE CUMPLIR PARA EL REEMPLAZO ES ESTA
-                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd){
+                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd) {
                     ArrayList<Integer> nuevo = new ArrayList<>();
-                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k){
+                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k) {
                         nuevo.add(seleccionados.get(indicesSeleccionados.get(j).fst).get(k));
                     }
-                    poblacion.set(indicesPobActualPeores.get(m).fst,nuevo);
+                    poblacion.set(indicesPobActualPeores.get(m).fst, nuevo);
                     indicesSeleccionados.remove(j);
                     noreemplazado = false;
                 }
@@ -355,7 +354,7 @@ public class AGE_Clase3_Grupo9 {
             }
 
             //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioB - aleatorioA) - 1; j++, cont++) {
+            for (int j = aleatorioB + 1; !auxQueue2.isEmpty(); j++) {
                 auxVec2.set(j % seleccionados.get(i).size(), auxQueue2.poll());
             }
 
@@ -393,17 +392,12 @@ public class AGE_Clase3_Grupo9 {
             }
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                System.out.println("es.ujaen.meta.AGE_Clase3_Grupo9.crucePMX(): " + seleccionados.get(i).get(j % seleccionados.get(i).size()));
-                posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
-            }
-
             ArrayList<Integer> auxVec1 = new ArrayList<>();
             for (int j = 0; j < seleccionados.get(i).size(); j++) {
                 auxVec1.add(-1);
             }
 
-            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i + 1));
+            ArrayList<Integer> auxVec2 = new ArrayList<>();
             for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
                 auxVec2.add(-1);
             }
@@ -428,11 +422,13 @@ public class AGE_Clase3_Grupo9 {
             }
             //Saca los valores de la queue y los pone en la posicion que este vacia
             for (int j = aleatorioB + 1; !auxQueue1.isEmpty(); j++) {
-                auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
+                if (auxVec1.get(j % seleccionados.get(i + 1).size()) == -1) {
+                    auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
+                }
             }
 
             for (int j = 0; j < posiciones.size(); j++) {
-                auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
+                auxVec2.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
 
             Queue<Integer> auxQueue2 = new LinkedList<>();
@@ -451,16 +447,11 @@ public class AGE_Clase3_Grupo9 {
             }
 
             //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioB - aleatorioA) - 1; j++, cont++) {
-                auxVec2.set(j % seleccionados.get(i).size(), auxQueue2.poll());
+            for (int j = aleatorioB + 1; !auxQueue2.isEmpty(); j++) {
+                if (auxVec2.get(j % seleccionados.get(i).size()) == -1) {
+                    auxVec2.set(j % seleccionados.get(i).size(), auxQueue2.poll());
+                }
             }
-
-            debugMuestraMensaje("Vector1");
-            debugMuestraArray(seleccionados.get(i));
-            debugMuestraArray(seleccionados.get(i + 1));
-            debugMuestraArray(auxVec1);
-            debugMuestraMensaje("Vector2");
-            debugMuestraArray(auxVec2);
         }
     }
 
@@ -477,23 +468,23 @@ public class AGE_Clase3_Grupo9 {
 
     }
 
-    private void sortPairArray(ArrayList<Pair<Integer,Integer>> arr){
+    private void sortPairArray(ArrayList<Pair<Integer, Integer>> arr) {
         boolean ordenado = false;
         while (!ordenado) {
             for (int i = 1; i < arr.size() - 1; ++i) {
                 if (arr.get(i).snd > arr.get(i + 1).snd) {
                     Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                    arr.set(i,arr.get(i+1));
-                    arr.set(i+1,aux);
+                    arr.set(i, arr.get(i + 1));
+                    arr.set(i + 1, aux);
                 }
                 if (arr.get(i).snd < arr.get(i - 1).snd) {
                     Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                    arr.set(i,arr.get(i-1));
-                    arr.set(i-1,aux);
+                    arr.set(i, arr.get(i - 1));
+                    arr.set(i - 1, aux);
                 }
             }
             ordenado = true;
-            for (int i = 0; i < arr.size()-1 && ordenado; ++i) {
+            for (int i = 0; i < arr.size() - 1 && ordenado; ++i) {
                 if (arr.get(i).snd > arr.get(i + 1).snd) {
                     ordenado = false;
                 }
@@ -501,4 +492,3 @@ public class AGE_Clase3_Grupo9 {
         }
     }
 }
-
