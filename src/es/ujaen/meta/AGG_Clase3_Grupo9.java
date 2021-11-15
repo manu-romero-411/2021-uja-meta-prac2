@@ -5,6 +5,7 @@
  */
 package es.ujaen.meta;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import com.sun.tools.javac.util.Pair;
@@ -167,7 +168,6 @@ public class AGG_Clase3_Grupo9 {
             }
         }
         seleccionados.add(mejorTorneo(torneos));
-
         return seleccionados;
     }
 
@@ -188,7 +188,37 @@ public class AGG_Clase3_Grupo9 {
         return mejor;
     }
 
+    private ArrayList<Integer> peorTorneo(ArrayList<Integer> torneos) {
+        ArrayList<Integer> peor = new ArrayList<>();
+        for (int i = 0; i < conjunto.size(); i++) {
+            peor.add(0);
+        }
+        int peorCoste = Integer.MAX_VALUE;
+        for (int i = 0; i < torneos.size(); i++) {
+            if (calculaCosteConjunto(poblacion.get(torneos.get(i))) < peorCoste) {
+                for (int j = 0; j < poblacion.get(torneos.get(i)).size(); j++) {
+                    peor.set(j, poblacion.get(torneos.get(i)).get(j));
+                }
+                peorCoste = calculaCosteConjunto(poblacion.get(torneos.get(i)));
+            }
+        }
+        return peor;
+    }
+
     private void reemplazamiento() {
+        ArrayList<ArrayList<Integer>> nuevaPob = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> reemp = new ArrayList<>();
+        for (int k = 0; k < tamPoblacion; ++k) {
+            for (int i = 0; i < tamTorneoReemplazamiento; ++i) {
+                int ale = random.nextInt(tamPoblacion);
+                if (!reemp.contains(poblacion.get(ale))) reemp.add(poblacion.get(ale));
+            }
+
+            // ME QUEDO CON EL PEOR
+
+
+            nuevaPob.add(reemp.get(indicePeor));
+        }
 
     }
 
@@ -228,7 +258,14 @@ public class AGG_Clase3_Grupo9 {
 
     }
 
-    private void mutacion() {
-
+    private void mutacion(ArrayList<Integer> elementoAMutar) {
+        int pos1 = random.nextInt(elementoAMutar.size());
+        int pos2 = pos1;
+        while(pos1 == pos2) {
+            pos2 = random.nextInt(elementoAMutar.size());
+        }
+        int aux = elementoAMutar.get(pos1);
+        elementoAMutar.set(pos2,elementoAMutar.get(pos1));
+        elementoAMutar.set(pos1,aux);
     }
 }
