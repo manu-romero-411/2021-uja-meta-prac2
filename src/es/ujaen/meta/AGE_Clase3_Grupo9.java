@@ -58,8 +58,13 @@ public class AGE_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
 
-        cruceOX(seleccionados); //Cruces y mutacion a la vez
-        crucePMX(seleccionados);
+        if (probCruce * 100 >= random.nextInt(101)) {
+            cruceOX(seleccionados); //Cruces y mutacion a la vez
+
+        }
+        if (probCruce * 100 >= random.nextInt(101)) {
+            crucePMX(seleccionados); //Cruces y mutacion a la vez
+        }
         reemplazamiento();
 
     }
@@ -162,6 +167,7 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(mejorTorneo(torneos));
         }
+
         return seleccionados;
     }
 
@@ -189,16 +195,21 @@ public class AGE_Clase3_Grupo9 {
         System.out.println("");
     }
 
+    private void debugMuestraMensaje(String debug) {
+        System.out.println(debug);
+    }
+
     private void reemplazamiento() {
 
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
-        for (int i = 0; i < seleccionados.size() - 1; i = i + 2) {
+        for (int i = 0; i < seleccionados.size(); i = i + 2) {
             boolean diferente = false;
             int aleatorioA = 0;
             int aleatorioB = 0;
             while (!diferente) {
+                diferente = false;
                 aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
                 aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
                 if (aleatorioB != aleatorioA) {
@@ -207,45 +218,134 @@ public class AGE_Clase3_Grupo9 {
             }
             if (aleatorioA > aleatorioB) {
                 int aux;
-                aux = aleatorioA;
+                aux = aleatorioB;
                 aleatorioB = aleatorioA;
-                aleatorioB = aux;
+                aleatorioA = aux;
             }
 
-            Queue<Integer> auxQueue = new LinkedList<>();
-            ArrayList<Integer> auxVec = new ArrayList<>(seleccionados.get(i));
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            for (int j = 0; j < seleccionados.get(i).size(); j++) {
+                auxVec1.add(-1);
+            }
+            Queue<Integer> auxQueue2 = new LinkedList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i + 1));
+            for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
+                auxVec2.add(-1);
+            }
 
             //Añade los valores de enmedio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxQueue.add(seleccionados.get(i).get(j));
+                auxQueue1.add(seleccionados.get(i).get(j));
             }
 
             //Mete los valores de la queue en un vector auxiliar
-            for (int j = aleatorioA; !auxQueue.isEmpty(); j++) {
-                auxVec.set(j, auxQueue.poll());
+            for (int j = aleatorioA; !auxQueue1.isEmpty(); j++) {
+                auxVec1.set(j, auxQueue1.poll());
             }
 
-            //Comprueba si los valores estan dentro del vector, si no estan, los añade a la queue por orden
-            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
-                if (!auxVec.contains(seleccionados.get(i + 1).get(j))) {
-                    auxQueue.add(seleccionados.get(i + 1).get(j % seleccionados.get(i).size()));
+            //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
+            for (int contador = 0, contador2 = aleatorioB + 1; contador < seleccionados.get(i).size(); contador++, contador2++) {
+                boolean esta = false;
+                for (int j = 0; j < auxVec1.size() && !esta; j++) {
+                    if (auxVec1.get(j) == seleccionados.get(i + 1).get(contador2 % seleccionados.get(i).size())) {
+                        esta = true;
+                    }
+                }
+                if (!esta) {
+                    auxQueue1.add(seleccionados.get(i + 1).get(contador2 % seleccionados.get(i).size()));
                 }
             }
 
             //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i).size() - (aleatorioA + aleatorioB); j++, cont++) {
-                auxVec.set(j % seleccionados.get(i + 1).size(), auxQueue.poll());
+            for (int j = aleatorioB + 1; !auxQueue1.isEmpty(); j++) {
+                auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
             }
 
+            //Segundo hijo
+            //Añade los valores de enmedio a la queue
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxQueue2.add(seleccionados.get(i + 1).get(j));
+            }
+
+            //Mete los valores de la queue en un vector auxiliar
+            for (int j = aleatorioA; !auxQueue2.isEmpty(); j++) {
+                auxVec2.set(j, auxQueue2.poll());
+            }
+
+            //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
+            for (int contador = 0, contador2 = aleatorioB + 1; contador < seleccionados.get(i + 1).size(); contador++, contador2++) {
+                boolean esta = false;
+                for (int j = 0; j < auxVec2.size() && !esta; j++) {
+                    if (auxVec2.get(j) == seleccionados.get(i).get(contador2 % seleccionados.get(i + 1).size())) {
+                        esta = true;
+                    }
+                }
+                if (!esta) {
+                    auxQueue2.add(seleccionados.get(i).get(contador2 % seleccionados.get(i + 1).size()));
+                }
+            }
+
+            //Saca los valores de la queue y los pone en la posicion que este vacia
+            for (int j = aleatorioB + 1, cont = 0; cont < seleccionados.get(i + 1).size() - (aleatorioB - aleatorioA) - 1; j++, cont++) {
+                auxVec2.set(j % seleccionados.get(i).size(), auxQueue2.poll());
+            }
+
+            //Mutaciones
+            if (probMutacion * evaluaciones >= random.nextInt(100)) {
+                seleccionados.set(i + 1, mutacion(auxVec1));
+            } else {
+                seleccionados.set(i + 1, auxVec1);
+            }
+            if (probMutacion * evaluaciones >= random.nextInt(100)) {
+                seleccionados.set(i, mutacion(auxVec2));
+            } else {
+                seleccionados.set(i, auxVec2);
+            }
         }
-        mutacion();
+
     }
 
     private void crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
-        mutacion();
+        for (int i = 0; i < seleccionados.size(); i = i + 2) {
+            boolean diferente = false;
+            int aleatorioA = 0;
+            int aleatorioB = 0;
+            while (!diferente) {
+                diferente = false;
+                aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
+                if (aleatorioB != aleatorioA) {
+                    diferente = true;
+                }
+            }
+            if (aleatorioA > aleatorioB) {
+                int aux;
+                aux = aleatorioB;
+                aleatorioB = aleatorioA;
+                aleatorioA = aux;
+            }
+
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            for (int j = 0; j < seleccionados.get(i).size(); j++) {
+                auxVec1.add(-1);
+            }
+            Queue<Integer> auxQueue2 = new LinkedList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>(seleccionados.get(i + 1));
+            for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
+                auxVec2.add(-1);
+            }
+
+        }
     }
 
-    private void mutacion() {
+    private ArrayList<Integer> mutacion(ArrayList<Integer> cruzado) {
+        ArrayList<Integer> aux = new ArrayList<>(cruzado);
+        for (int i = 0; i < aux.size(); i++) {
 
+        }
+        System.out.println("A");
+        return aux;
     }
 }
