@@ -340,12 +340,14 @@ public class AGE_Clase3_Grupo9 {
         }
     }
 
-    private ArrayList<Integer> mutacion(ArrayList<Integer> cruzado) {
-        ArrayList<Integer> aux = new ArrayList<>(cruzado);
-        for (int i = 0; i < aux.size(); i++) {
-
+    private void mutacion(ArrayList<Integer> elementoAMutar) {
+        int pos1 = random.nextInt(elementoAMutar.size());
+        int pos2 = pos1;
+        while(pos1 == pos2) {
+            pos2 = random.nextInt(elementoAMutar.size());
         }
-        System.out.println("A");
-        return aux;
+        int aux = elementoAMutar.get(pos1);
+        elementoAMutar.set(pos2,elementoAMutar.get(pos1));
+        elementoAMutar.set(pos1,aux);
     }
 }
