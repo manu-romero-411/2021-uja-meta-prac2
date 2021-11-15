@@ -55,7 +55,6 @@ public class AGG_Clase3_Grupo9 {
         reemplazamiento();
         cruceOX2(seleccionados.get(1), seleccionados.get(2));
         crucePMX(seleccionados.get(1), seleccionados.get(2));
-        mutacion();
     }
 
     private void iniciaConjunto() {
@@ -211,13 +210,13 @@ public class AGG_Clase3_Grupo9 {
         for (int k = 0; k < tamPoblacion; ++k) {
             for (int i = 0; i < tamTorneoReemplazamiento; ++i) {
                 int ale = random.nextInt(tamPoblacion);
-                if (!reemp.contains(poblacion.get(ale))) reemp.add(poblacion.get(ale));
+                if (!reemp.contains(poblacion.get(ale))) {
+                    reemp.add(poblacion.get(ale));
+                }
             }
 
             // ME QUEDO CON EL PEOR
-
-
-            nuevaPob.add(reemp.get(indicePeor));
+//            nuevaPob.add(reemp.get(indicePeor));
         }
 
     }
@@ -259,13 +258,15 @@ public class AGG_Clase3_Grupo9 {
     }
 
     private void mutacion(ArrayList<Integer> elementoAMutar) {
-        int pos1 = random.nextInt(elementoAMutar.size());
-        int pos2 = pos1;
-        while(pos1 == pos2) {
+        int pos1, pos2;
+        do {
+            pos1 = random.nextInt(elementoAMutar.size());
             pos2 = random.nextInt(elementoAMutar.size());
-        }
+        } while (pos1 == pos2);
+
         int aux = elementoAMutar.get(pos1);
-        elementoAMutar.set(pos2,elementoAMutar.get(pos1));
-        elementoAMutar.set(pos1,aux);
+        elementoAMutar.set(pos2, elementoAMutar.get(pos1));
+        elementoAMutar.set(pos1, aux);
+
     }
 }
