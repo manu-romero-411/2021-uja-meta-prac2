@@ -293,12 +293,22 @@ public class AGE_Clase3_Grupo9 {
 
             //Mutaciones
             if (probMutacion * evaluaciones >= random.nextInt(100)) {
-                seleccionados.set(i + 1, mutacion(auxVec1));
+                ArrayList<Integer> mutado = new ArrayList<>();
+                for (int k = 0; k < auxVec1.size(); ++k){
+                    mutado.set(k,auxVec1.get(k));
+                }
+                mutacion(mutado);
+                seleccionados.set(i + 1, mutado);
             } else {
                 seleccionados.set(i + 1, auxVec1);
             }
             if (probMutacion * evaluaciones >= random.nextInt(100)) {
-                seleccionados.set(i, mutacion(auxVec2));
+                ArrayList<Integer> mutado = new ArrayList<>();
+                for (int k = 0; k < auxVec2.size(); ++k){
+                    mutado.set(k,auxVec2.get(k));
+                }
+                mutacion(mutado);
+                seleccionados.set(i, mutado);
             } else {
                 seleccionados.set(i, auxVec2);
             }
