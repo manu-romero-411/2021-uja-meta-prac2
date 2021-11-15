@@ -55,7 +55,9 @@ public class AGG_Clase3_Grupo9 {
         reemplazamiento();
         cruceOX2(seleccionados.get(1), seleccionados.get(2));
         crucePMX(seleccionados.get(1), seleccionados.get(2));
-        mutacion();
+        for(int i = 0; i < seleccionados.size(); ++i) {
+            mutacion(seleccionados.get(i));
+        }
     }
 
     private void iniciaConjunto() {
@@ -206,19 +208,7 @@ public class AGG_Clase3_Grupo9 {
     }
 
     private void reemplazamiento() {
-        ArrayList<ArrayList<Integer>> nuevaPob = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> reemp = new ArrayList<>();
-        for (int k = 0; k < tamPoblacion; ++k) {
-            for (int i = 0; i < tamTorneoReemplazamiento; ++i) {
-                int ale = random.nextInt(tamPoblacion);
-                if (!reemp.contains(poblacion.get(ale))) reemp.add(poblacion.get(ale));
-            }
 
-            // ME QUEDO CON EL PEOR
-
-
-            nuevaPob.add(reemp.get(indicePeor));
-        }
 
     }
 
