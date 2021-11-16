@@ -228,15 +228,15 @@ public class AGE_Clase3_Grupo9 {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
             while (!aleatorioDiferentes) {
-                for (int j = 0; j < tamTorneoSeleccion; j++) {
+                for (int j = 0; j < tamTorneoReemplazamiento; j++) {
                     torneos.add(random.nextInt(tamPoblacion));
                 }
                 aleatorioDiferentes = true;
 
-                for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
-                    int cont = tamTorneoSeleccion - 1;
+                for (int j = 0; j < tamTorneoReemplazamiento && aleatorioDiferentes; j++) {
+                    int cont = tamTorneoReemplazamiento - 1;
                     for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
-                        if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
+                        if (torneos.get(j) == torneos.get(k % tamTorneoReemplazamiento)) {
                             aleatorioDiferentes = false;
                         }
                     }
