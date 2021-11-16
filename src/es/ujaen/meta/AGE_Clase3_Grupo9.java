@@ -438,25 +438,43 @@ public class AGE_Clase3_Grupo9 {
     private void sortPairArray(ArrayList<Pair<Integer,Integer>> arr){
         boolean ordenado = false;
         while (!ordenado) {
-            for (int i = 1; i < arr.size() - 1; ++i) {
-                if (arr.get(i).snd > arr.get(i + 1).snd) {
-                    Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                    arr.set(i,arr.get(i+1));
-                    arr.set(i+1,aux);
+            if (arr.size() == 2){
+                // SI HAY DOS ELEMENTOS EL FOR NO VA BIEN Y ES MEJOR HACER LA COMPARACIÓN A MANO
+                if (arr.get(0).snd > arr.get(1).snd){
+                    Pair<Integer, Integer> aux = new Pair(arr.get(1).fst, arr.get(1).snd);
+                    arr.set(0,arr.get(1));
+                    arr.set(1,aux);
                 }
-                if (arr.get(i).snd < arr.get(i - 1).snd) {
-                    Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                    arr.set(i,arr.get(i-1));
-                    arr.set(i-1,aux);
-                }
-            }
-            ordenado = true;
-            for (int i = 0; i < arr.size()-1 && ordenado; ++i) {
-                if (arr.get(i).snd > arr.get(i + 1).snd) {
-                    ordenado = false;
+                ordenado = true;
+            } else {
+                if (arr.size() < 2){
+                    // NO TIENE SENTIDO ORDENAR SI EN EL ARRAYLIST SOLO HAY UN ELEMENTO
+                    ordenado = true;
+                } else {
+                    if (arr.size() > 2){
+                        for (int i = 1; i < arr.size() - 1; ++i) {
+                            if (arr.get(i).snd > arr.get(i + 1).snd) {
+                                Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
+                                arr.set(i,arr.get(i+1));
+                                arr.set(i+1,aux);
+                            }
+                            if (arr.get(i).snd < arr.get(i - 1).snd) {
+                                Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
+                                arr.set(i,arr.get(i-1));
+                                arr.set(i-1,aux);
+                            }
+                        }
+                        ordenado = true;
+                        for (int i = 0; i < arr.size()-1 && ordenado; ++i) {
+                            if (arr.get(i).snd > arr.get(i + 1).snd) {
+                                ordenado = false;
+                            }
+                        }
+                    }
                 }
             }
         }
+        System.out.println();
     }
 }
 
