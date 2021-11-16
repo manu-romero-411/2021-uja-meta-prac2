@@ -67,14 +67,15 @@ public class AGE_Clase3_Grupo9 {
             System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
             debugMuestraArray(poblacion.get(i));
         }
+        ArrayList<ArrayList<Integer>> pobantes = poblacion;
         reemplazamiento();
+        ArrayList<ArrayList<Integer>> pobdespues = poblacion;
 
         System.out.println("POBLACIÓN AHORA:");
         for (int i = 0; i < poblacion.size(); ++i) {
             System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
             debugMuestraArray(poblacion.get(i));
         }
-
     }
 
     private void iniciaConjunto() {
@@ -222,22 +223,22 @@ public class AGE_Clase3_Grupo9 {
         System.out.println(debug);
     }
 
+
     private void reemplazamiento() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
-            int haciaTorneo = -1;
             while (!aleatorioDiferentes) {
-                for (int j = 0; j < tamTorneoReemplazamiento; j++) {
+                for (int j = 0; j < tamTorneoSeleccion; j++) {
                     torneos.add(random.nextInt(tamPoblacion));
                 }
                 aleatorioDiferentes = true;
 
-                for (int j = 0; j < tamTorneoReemplazamiento && aleatorioDiferentes; j++) {
-                    int cont = tamTorneoReemplazamiento - 1;
+                for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
+                    int cont = tamTorneoSeleccion - 1;
                     for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
-                        if (torneos.get(j) == torneos.get(k % tamTorneoReemplazamiento)) {
+                        if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
                             aleatorioDiferentes = false;
                         }
                     }
@@ -245,31 +246,31 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(peorTorneo(torneos));
         }
-        ArrayList<Pair<Integer, Integer>> indicesPobActualPeores = new ArrayList<>();
-        for (int m = 0; m < poblacion.size(); ++m) {
-            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(poblacion.get(m)));
+        ArrayList<Pair<Integer,Integer>> indicesPobActualPeores = new ArrayList<>();
+        for (int m = 0; m < poblacion.size(); ++m){
+            Pair<Integer,Integer> par = new Pair(m,calculaCosteConjunto(poblacion.get(m)));
             indicesPobActualPeores.add(par);
         }
         sortPairArray(indicesPobActualPeores);
 
-        ArrayList<Pair<Integer, Integer>> indicesSeleccionados = new ArrayList<>();
-        for (int m = 0; m < seleccionados.size(); ++m) {
-            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(seleccionados.get(m)));
+        ArrayList<Pair<Integer,Integer>> indicesSeleccionados = new ArrayList<>();
+        for (int m = 0; m < seleccionados.size(); ++m){
+            Pair<Integer,Integer> par = new Pair(m,calculaCosteConjunto(seleccionados.get(m)));
             indicesSeleccionados.add(par);
         }
         sortPairArray(indicesSeleccionados);
 
         //LOS PEORES VAN AL FINAL
-        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m) {
+        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m){
             boolean noreemplazado = true;
-            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j) {
+            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j){
                 // LA CONDICIÓN QUE SE DEBE CUMPLIR PARA EL REEMPLAZO ES ESTA
-                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd) {
+                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd){
                     ArrayList<Integer> nuevo = new ArrayList<>();
-                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k) {
+                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k){
                         nuevo.add(seleccionados.get(indicesSeleccionados.get(j).fst).get(k));
                     }
-                    poblacion.set(indicesPobActualPeores.get(m).fst, nuevo);
+                    poblacion.set(indicesPobActualPeores.get(m).fst,nuevo);
                     indicesSeleccionados.remove(j);
                     noreemplazado = false;
                 }

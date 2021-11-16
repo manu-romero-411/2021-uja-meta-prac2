@@ -1,5 +1,5 @@
 Archivos=nissan01.dat nissan02.dat nissan03.dat nissan04.dat
-Semillas=77371841
+Semillas=77433193
 Algoritmos=Greedy
 Guardar=log
 Iteraciones=1000
