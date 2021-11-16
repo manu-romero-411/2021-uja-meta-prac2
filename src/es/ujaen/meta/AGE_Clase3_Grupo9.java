@@ -67,14 +67,15 @@ public class AGE_Clase3_Grupo9 {
             System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
             debugMuestraArray(poblacion.get(i));
         }
+        ArrayList<ArrayList<Integer>> pobantes = poblacion;
         reemplazamiento();
+        ArrayList<ArrayList<Integer>> pobdespues = poblacion;
 
         System.out.println("POBLACIÓN AHORA:");
         for (int i = 0; i < poblacion.size(); ++i) {
             System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
             debugMuestraArray(poblacion.get(i));
         }
-
     }
 
     private void iniciaConjunto() {
@@ -222,21 +223,28 @@ public class AGE_Clase3_Grupo9 {
         System.out.println(debug);
     }
 
+
     private void reemplazamiento() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
             while (!aleatorioDiferentes) {
-                for (int j = 0; j < tamTorneoSeleccion; j++) {
-                    torneos.add(random.nextInt(tamPoblacion));
+                if (torneos.size() == 0) {
+                    for (int j = 0; j < tamTorneoReemplazamiento; j++) {
+                        torneos.add(random.nextInt(tamPoblacion));
+                    }
+                } else {
+                    for (int j = 0; j < tamTorneoReemplazamiento; j++) {
+                        torneos.set(j,random.nextInt(tamPoblacion));
+                    }
                 }
                 aleatorioDiferentes = true;
 
-                for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
-                    int cont = tamTorneoSeleccion - 1;
+                for (int j = 0; j < tamTorneoReemplazamiento && aleatorioDiferentes; j++) {
+                    int cont = tamTorneoReemplazamiento - 1;
                     for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
-                        if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
+                        if (torneos.get(j) == torneos.get(k % tamTorneoReemplazamiento)) {
                             aleatorioDiferentes = false;
                         }
                     }
@@ -244,36 +252,37 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(peorTorneo(torneos));
         }
-        ArrayList<Pair<Integer, Integer>> indicesPobActualPeores = new ArrayList<>();
-        for (int m = 0; m < poblacion.size(); ++m) {
-            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(poblacion.get(m)));
+        ArrayList<Pair<Integer,Integer>> indicesPobActualPeores = new ArrayList<>();
+        for (int m = 0; m < poblacion.size(); ++m){
+            Pair<Integer,Integer> par = new Pair(m,calculaCosteConjunto(poblacion.get(m)));
             indicesPobActualPeores.add(par);
         }
         sortPairArray(indicesPobActualPeores);
 
-        ArrayList<Pair<Integer, Integer>> indicesSeleccionados = new ArrayList<>();
-        for (int m = 0; m < seleccionados.size(); ++m) {
-            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(seleccionados.get(m)));
+        ArrayList<Pair<Integer,Integer>> indicesSeleccionados = new ArrayList<>();
+        for (int m = 0; m < seleccionados.size(); ++m){
+            Pair<Integer,Integer> par = new Pair(m,calculaCosteConjunto(seleccionados.get(m)));
             indicesSeleccionados.add(par);
         }
         sortPairArray(indicesSeleccionados);
 
         //LOS PEORES VAN AL FINAL
-        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m) {
+        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m){
             boolean noreemplazado = true;
-            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j) {
+            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j){
                 // LA CONDICIÓN QUE SE DEBE CUMPLIR PARA EL REEMPLAZO ES ESTA
-                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd) {
+                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd){
                     ArrayList<Integer> nuevo = new ArrayList<>();
-                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k) {
+                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k){
                         nuevo.add(seleccionados.get(indicesSeleccionados.get(j).fst).get(k));
                     }
-                    poblacion.set(indicesPobActualPeores.get(m).fst, nuevo);
+                    poblacion.set(indicesPobActualPeores.get(m).fst,nuevo);
                     indicesSeleccionados.remove(j);
                     noreemplazado = false;
                 }
             }
         }
+        System.out.println();
     }
 
     private void cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
@@ -471,24 +480,42 @@ public class AGE_Clase3_Grupo9 {
     private void sortPairArray(ArrayList<Pair<Integer, Integer>> arr) {
         boolean ordenado = false;
         while (!ordenado) {
-            for (int i = 1; i < arr.size() - 1; ++i) {
-                if (arr.get(i).snd > arr.get(i + 1).snd) {
-                    Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                    arr.set(i, arr.get(i + 1));
-                    arr.set(i + 1, aux);
+            if (arr.size() == 2){
+                // SI HAY DOS ELEMENTOS EL FOR NO VA BIEN Y ES MEJOR HACER LA COMPARACIÓN A MANO
+                if (arr.get(0).snd > arr.get(1).snd){
+                    Pair<Integer, Integer> aux = new Pair(arr.get(1).fst, arr.get(1).snd);
+                    arr.set(0,arr.get(1));
+                    arr.set(1,aux);
                 }
-                if (arr.get(i).snd < arr.get(i - 1).snd) {
-                    Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                    arr.set(i, arr.get(i - 1));
-                    arr.set(i - 1, aux);
-                }
-            }
-            ordenado = true;
-            for (int i = 0; i < arr.size() - 1 && ordenado; ++i) {
-                if (arr.get(i).snd > arr.get(i + 1).snd) {
-                    ordenado = false;
+                ordenado = true;
+            } else {
+                if (arr.size() < 2){
+                    // NO TIENE SENTIDO ORDENAR SI EN EL ARRAYLIST SOLO HAY UN ELEMENTO
+                    ordenado = true;
+                } else {
+                    if (arr.size() > 2){
+                        for (int i = 1; i < arr.size() - 1; ++i) {
+                            if (arr.get(i).snd > arr.get(i + 1).snd) {
+                                Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
+                                arr.set(i,arr.get(i+1));
+                                arr.set(i+1,aux);
+                            }
+                            if (arr.get(i).snd < arr.get(i - 1).snd) {
+                                Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
+                                arr.set(i,arr.get(i-1));
+                                arr.set(i-1,aux);
+                            }
+                        }
+                        ordenado = true;
+                        for (int i = 0; i < arr.size()-1 && ordenado; ++i) {
+                            if (arr.get(i).snd > arr.get(i + 1).snd) {
+                                ordenado = false;
+                            }
+                        }
+                    }
                 }
             }
         }
+        System.out.println();
     }
 }
