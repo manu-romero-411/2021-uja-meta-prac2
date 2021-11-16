@@ -47,7 +47,7 @@ public class AGG_Clase3_Grupo9 {
         this.LRC = new ArrayList<>();
     }
 
-    public void hazGeneticoEstacionario() {
+    public void hazGeneticoGeneracional() {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();

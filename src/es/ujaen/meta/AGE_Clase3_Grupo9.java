@@ -227,6 +227,7 @@ public class AGE_Clase3_Grupo9 {
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
+            int haciaTorneo = -1;
             while (!aleatorioDiferentes) {
                 for (int j = 0; j < tamTorneoReemplazamiento; j++) {
                     torneos.add(random.nextInt(tamPoblacion));
