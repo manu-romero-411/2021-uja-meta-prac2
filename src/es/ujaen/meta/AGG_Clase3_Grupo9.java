@@ -222,7 +222,8 @@ public class AGG_Clase3_Grupo9 {
         }
     }
 
-    private void cruceOX2(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
+    private ArrayList<ArrayList<Integer>> cruceOX2(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
+        ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         ArrayList<Integer> listaAleatorios = new ArrayList<>();
         for (int i = 0; i < 3; ++i) {
             listaAleatorios.set(i, random.nextInt(padre1.size()));
@@ -252,9 +253,12 @@ public class AGG_Clase3_Grupo9 {
                 elementosCorte.remove(0);
             }
         }
+        return auxSel;
     }
 
-    private void crucePMX(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
+    private ArrayList<ArrayList<Integer>> crucePMX(ArrayList<Integer> padre1, ArrayList<Integer> padre2) {
+        ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
+
         int aleatorioA, aleatorioB;
         do {
             aleatorioA = random.nextInt(padre1.size() - 2) + 1;
@@ -304,6 +308,11 @@ public class AGG_Clase3_Grupo9 {
             }
         }
 
+        auxSel.add(auxVec1);
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel.get(0));
+        }
+
         for (int j = 0; j < posiciones.size(); j++) {
             auxVec2.set(posiciones.get(j).snd, posiciones.get(j).fst);
         }
@@ -329,6 +338,12 @@ public class AGG_Clase3_Grupo9 {
                 auxVec2.set(j % padre1.size(), auxQueue2.poll());
             }
         }
+        auxSel.add(auxVec2);
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel.get(1));
+        }
+
+        return auxSel;
     }
 
     private void mutacion(ArrayList<Integer> elementoAMutar) {
