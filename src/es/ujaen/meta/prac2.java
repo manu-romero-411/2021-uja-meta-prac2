@@ -38,12 +38,12 @@ public class prac2 {
             genetico.hazGeneticoEstacionario();
         }
         
-        /*for (int i = 0; i < arrayA.size(); i++) {
+        for (int i = 0; i < arrayA.size(); i++) {
             AGG_Clase3_Grupo9 genetico = new AGG_Clase3_Grupo9(random, config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
                     config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional());
-            genetico.hazGeneticoEstacionario();
-        }*/
+            genetico.hazGeneticoGeneracional();
+        }
 
         log.guardaLog();
     }
