@@ -55,7 +55,7 @@ public class AGG_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
-        cruceOX2(seleccionados.get(1), seleccionados.get(2));
+        cruceOX2(seleccionados);
         crucePMX(seleccionados);
     }
 
@@ -151,24 +151,44 @@ public class AGG_Clase3_Grupo9 {
 
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
-        ArrayList<Integer> torneos = new ArrayList<>();
-        boolean aleatorioDiferentes = false;
-        while (!aleatorioDiferentes) {
-            for (int j = 0; j < tamTorneoSeleccion; j++) {
-                torneos.add(random.nextInt(tamPoblacion));
-            }
-            aleatorioDiferentes = true;
+        for (int i = 0; i < tamPoblacion; i++) {
+            ArrayList<Integer> aux = new ArrayList<>(seleccionados.get(i));
+            ArrayList<Integer> torneos = new ArrayList<>();
+            boolean aleatorioDiferentes = false;
+            boolean estaTorneo = false;
+            while (!aleatorioDiferentes && estaTorneo) {
+                for (int j = 0; j < tamTorneoSeleccion; j++) {
+                    torneos.add(random.nextInt(tamPoblacion));
+                }
+                aleatorioDiferentes = true;
 
-            for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
-                int cont = tamTorneoSeleccion - 1;
-                for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
-                    if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
-                        aleatorioDiferentes = false;
+                for (int j = 0; j < tamTorneoSeleccion && aleatorioDiferentes; j++) {
+                    int cont = tamTorneoSeleccion - 1;
+                    for (int k = j + 1; cont > 0 && aleatorioDiferentes; cont--, k++) {
+                        if (torneos.get(j) == torneos.get(k % tamTorneoSeleccion)) {
+                            aleatorioDiferentes = false;
+                        }
+                    }
+                }
+
+                for (int j = 0; j < mejorTorneo(torneos).size(); j++) {
+                    aux.set(j, mejorTorneo(torneos).get(j));
+                }
+
+                int cont = 0;
+                for (int j = 0; j < seleccionados.size() && !estaTorneo; j++) {
+                    for (int k = 0; k < aux.size(); k++) {
+                        if (seleccionados.get(j).get(k) == aux.get(k)) {
+                            cont++;
+                        }
+                    }
+                    if (cont == aux.size()) {
+                        estaTorneo = true;
                     }
                 }
             }
+            seleccionados.add(aux);
         }
-        seleccionados.add(mejorTorneo(torneos));
         return seleccionados;
     }
 
@@ -224,16 +244,16 @@ public class AGG_Clase3_Grupo9 {
 
     private ArrayList<ArrayList<Integer>> cruceOX2(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
-        for (int i = 0; i < seleccionados.size() - 1; i = i + 2) {
+        for (int j = 0; j < seleccionados.size() - 1; j = j + 2) {
 
-            ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(i));
-            ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(i + 1));
+            ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(j));
+            ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(j + 1));
 
             ArrayList<Integer> listaAleatorios = new ArrayList<>();
             for (int i = 0; i < 3; ++i) {
                 listaAleatorios.set(i, random.nextInt(padre1.size()));
-                for (int j = 0; j < i; ++j) {
-                    while (listaAleatorios.get(i) == listaAleatorios.get(j)) {
+                for (int k = 0; k < i; ++k) {
+                    while (listaAleatorios.get(i) == listaAleatorios.get(k)) {
                         listaAleatorios.set(i, random.nextInt(conjunto.size()));
                     }
                 }
