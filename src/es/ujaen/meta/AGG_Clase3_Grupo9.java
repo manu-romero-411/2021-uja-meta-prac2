@@ -55,7 +55,7 @@ public class AGG_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
-        cruceOX2(seleccionados);
+       // cruceOX2(seleccionados);
         crucePMX(seleccionados);
     }
 
@@ -152,10 +152,13 @@ public class AGG_Clase3_Grupo9 {
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < tamPoblacion; i++) {
-            ArrayList<Integer> aux = new ArrayList<>(seleccionados.get(i));
+            ArrayList<Integer> aux = new ArrayList<>();
+            for (int j = 0; j < conjunto.size(); j++) {
+                aux.add(-1);
+            }
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
-            boolean estaTorneo = false;
+            boolean estaTorneo = true;
             while (!aleatorioDiferentes && estaTorneo) {
                 for (int j = 0; j < tamTorneoSeleccion; j++) {
                     torneos.add(random.nextInt(tamPoblacion));
@@ -176,6 +179,7 @@ public class AGG_Clase3_Grupo9 {
                 }
 
                 int cont = 0;
+                estaTorneo = false;
                 for (int j = 0; j < seleccionados.size() && !estaTorneo; j++) {
                     for (int k = 0; k < aux.size(); k++) {
                         if (seleccionados.get(j).get(k) == aux.get(k)) {
