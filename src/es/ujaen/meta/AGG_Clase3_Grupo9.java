@@ -55,7 +55,7 @@ public class AGG_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
-       // cruceOX2(seleccionados);
+        //cruceOX2(seleccionados);
         crucePMX(seleccionados);
         reemplazamiento();
 
@@ -305,6 +305,7 @@ public class AGG_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
+            System.out.println("AleatorioA: " + aleatorioA + " AleatorioB: " + aleatorioB);
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
@@ -317,6 +318,10 @@ public class AGG_Clase3_Grupo9 {
                 auxVec2.add(-1);
             }
 
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
+            }
+            
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec1.set(posiciones.get(j).fst, posiciones.get(j).snd);
             }
@@ -341,6 +346,11 @@ public class AGG_Clase3_Grupo9 {
                     auxVec1.set(j % padre2.size(), auxQueue1.poll());
                 }
             }
+            System.out.println("auxVec1");
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
+            debugMuestraArray(auxVec1);
+
             auxSel.add(auxVec1);
             if (probMutacion * evaluaciones >= random.nextInt(101)) {
                 mutacion(auxSel.get(i));
@@ -371,12 +381,25 @@ public class AGG_Clase3_Grupo9 {
                     auxVec2.set(j % padre1.size(), auxQueue2.poll());
                 }
             }
+            System.out.println("auxVec2");
+
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
+            debugMuestraArray(auxVec2);
             auxSel.add(auxVec2);
             if (probMutacion * evaluaciones >= random.nextInt(101)) {
                 mutacion(auxSel.get(i + 1));
             }
         }
+
         return auxSel;
+    }
+
+    private void debugMuestraArray(ArrayList<Integer> debug) {
+        for (int i = 0; i < debug.size(); i++) {
+            System.out.print(debug.get(i) + " ");
+        }
+        System.out.println("");
     }
 
     private void mutacion(ArrayList<Integer> elementoAMutar) {
