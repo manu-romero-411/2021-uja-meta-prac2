@@ -422,17 +422,32 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre2.get(j));
             }
-            
+
             for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxVec1.set(j,auxQueue1.poll());
+                auxVec1.set(j, auxQueue1.poll());
             }
-            
+
             for (int j = 0; j < auxVec1.size(); j++) {
-                if(auxVec1.get(j)!=padre2.get(j) && auxVec1.get(j) == -1){
+                if (auxVec1.get(j) != padre2.get(j) && auxVec1.get(j) == -1) {
                     auxVec1.set(j, padre2.get(j));
+                }else{
+                    auxQueue1.add(j);
                 }
             }
+
+            System.out.println("auxVec1");
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
+            debugMuestraArray(auxVec1);
             
+
+            for (int j = 0; !auxQueue1.isEmpty(); j++) {
+                int aux = auxVec1.get(auxQueue1.poll());
+
+                int padreAux = padre1.get(aux);
+                auxVec1.set(aux, padreAux);
+            }
+
             //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
 //            for (int contador = 0, contador2 = aleatorioA + 1; contador < padre1.size(); contador++, contador2++) {
 //                boolean esta = false;
