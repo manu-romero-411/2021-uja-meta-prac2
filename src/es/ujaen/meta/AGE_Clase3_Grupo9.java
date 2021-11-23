@@ -308,7 +308,7 @@ public class AGE_Clase3_Grupo9 {
             }
             Queue<Integer> auxQueue2 = new LinkedList<>();
             ArrayList<Integer> auxVec2 = new ArrayList<>();
-            for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
+            for (int j = 0; j < padre2.size(); j++) {
                 auxVec2.add(-1);
             }
 
@@ -326,7 +326,7 @@ public class AGE_Clase3_Grupo9 {
             for (int contador = 0, contador2 = aleatorioB + 1; contador < padre1.size(); contador++, contador2++) {
                 boolean esta = false;
                 for (int j = 0; j < auxVec1.size() && !esta; j++) {
-                    if (auxVec1.get(j) == seleccionados.get(i + 1).get(contador2 % padre1.size())) {
+                    if (auxVec1.get(j) == padre2.get(contador2 % padre1.size())) {
                         esta = true;
                     }
                 }
@@ -337,13 +337,10 @@ public class AGE_Clase3_Grupo9 {
 
             //Saca los valores de la queue y los pone en la posicion que este vacia
             for (int j = aleatorioB + 1; !auxQueue1.isEmpty(); j++) {
-                auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
+                auxVec1.set(j % padre2.size(), auxQueue1.poll());
             }
 
             auxSel.add(auxVec1);
-            if (probMutacion * evaluaciones >= random.nextInt(101)) {
-                mutacion(auxSel.get(i));
-            }
 
             //Segundo hijo
             //Añade los valores de enmedio a la queue
@@ -357,15 +354,15 @@ public class AGE_Clase3_Grupo9 {
             }
 
             //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
-            for (int contador = 0, contador2 = aleatorioB + 1; contador < seleccionados.get(i + 1).size(); contador++, contador2++) {
+            for (int contador = 0, contador2 = aleatorioB + 1; contador < padre2.size(); contador++, contador2++) {
                 boolean esta = false;
                 for (int j = 0; j < auxVec2.size() && !esta; j++) {
-                    if (auxVec2.get(j) == padre1.get(contador2 % seleccionados.get(i + 1).size())) {
+                    if (auxVec2.get(j) == padre1.get(contador2 % padre2.size())) {
                         esta = true;
                     }
                 }
                 if (!esta) {
-                    auxQueue2.add(padre1.get(contador2 % seleccionados.get(i + 1).size()));
+                    auxQueue2.add(padre1.get(contador2 % padre2.size()));
                 }
             }
 
@@ -374,9 +371,9 @@ public class AGE_Clase3_Grupo9 {
                 auxVec2.set(j % padre1.size(), auxQueue2.poll());
             }
             auxSel.add(auxVec2);
-            if (probMutacion * evaluaciones >= random.nextInt(101)) {
-                mutacion(auxSel.get(i + 1));
-            }
+        }
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel);
         }
         return auxSel;
     }
@@ -385,6 +382,8 @@ public class AGE_Clase3_Grupo9 {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         for (int i = 0; i < seleccionados.size(); i = i + 2) {
 
+            ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(i));
+            ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(i + 1));
             int aleatorioA, aleatorioB;
             do {
                 aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
@@ -396,56 +395,96 @@ public class AGE_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
+            aleatorioA = 5;
+            aleatorioB = 6;
             System.out.println("AleatorioA: " + aleatorioA + " AleatorioB: " + aleatorioB);
-            
-            debugMuestraArray(seleccionados.get(i));
-            debugMuestraArray(seleccionados.get(i + 1));
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
-            for (int j = 0; j < seleccionados.get(i).size(); j++) {
+            for (int j = 0; j < padre1.size(); j++) {
                 auxVec1.add(-1);
             }
 
             ArrayList<Integer> auxVec2 = new ArrayList<>();
-            for (int j = 0; j < seleccionados.get(i + 1).size(); j++) {
+            for (int j = 0; j < padre2.size(); j++) {
                 auxVec2.add(-1);
+            }
+//
+//            for (int j = aleatorioA; j <= aleatorioB; j++) {
+//                posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
+//            }
+//
+//            for (int j = 0; j < posiciones.size(); j++) {
+//                auxVec1.set(posiciones.get(j).fst, posiciones.get(j).snd);
+//            }
+
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxQueue1.add(padre2.get(j));
             }
 
             for (int j = aleatorioA; j <= aleatorioB; j++) {
-                posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
+                auxVec1.set(j, auxQueue1.poll());
             }
 
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec1.set(posiciones.get(j).fst, posiciones.get(j).snd);
+            for (int j = 0; j < auxVec1.size(); j++) {
+                if (auxVec1.get(j) != padre2.get(j) && auxVec1.get(j) == -1) {
+                    auxVec1.set(j, padre2.get(j));
+                }else{
+                    auxQueue1.add(j);
+                }
             }
 
-            Queue<Integer> auxQueue1 = new LinkedList<>();
+            System.out.println("auxVec1");
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
+            debugMuestraArray(auxVec1);
+            
+
+            for (int j = 0; !auxQueue1.isEmpty(); j++) {
+                int aux = auxVec1.get(auxQueue1.poll());
+
+                int padreAux = padre1.get(aux);
+                auxVec1.set(aux, padreAux);
+            }
 
             //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
-            for (int contador = 0, contador2 = aleatorioB + 1; contador < seleccionados.get(i).size(); contador++, contador2++) {
-                boolean esta = false;
-                for (int j = 0; j < auxVec1.size() && !esta; j++) {
-                    if (auxVec1.get(j) == seleccionados.get(i + 1).get(contador2 % seleccionados.get(i).size())) {
-                        esta = true;
-                    }
-                }
-                if (!esta) {
-                    auxQueue1.add(seleccionados.get(i + 1).get(contador2 % seleccionados.get(i).size()));
-                }
-            }
-            //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1; !auxQueue1.isEmpty(); j++) {
-                if (auxVec1.get(j % seleccionados.get(i + 1).size()) == -1) {
-                    auxVec1.set(j % seleccionados.get(i + 1).size(), auxQueue1.poll());
-                }
-            }
+//            for (int contador = 0, contador2 = aleatorioA + 1; contador < padre1.size(); contador++, contador2++) {
+//                boolean esta = false;
+//                for (int j = 0; j < auxVec1.size() && !esta; j++) {
+//                    if (auxVec1.get(j) == padre2.get(contador2 % padre1.size())) {
+//                        esta = true;
+//                    }
+//                }
+//                if (!esta) {
+//                    auxQueue1.add(padre2.get(contador2 % padre1.size()));
+//                }
+//            }
+//            for (int contador = 0, contador2 = aleatorioA + 1; contador < padre1.size(); contador++, contador2++) {
+//                boolean esta = false;
+//                for (int j = 0; j < auxVec1.size() && !esta; j++) {
+//                    if (auxVec1.get(j) == padre2.get(contador2 % padre1.size())) {
+//                        esta = true;
+//                    }
+//                }
+//                if (!esta) {
+//                    auxVec1.set(contador2 % padre1.size(), padre2.get(contador2 % padre1.size()));
+//                }else{
+//                    auxQueue1.add(padre2.get(contador2 % padre1.size()));
+//                }
+//            }
+//            //Saca los valores de la queue y los pone en la posicion que este vacia
+////            for (int j = aleatorioA + 1; !auxQueue1.isEmpty(); j++) {
+////                if (auxVec1.get(j % padre2.size()) == -1) {
+////                    auxVec1.set(j % padre2.size(), auxQueue1.poll());
+////                }
+////            }
             System.out.println("auxVec1");
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
             debugMuestraArray(auxVec1);
+
             auxSel.add(auxVec1);
-            if (probMutacion * evaluaciones >= random.nextInt(101)) {
-                mutacion(auxSel.get(i));
-            }
 
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec2.set(posiciones.get(j).snd, posiciones.get(j).fst);
@@ -454,44 +493,52 @@ public class AGE_Clase3_Grupo9 {
             Queue<Integer> auxQueue2 = new LinkedList<>();
 
             //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
-            for (int contador = 0, contador2 = aleatorioB + 1; contador < seleccionados.get(i + 1).size(); contador++, contador2++) {
+            for (int contador = 0, contador2 = aleatorioA + 1; contador < padre2.size(); contador++, contador2++) {
                 boolean esta = false;
                 for (int j = 0; j < auxVec2.size() && !esta; j++) {
-                    if (auxVec2.get(j) == seleccionados.get(i).get(contador2 % seleccionados.get(i + 1).size())) {
+                    if (auxVec2.get(j) == padre1.get(contador2 % padre2.size())) {
                         esta = true;
                     }
                 }
                 if (!esta) {
-                    auxQueue2.add(seleccionados.get(i).get(contador2 % seleccionados.get(i + 1).size()));
+                    auxQueue2.add(padre1.get(contador2 % padre2.size()));
                 }
             }
 
             //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1; !auxQueue2.isEmpty(); j++) {
-                if (auxVec2.get(j % seleccionados.get(i).size()) == -1) {
-                    auxVec2.set(j % seleccionados.get(i).size(), auxQueue2.poll());
+            for (int j = aleatorioA + 1; !auxQueue2.isEmpty(); j++) {
+                if (auxVec2.get(j % padre1.size()) == -1) {
+                    auxVec2.set(j % padre1.size(), auxQueue2.poll());
                 }
             }
-            auxSel.add(auxVec2);
-            if (probMutacion * evaluaciones >= random.nextInt(101)) {
-                mutacion(auxSel.get(i + 1));
-            }
-        }
-        return auxSel;
+            System.out.println("auxVec2");
 
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
+            debugMuestraArray(auxVec2);
+            auxSel.add(auxVec2);
+
+        }
+
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel);
+        }
+
+        return auxSel;
     }
 
-    private void mutacion(ArrayList<Integer> elementoAMutar) {
-        int pos1, pos2;
-        do {
-            pos1 = random.nextInt(elementoAMutar.size());
-            pos2 = random.nextInt(elementoAMutar.size());
-        } while (pos1 == pos2);
+    private void mutacion(ArrayList<ArrayList<Integer>> elementoAMutar) {
+        for (int i = 0; i < elementoAMutar.size(); i++) {
+            int pos1, pos2;
+            do {
+                pos1 = random.nextInt(elementoAMutar.size());
+                pos2 = random.nextInt(elementoAMutar.size());
+            } while (pos1 == pos2);
 
-        int aux = elementoAMutar.get(pos1);
-        elementoAMutar.set(pos2, elementoAMutar.get(pos1));
-        elementoAMutar.set(pos1, aux);
-
+            int aux = elementoAMutar.get(i).get(pos1);
+            elementoAMutar.get(i).set(pos2, elementoAMutar.get(i).get(pos1));
+            elementoAMutar.get(i).set(pos1, aux);
+        }
     }
 
     private void sortPairArray(ArrayList<Pair<Integer, Integer>> arr) {
