@@ -472,14 +472,39 @@ public class AGE_Clase3_Grupo9 {
                 auxVec2.set(j, auxQueue2.poll());
             }
 
-            for (int j = aleatorioB + 1, cont = 0; cont < auxVec2.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
 
-                auxVec2.set(j % auxVec2.size(), padre1.get(j % auxVec2.size()));
+            for (int j = aleatorioB + 1, cont = 0; cont < auxVec2.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
+                boolean esta = true;
+                for (int k = 0; k < auxVec2.size() && esta; k++) {
+                    if (auxVec2.get(k) == padre2.get(j % auxVec2.size())) {
+                        esta = false;
+                    }
+                }
+                if (esta) {
+                    auxVec2.set(j % auxVec2.size(), padre2.get(j % auxVec2.size()));
+                } else {
+                    auxQueue2.add(padre2.get(j % auxVec2.size()));
+                }
             }
+
+            while (!auxQueue2.isEmpty()) {
+                boolean esta = true;
+                int aux = 0;
+                for (int j = 0; j < padre2.size() && esta; j++) {
+                    if (padre2.get(j) == auxQueue2.peek()) {
+                        aux = j;
+                        esta = false;
+                    }
+                }
+                if (!esta) {
+                    int auxas = padre2.get(auxQueue2.poll());
+                    auxVec2.set(aux, auxas);
+                }
+            }
+
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
             }
-
             //Se hace bien
             auxSel.add(auxVec2);
 

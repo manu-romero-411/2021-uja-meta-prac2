@@ -303,6 +303,8 @@ public class AGG_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
+            aleatorioA = 5;
+            aleatorioB = 6;
             System.out.println("AleatorioA: " + aleatorioA + " AleatorioB: " + aleatorioB);
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
@@ -319,75 +321,110 @@ public class AGG_Clase3_Grupo9 {
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
             }
-            
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec1.set(posiciones.get(j).fst, posiciones.get(j).snd);
-            }
 
             Queue<Integer> auxQueue1 = new LinkedList<>();
 
-            //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
-            for (int contador = 0, contador2 = aleatorioB + 1; contador < padre1.size(); contador++, contador2++) {
-                boolean esta = false;
-                for (int j = 0; j < auxVec1.size() && !esta; j++) {
-                    if (auxVec1.get(j) == padre2.get(contador2 % padre1.size())) {
-                        esta = true;
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxQueue1.add(padre2.get(j));
+            }
+
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxVec1.set(j, auxQueue1.poll());
+            }
+
+            for (int j = aleatorioB + 1, cont = 0; cont < auxVec1.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
+                boolean esta = true;
+                for (int k = 0; k < auxVec1.size() && esta; k++) {
+                    if (auxVec1.get(k) == padre1.get(j % auxVec1.size())) {
+                        esta = false;
+                    }
+                }
+                if (esta) {
+                    auxVec1.set(j % auxVec1.size(), padre1.get(j % auxVec1.size()));
+                } else {
+                    auxQueue1.add(padre1.get(j % auxVec1.size()));
+                }
+            }
+
+            while (!auxQueue1.isEmpty()) {
+                boolean esta = true;
+                int aux = 0;
+                for (int j = 0; j < padre1.size() && esta; j++) {
+                    if (padre1.get(j) == auxQueue1.peek()) {
+                        aux = j;
+                        esta = false;
                     }
                 }
                 if (!esta) {
-                    auxQueue1.add(padre2.get(contador2 % padre1.size()));
+                    int auxas = padre1.get(auxQueue1.poll());
+                    auxVec1.set(aux, auxas);
                 }
             }
-            //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1; !auxQueue1.isEmpty(); j++) {
-                if (auxVec1.get(j % padre2.size()) == -1) {
-                    auxVec1.set(j % padre2.size(), auxQueue1.poll());
-                }
+
+            for (int j = 0; j < posiciones.size(); j++) {
+                auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
+
             System.out.println("auxVec1");
             debugMuestraArray(padre1);
             debugMuestraArray(padre2);
             debugMuestraArray(auxVec1);
 
-            auxSel.add(auxVec1);
-            if (probMutacion * evaluaciones >= random.nextInt(101)) {
-                mutacion(auxSel.get(i));
-            }
-
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec2.set(posiciones.get(j).snd, posiciones.get(j).fst);
-            }
-
             Queue<Integer> auxQueue2 = new LinkedList<>();
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxQueue2.add(padre1.get(j));
+            }
 
-            //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
-            for (int contador = 0, contador2 = aleatorioB + 1; contador < padre2.size(); contador++, contador2++) {
-                boolean esta = false;
-                for (int j = 0; j < auxVec2.size() && !esta; j++) {
-                    if (auxVec2.get(j) == padre1.get(contador2 % padre2.size())) {
-                        esta = true;
+            for (int j = aleatorioA; j <= aleatorioB; j++) {
+                auxVec2.set(j, auxQueue2.poll());
+            }
+
+            for (int j = aleatorioB + 1, cont = 0; cont < auxVec2.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
+                boolean esta = true;
+                for (int k = 0; k < auxVec2.size() && esta; k++) {
+                    if (auxVec2.get(k) == padre2.get(j % auxVec2.size())) {
+                        esta = false;
+                    }
+                }
+                if (esta) {
+                    auxVec2.set(j % auxVec2.size(), padre2.get(j % auxVec2.size()));
+                } else {
+                    auxQueue2.add(padre2.get(j % auxVec2.size()));
+                }
+            }
+
+            while (!auxQueue2.isEmpty()) {
+                boolean esta = true;
+                int aux = 0;
+                for (int j = 0; j < padre2.size() && esta; j++) {
+                    if (padre2.get(j) == auxQueue2.peek()) {
+                        aux = j;
+                        esta = false;
                     }
                 }
                 if (!esta) {
-                    auxQueue2.add(padre1.get(contador2 % padre2.size()));
+                    int auxas = padre2.get(auxQueue2.poll());
+                    auxVec2.set(aux, auxas);
                 }
             }
 
-            //Saca los valores de la queue y los pone en la posicion que este vacia
-            for (int j = aleatorioB + 1; !auxQueue2.isEmpty(); j++) {
-                if (auxVec2.get(j % padre1.size()) == -1) {
-                    auxVec2.set(j % padre1.size(), auxQueue2.poll());
-                }
+            for (int j = 0; j < posiciones.size(); j++) {
+                auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
             }
+            //Se hace bien
+            auxSel.add(auxVec2);
+
             System.out.println("auxVec2");
 
             debugMuestraArray(padre1);
             debugMuestraArray(padre2);
             debugMuestraArray(auxVec2);
             auxSel.add(auxVec2);
-            if (probMutacion * evaluaciones >= random.nextInt(101)) {
-                mutacion(auxSel.get(i + 1));
-            }
+
+        }
+
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel);
         }
 
         return auxSel;
@@ -400,16 +437,17 @@ public class AGG_Clase3_Grupo9 {
         System.out.println("");
     }
 
-    private void mutacion(ArrayList<Integer> elementoAMutar) {
-        int pos1, pos2;
-        do {
-            pos1 = random.nextInt(elementoAMutar.size());
-            pos2 = random.nextInt(elementoAMutar.size());
-        } while (pos1 == pos2);
+    private void mutacion(ArrayList<ArrayList<Integer>> elementoAMutar) {
+        for (int i = 0; i < elementoAMutar.size(); i++) {
+            int pos1, pos2;
+            do {
+                pos1 = random.nextInt(elementoAMutar.size());
+                pos2 = random.nextInt(elementoAMutar.size());
+            } while (pos1 == pos2);
 
-        int aux = elementoAMutar.get(pos1);
-        elementoAMutar.set(pos2, elementoAMutar.get(pos1));
-        elementoAMutar.set(pos1, aux);
-
+            int aux = elementoAMutar.get(i).get(pos1);
+            elementoAMutar.get(i).set(pos2, elementoAMutar.get(i).get(pos1));
+            elementoAMutar.get(i).set(pos1, aux);
+        }
     }
 }
