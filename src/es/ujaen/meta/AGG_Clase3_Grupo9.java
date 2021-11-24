@@ -55,7 +55,7 @@ public class AGG_Clase3_Grupo9 {
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
         reemplazamiento();
-        //cruceOX2(seleccionados);
+        cruceOX2(seleccionados);
         crucePMX(seleccionados);
     }
 
@@ -255,12 +255,25 @@ public class AGG_Clase3_Grupo9 {
 
             ArrayList<Integer> listaAleatorios = new ArrayList<>();
             for (int i = 0; i < 3; ++i) {
-                listaAleatorios.set(i, random.nextInt(padre1.size()));
+                listaAleatorios.add(i, random.nextInt(padre1.size()));
                 for (int k = 0; k < i; ++k) {
                     while (listaAleatorios.get(i) == listaAleatorios.get(k)) {
                         listaAleatorios.set(i, random.nextInt(conjunto.size()));
                     }
                 }
+            }
+
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>();
+
+            for (int i = 0; i < padre1.size(); i++) {
+                auxVec1.add(-1);
+                auxVec2.add(-1);
+            }
+
+            for (int i = 0; i < listaAleatorios.size(); i++) {
+                auxVec1.set(listaAleatorios.get(i), padre2.get(i));
+                auxVec2.set(listaAleatorios.get(i), padre1.get(i));
             }
 
             // ES POSIBLE QUE ESTE BLOQUE SEA REDUNDANTE
@@ -441,8 +454,8 @@ public class AGG_Clase3_Grupo9 {
         for (int i = 0; i < elementoAMutar.size(); i++) {
             int pos1, pos2;
             do {
-                pos1 = random.nextInt(elementoAMutar.size());
-                pos2 = random.nextInt(elementoAMutar.size());
+                pos1 = random.nextInt(elementoAMutar.get(i).size());
+                pos2 = random.nextInt(elementoAMutar.get(i).size());
             } while (pos1 == pos2);
 
             int aux = elementoAMutar.get(i).get(pos1);
