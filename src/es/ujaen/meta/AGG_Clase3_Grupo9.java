@@ -31,6 +31,7 @@ public class AGG_Clase3_Grupo9 {
     private final int vecesSeleccion;
     private final int tamTorneoSeleccion;
     private final int tamTorneoReemplazamiento;
+    private ArrayList<Integer> elite;
 
     public AGG_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento) {
@@ -47,6 +48,10 @@ public class AGG_Clase3_Grupo9 {
         this.conjunto = new ArrayList<>();
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
+        this.elite = new ArrayList<>();
+        for(int i = 0; i < conjunto.size(); ++i){
+            elite.add(-1);
+        }
     }
 
     public void hazGeneticoGeneracional() {
@@ -124,6 +129,39 @@ public class AGG_Clase3_Grupo9 {
             }
             poblacion.add(individuos);
 
+        }
+
+        // INICIAMOS LA ÉLITE. EN EL REEMPLAZAMIENTO TRATAREMOS CON ELLA
+        nuevaElite(poblacion);
+    }
+
+    private void nuevaElite(ArrayList<ArrayList<Integer>> poblacion1){
+        int costeMin = Integer.MAX_VALUE;
+        int eliteIt = -1;
+        for (int i = 0; i < poblacion1.size(); ++i){
+            if(calculaCosteConjunto(poblacion1.get(i)) < costeMin){
+                eliteIt = i;
+            }
+        }
+
+        for (int i = 0; i < poblacion1.get(eliteIt).size(); ++i){
+            elite.set(i,poblacion1.get(eliteIt).get(i));
+        }
+    }
+
+    // Esta función la llamaremos desde el reemplazamiento, para sustituir el peor de la nueva generación por la élite
+    // vigente
+    private void eliteReemplaza(ArrayList<ArrayList<Integer>> poblacion1, ArrayList<Integer> elite1){
+        int costeMin = Integer.MIN_VALUE;
+        int eliteIt = -1;
+        for (int i = 0; i < poblacion1.size(); ++i){
+            if(calculaCosteConjunto(poblacion1.get(i)) > costeMin){
+                eliteIt = i;
+            }
+        }
+
+        for (int i = 0; i < poblacion1.get(eliteIt).size(); ++i){
+            elite.set(i,elite1.get(i));
         }
     }
 
@@ -232,19 +270,41 @@ public class AGG_Clase3_Grupo9 {
         return peor;
     }
 
-    private void reemplazamiento() {
-        ArrayList<ArrayList<Integer>> nuevaPob = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> reemp = new ArrayList<>();
-        for (int k = 0; k < tamPoblacion; ++k) {
-            for (int i = 0; i < tamTorneoReemplazamiento; ++i) {
-                int ale = random.nextInt(tamPoblacion);
-                if (!reemp.contains(poblacion.get(ale))) {
-                    reemp.add(poblacion.get(ale));
+    private void reemplazamiento(ArrayList<ArrayList<Integer>> nuevaPob) {
+        // Habiendo cruzado y mutado toda la población nueva, tenemos que reemplazar la anterior.
+        // Primero, tenemos que ver si el élite está en esta nueva población.
+        boolean isElite = false;
+        int eliteIt2 = -1;
+        for (int i = 0; i < nuevaPob.size(); ++i){
+            isElite = true;
+            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++i){
+                if (elite.get(j) != nuevaPob.get(i).get(j)) {
+                    isElite = false; // LA ÉLITE ANTERIOR NO ESTÁ EN i. SEGUIR BUSCANDO
+                    break;
                 }
             }
+            if (isElite == true){
+                eliteIt2 = i;
+                // LA ÉLITE ANTERIOR ESTARÍA EN i
+            }
+        }
 
-            // ME QUEDO CON EL PEOR
-//            nuevaPob.add(reemp.get(indicePeor));
+        // Si la élite no está en la población nueva, poner la élite de la población anterior.
+        // Si la élite sí está, no hacer nada aquí.
+
+        if (isElite == false){
+            eliteReemplaza(nuevaPob,elite);
+        }
+
+        // Buscamos una nueva élite en la nueva población (esto quizás no haga falta hacerlo aquí o ya se haga en la
+        // selección)
+        nuevaElite(nuevaPob);
+
+        // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
+        for(int i = 0; i < poblacion.size(); ++i){
+            for (int j = 0; j < poblacion.get(i).size(); ++j){
+                poblacion.get(i).set(j,nuevaPob.get(i).get(j));
+            }
         }
     }
 
