@@ -281,7 +281,10 @@ public class AGG_Clase3_Grupo9 {
             // ¿Qué elementos de padre1 están en las posiciones escogidas de padre2?
             for (int i = 0; i < padre1.size(); ++i) {
                 for (int k = 0; k < paresEscogidosPadre2.size(); ++k) {
-                    if (paresEscogidosPadre2.get(k).snd == padre1.get(i)) {
+                    int cual1 = paresEscogidosPadre2.get(k).snd;
+                    int cual2 = padre1.get(i);
+
+                    if (cual1 == cual2) {
                         Pair<Integer,Integer> par = new Pair<>(i,padre1.get(i));
                         paresOrdenadosPadre1.add(par);
                     }
@@ -316,7 +319,9 @@ public class AGG_Clase3_Grupo9 {
             for (int i = 0; i < padre2.size(); ++i) {
                 auxVec2.add(-1);
             }
-
+            if (j == 4){
+                debugMuestraArray(padre1);
+            }
             for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
                 auxVec2.set(paresEscogidosPadre2.get(i).fst,paresOrdenadosPadre1.get(i).snd);
             }

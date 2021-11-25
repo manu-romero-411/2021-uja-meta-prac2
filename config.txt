@@ -1,4 +1,4 @@
-Archivos=nissan03.dat
+Archivos=ford01.dat ford02.dat ford03.dat ford04.dat nissan01.dat nissan02.dat nissan03.dat nissan04.dat
 Semillas=77433193
 Algoritmos=Greedy
 Guardar=log
