@@ -297,7 +297,6 @@ public class AGG_Clase3_Grupo9 {
 
         // Si la élite no está en la población nueva, poner la élite de la población anterior.
         // Si la élite sí está, no hacer nada aquí.
-
         if (isElite == false){
             eliteReemplaza(nuevaPob,elite);
         }
