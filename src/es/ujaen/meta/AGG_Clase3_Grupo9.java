@@ -49,21 +49,24 @@ public class AGG_Clase3_Grupo9 {
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
         this.elite = new ArrayList<>();
-        for(int i = 0; i < conjunto.size(); ++i){
+
+    }
+
+    private void inicializaElite(){
+        for(int i = 0; i < archivo.getMatriz1().length; ++i){
             elite.add(-1);
         }
     }
 
     public void hazGeneticoGeneracional() {
+        inicializaElite();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-        reemplazamiento();
         cruceOX2(seleccionados);
         crucePMX(seleccionados);
-        reemplazamiento();
-
+        reemplazamiento(seleccionados);
     }
 
     private void iniciaConjunto() {
@@ -141,6 +144,7 @@ public class AGG_Clase3_Grupo9 {
         for (int i = 0; i < poblacion1.size(); ++i){
             if(calculaCosteConjunto(poblacion1.get(i)) < costeMin){
                 eliteIt = i;
+                costeMin = calculaCosteConjunto(poblacion1.get(i));
             }
         }
 
@@ -277,8 +281,10 @@ public class AGG_Clase3_Grupo9 {
         int eliteIt2 = -1;
         for (int i = 0; i < nuevaPob.size(); ++i){
             isElite = true;
-            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++i){
-                if (elite.get(j) != nuevaPob.get(i).get(j)) {
+            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++j){
+                int cual1 = elite.get(j);
+                int cual2 = nuevaPob.get(i).get(j);
+                if (cual1 != cual2) {
                     isElite = false; // LA ÉLITE ANTERIOR NO ESTÁ EN i. SEGUIR BUSCANDO
                     break;
                 }
