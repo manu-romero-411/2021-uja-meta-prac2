@@ -265,38 +265,77 @@ public class AGG_Clase3_Grupo9 {
                 }
             }
 
-            ArrayList<Integer> auxVec1 = new ArrayList<>();
-            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            ArrayList<Pair<Integer,Integer>> paresEscogidosPadre2 = new ArrayList<>();
+            ArrayList<Pair<Integer,Integer>> paresOrdenadosPadre1 = new ArrayList<>();
 
-            for (int i = 0; i < padre1.size(); i++) {
-                auxVec1.add(-1);
+            // ¿Qué elementos de padre2 me ha escogido el aleatorio?
+            for (int i = 0; i < padre2.size(); ++i) {
+                for (int k = 0; k < listaAleatorios.size(); ++k) {
+                    if (listaAleatorios.get(k) == i) {
+                        Pair<Integer,Integer> par = new Pair<>(i,padre2.get(i));
+                        paresEscogidosPadre2.add(par);
+                    }
+                }
+            }
+
+            // ¿Qué elementos de padre1 están en las posiciones escogidas de padre2?
+            for (int i = 0; i < padre1.size(); ++i) {
+                for (int k = 0; k < paresEscogidosPadre2.size(); ++k) {
+                    if (paresEscogidosPadre2.get(k).snd == padre1.get(i)) {
+                        Pair<Integer,Integer> par = new Pair<>(i,padre1.get(i));
+                        paresOrdenadosPadre1.add(par);
+                    }
+                }
+            }
+
+            // Copiamos el padre1 exceptuando los valores escogidos
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            for (int i = 0; i < padre1.size(); ++i) {
+                auxVec1.add(padre1.get(i));
+            }
+
+            for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
+                for (int k = 0; k < auxVec1.size(); ++k){
+                    if (paresEscogidosPadre2.get(i).snd == auxVec1.get(k)){
+                        auxVec1.set(k,-1);
+                    }
+                }
+            }
+
+            // Añadimos los elementos de padre2 en orden en padre1
+            int contadorPar = 0;
+            for (int i = 0; i < auxVec1.size(); ++i){
+                if(auxVec1.get(i) == -1){
+                    auxVec1.set(i,paresEscogidosPadre2.get(contadorPar).snd);
+                    contadorPar++;
+                }
+            }
+
+            // Ahora hay que hacer lo mismo pero con padre2
+            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            for (int i = 0; i < padre2.size(); ++i) {
                 auxVec2.add(-1);
             }
 
-            for (int i = 0; i < listaAleatorios.size(); i++) {
-                auxVec1.set(listaAleatorios.get(i), padre2.get(i));
-                auxVec2.set(listaAleatorios.get(i), padre1.get(i));
+            for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
+                auxVec2.set(paresEscogidosPadre2.get(i).fst,paresOrdenadosPadre1.get(i).snd);
             }
 
-            // ES POSIBLE QUE ESTE BLOQUE SEA REDUNDANTE
-            ArrayList<Integer> elementosCorte = new ArrayList<>();
-            for (int i = 0; i < padre1.size(); ++i) {
-                if (listaAleatorios.contains(padre1.get(i))) {
-                    elementosCorte.add(padre1.get(i));
+            for (int i = 0; i < auxVec2.size(); ++i) {
+                if (auxVec2.get(i) == -1) {
+                    auxVec2.set(i, padre2.get(i));
                 }
             }
 
-            for (int i = 0; i < padre2.size(); ++i) {
-                if (elementosCorte.contains(padre2.get(i))) {
-                    padre2.set(i, -1);
-                }
-            }
-            for (int i = 0; i < padre2.size(); ++i) {
-                if (padre2.get(i) == -1) {
-                    padre2.set(i, elementosCorte.get(0));
-                    elementosCorte.remove(0);
-                }
-            }
+            // Ya tenemos los dos vectores cruzados. Meterlos en la población
+            auxSel.add(auxVec2);
+            auxSel.add(auxVec1);
+
+        }
+
+        // Se realiza la mutación con la nueva población generada
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel);
         }
         return auxSel;
     }
