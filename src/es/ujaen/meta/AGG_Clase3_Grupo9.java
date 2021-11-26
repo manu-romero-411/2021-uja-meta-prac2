@@ -237,6 +237,7 @@ public class AGG_Clase3_Grupo9 {
             }
             seleccionados.add(aux);
         }
+        nuevaElite(poblacion);
         return seleccionados;
     }
 
@@ -303,7 +304,7 @@ public class AGG_Clase3_Grupo9 {
 
         // Buscamos una nueva élite en la nueva población (esto quizás no haga falta hacerlo aquí o ya se haga en la
         // selección)
-        nuevaElite(nuevaPob);
+        //nuevaElite(nuevaPob);
 
         // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
         for(int i = 0; i < poblacion.size(); ++i){
@@ -359,23 +360,16 @@ public class AGG_Clase3_Grupo9 {
             // Copiamos el padre1 exceptuando los valores escogidos
             ArrayList<Integer> auxVec1 = new ArrayList<>();
             for (int i = 0; i < padre1.size(); ++i) {
-                auxVec1.add(padre1.get(i));
+                auxVec1.add(-1);
             }
 
             for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
-                for (int k = 0; k < auxVec1.size(); ++k){
-                    if (paresEscogidosPadre2.get(i).snd == auxVec1.get(k)){
-                        auxVec1.set(k,-1);
-                    }
-                }
+                auxVec1.set(paresOrdenadosPadre1.get(i).fst,paresEscogidosPadre2.get(i).snd);
             }
 
-            // Añadimos los elementos de padre2 en orden en padre1
-            int contadorPar = 0;
-            for (int i = 0; i < auxVec1.size(); ++i){
-                if(auxVec1.get(i) == -1){
-                    auxVec1.set(i,paresEscogidosPadre2.get(contadorPar).snd);
-                    contadorPar++;
+            for (int i = 0; i < auxVec1.size(); ++i) {
+                if (auxVec1.get(i) == -1) {
+                    auxVec1.set(i, padre1.get(i));
                 }
             }
 
@@ -384,9 +378,7 @@ public class AGG_Clase3_Grupo9 {
             for (int i = 0; i < padre2.size(); ++i) {
                 auxVec2.add(-1);
             }
-            if (j == 4){
-                debugMuestraArray(padre1);
-            }
+
             for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
                 auxVec2.set(paresEscogidosPadre2.get(i).fst,paresOrdenadosPadre1.get(i).snd);
             }
