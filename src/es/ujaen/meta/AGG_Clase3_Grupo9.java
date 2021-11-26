@@ -320,52 +320,46 @@ public class AGG_Clase3_Grupo9 {
 
             ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(j));
             ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(j + 1));
+            ArrayList<Boolean> bools = new ArrayList<>();
 
-            ArrayList<Integer> listaAleatorios = new ArrayList<>();
-            for (int i = 0; i < 3; ++i) {
-                listaAleatorios.add(i, random.nextInt(padre1.size()));
-                for (int k = 0; k < i; ++k) {
-                    while (listaAleatorios.get(i) == listaAleatorios.get(k)) {
-                        listaAleatorios.set(i, random.nextInt(conjunto.size()));
-                    }
-                }
+            for (int i = 0; i < padre1.size(); ++i) {
+                bools.add(random.nextBoolean());
             }
 
-            ArrayList<Pair<Integer,Integer>> paresEscogidosPadre2 = new ArrayList<>();
-            ArrayList<Pair<Integer,Integer>> paresOrdenadosPadre1 = new ArrayList<>();
+            ArrayList<Pair<Integer,Integer>> paresEscogidos = new ArrayList<>();
+            ArrayList<Pair<Integer,Integer>> paresOrdenados = new ArrayList<>();
 
             // ¿Qué elementos de padre2 me ha escogido el aleatorio?
-            for (int i = 0; i < padre2.size(); ++i) {
-                for (int k = 0; k < listaAleatorios.size(); ++k) {
-                    if (listaAleatorios.get(k) == i) {
-                        Pair<Integer,Integer> par = new Pair<>(i,padre2.get(i));
-                        paresEscogidosPadre2.add(par);
-                    }
+            for (int i = 0; i < bools.size(); ++i) {
+                if (bools.get(i)) {
+                    Pair<Integer,Integer> par = new Pair<>(i,padre2.get(i));
+                    paresEscogidos.add(par);
                 }
             }
 
             // ¿Qué elementos de padre1 están en las posiciones escogidas de padre2?
             for (int i = 0; i < padre1.size(); ++i) {
-                for (int k = 0; k < paresEscogidosPadre2.size(); ++k) {
-                    int cual1 = paresEscogidosPadre2.get(k).snd;
+                for (int k = 0; k < paresEscogidos.size(); ++k) {
+                    int cual1 = paresEscogidos.get(k).snd;
                     int cual2 = padre1.get(i);
 
                     if (cual1 == cual2) {
                         Pair<Integer,Integer> par = new Pair<>(i,padre1.get(i));
-                        paresOrdenadosPadre1.add(par);
+                        paresOrdenados.add(par);
                     }
                 }
             }
 
-            // Copiamos el padre1 exceptuando los valores escogidos
+            // Primero copiamos los valores escogidos de padre2 en su orden, y luego el resto de padre1
             ArrayList<Integer> auxVec1 = new ArrayList<>();
             for (int i = 0; i < padre1.size(); ++i) {
                 auxVec1.add(-1);
             }
 
-            for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
-                auxVec1.set(paresOrdenadosPadre1.get(i).fst,paresEscogidosPadre2.get(i).snd);
+            for (int i = 0; i < paresEscogidos.size(); ++i){
+                auxVec1.set(paresOrdenados.get(i).fst,paresEscogidos.get(i).snd);
             }
+
 
             for (int i = 0; i < auxVec1.size(); ++i) {
                 if (auxVec1.get(i) == -1) {
@@ -374,21 +368,54 @@ public class AGG_Clase3_Grupo9 {
             }
 
             // Ahora hay que hacer lo mismo pero con padre2
+            for (int i = 0; i < padre2.size(); ++i) {
+                bools.set(i,random.nextBoolean());
+            }
+            paresEscogidos.clear();
+            paresOrdenados.clear();
+
+            // ¿Qué elementos de padre1 me ha escogido el aleatorio?
+            for (int i = 0; i < padre1.size(); ++i) {
+                if (bools.get(i)) {
+                    Pair<Integer,Integer> par = new Pair<>(i,padre1.get(i));
+                    paresEscogidos.add(par);
+                }
+            }
+
+            // ¿Qué elementos de padre2 están en las posiciones escogidas de padre1?
+            for (int i = 0; i < padre2.size(); ++i) {
+                for (int k = 0; k < paresEscogidos.size(); ++k) {
+                    int cual1 = paresEscogidos.get(k).snd;
+                    int cual2 = padre2.get(i);
+
+                    if (cual1 == cual2) {
+                        Pair<Integer,Integer> par = new Pair<>(i,padre2.get(i));
+                        paresOrdenados.add(par);
+                    }
+                }
+            }
+
+            // Primero copiamos los valores escogidos de padre2 en su orden, y luego el resto de padre1
             ArrayList<Integer> auxVec2 = new ArrayList<>();
             for (int i = 0; i < padre2.size(); ++i) {
                 auxVec2.add(-1);
             }
 
-            for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
-                auxVec2.set(paresEscogidosPadre2.get(i).fst,paresOrdenadosPadre1.get(i).snd);
+            for (int i = 0; i < paresEscogidos.size(); ++i){
+                auxVec2.set(paresOrdenados.get(i).fst,paresEscogidos.get(i).snd);
             }
+
 
             for (int i = 0; i < auxVec2.size(); ++i) {
                 if (auxVec2.get(i) == -1) {
-                    auxVec2.set(i, padre2.get(i));
+                    auxVec2.set(i, padre1.get(i));
                 }
             }
 
+            debugMuestraArray(padre1);
+            debugMuestraArray(padre2);
+            debugMuestraArray(auxVec1);
+            debugMuestraArray(auxVec2);
             // Ya tenemos los dos vectores cruzados. Meterlos en la población
             auxSel.add(auxVec2);
             auxSel.add(auxVec1);

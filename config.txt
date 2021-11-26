@@ -21,3 +21,4 @@ Gen-TamTorneoSeleccionEstacionario=3
 Gen-TamReemplazamientoGeneracional=50
 Gen-TamTorneoReemplazamientoEstacionario=4
 Gen-VecesTorneoReemplazamientoEstacionario=2
+Gen-NumCortesCruceOX2=3
