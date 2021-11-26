@@ -67,6 +67,19 @@ public class AGG_Clase3_Grupo9 {
         cruceOX2(seleccionados);
         crucePMX(seleccionados);
         reemplazamiento(seleccionados);
+
+        int costeMin = Integer.MAX_VALUE;
+        int mejorSol = -1;
+        for (int i = 0; i < poblacion.size(); ++i){
+            int costeSel = calculaCosteConjunto(poblacion.get(i));
+            if (costeSel < costeMin){
+                costeMin = costeSel;
+                mejorSol = i;
+            }
+        }
+
+        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
+        debugMuestraArray(poblacion.get(mejorSol));
     }
 
     private void iniciaConjunto() {
@@ -319,10 +332,8 @@ public class AGG_Clase3_Grupo9 {
 
             ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(j));
             ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(j + 1));
-            ArrayList<Boolean> bools = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
-
             for (int i = 0; i < padre1.size(); i++) {
                 auxVec1.add(-1);
             }
@@ -340,14 +351,14 @@ public class AGG_Clase3_Grupo9 {
 
             for (int i = 0; i < padre1.size(); i++) {
                 if (boolPadre.poll()) {
-                    System.out.print("V ");
+                    //System.out.print("V ");
                     auxVec1.set(i, padre1.get(i));
                 } else {
-                    System.out.print("F ");
+                    //System.out.print("F ");
                     noEstan.add(padre1.get(i));
                 }
             }
-            System.out.println("");
+            //System.out.println("");
             for (int i = 0; i < padre2.size(); i++) {
                 boolean noEsta = false;
                 for (int k = 0; k < noEstan.size() && !noEsta; k++) {
@@ -372,14 +383,14 @@ public class AGG_Clase3_Grupo9 {
 
             for (int i = 0; i < padre2.size(); i++) {
                 if (boolPadre.poll()) {
-                    System.out.print("V ");
+                    //System.out.print("V ");
                     auxVec2.set(i, padre2.get(i));
                 } else {
-                    System.out.print("F ");
+                    //System.out.print("F ");
                     noEstan.add(padre2.get(i));
                 }
             }
-            System.out.println("");
+            //System.out.println("");
 
             for (int i = 0; i < padre1.size(); i++) {
                 boolean noEsta = false;
@@ -488,10 +499,10 @@ public class AGG_Clase3_Grupo9 {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
 
-            System.out.println("auxVec1");
+            /*System.out.println("auxVec1");
             debugMuestraArray(padre1);
             debugMuestraArray(padre2);
-            debugMuestraArray(auxVec1);
+            debugMuestraArray(auxVec1);*/
 
             Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = aleatorioA; j <= aleatorioB; j++) {
@@ -537,12 +548,11 @@ public class AGG_Clase3_Grupo9 {
             //Se hace bien
             auxSel.add(auxVec2);
 
-            System.out.println("auxVec2");
-
+            /*System.out.println("auxVec2");
             debugMuestraArray(padre1);
             debugMuestraArray(padre2);
             debugMuestraArray(auxVec2);
-            auxSel.add(auxVec2);
+            auxSel.add(auxVec2);*/
 
         }
 
