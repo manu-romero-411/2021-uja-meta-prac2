@@ -384,9 +384,6 @@ public class AGE_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
-            aleatorioA = 5;
-            aleatorioB = 6;
-            System.out.println("AleatorioA: " + aleatorioA + " AleatorioB: " + aleatorioB);
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
