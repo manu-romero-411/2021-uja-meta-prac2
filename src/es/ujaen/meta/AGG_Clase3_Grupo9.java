@@ -359,7 +359,7 @@ public class AGG_Clase3_Grupo9 {
             // Copiamos el padre1 exceptuando los valores escogidos
             ArrayList<Integer> auxVec1 = new ArrayList<>();
             for (int i = 0; i < padre1.size(); ++i) {
-                auxVec1.add(padre1.get(i));
+                auxVec1.add(-1);
             }
 
             for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
@@ -427,9 +427,6 @@ public class AGG_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
-            aleatorioA = 5;
-            aleatorioB = 6;
-            System.out.println("AleatorioA: " + aleatorioA + " AleatorioB: " + aleatorioB);
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
