@@ -62,9 +62,9 @@ public class AGE_Clase3_Grupo9 {
             if (probCruce * 100 >= random.nextInt(101)) {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
             }
-            for (int j = 0; j < poblacion.size(); j++) {
-                poblacion.set(i, reemplazamiento(seleccionados).get(i));
-            }
+            reemplazamiento(seleccionados);
+
+            System.out.println("A");
         }
     }
 
@@ -213,7 +213,7 @@ public class AGE_Clase3_Grupo9 {
         System.out.println(debug);
     }
 
-    private ArrayList<ArrayList<Integer>> reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
+    private void reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
@@ -256,7 +256,6 @@ public class AGE_Clase3_Grupo9 {
             }
 
         }
-        return seleccionados;
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
