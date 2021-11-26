@@ -50,10 +50,10 @@ public class AGE_Clase3_Grupo9 {
     }
 
     public void hazGeneticoEstacionario() {
+        iniciaConjunto();
+        creaLRC();
+        creaPoblacionInicial();
         for (int i = 0; i < evaluaciones; ++i) {
-            iniciaConjunto();
-            creaLRC();
-            creaPoblacionInicial();
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (probCruce * 100 >= random.nextInt(101)) {
                 cruceOX(seleccionados); //Cruces y mutación a la vez
@@ -62,8 +62,9 @@ public class AGE_Clase3_Grupo9 {
             if (probCruce * 100 >= random.nextInt(101)) {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
             }
-            reemplazamiento();
-            evaluacion();
+            for (int j = 0; j < poblacion.size(); j++) {
+                poblacion.set(i, reemplazamiento(seleccionados).get(i));
+            }
         }
     }
 
@@ -212,7 +213,7 @@ public class AGE_Clase3_Grupo9 {
         System.out.println(debug);
     }
 
-    private void reemplazamiento() {
+    private ArrayList<ArrayList<Integer>> reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
@@ -240,37 +241,33 @@ public class AGE_Clase3_Grupo9 {
             }
             seleccionados.add(peorTorneo(torneos));
         }
-        ArrayList<Pair<Integer, Integer>> indicesPobActualPeores = new ArrayList<>();
-        for (int m = 0; m < poblacion.size(); ++m) {
-            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(poblacion.get(m)));
-            indicesPobActualPeores.add(par);
-        }
-        sortPairArray(indicesPobActualPeores);
 
-        ArrayList<Pair<Integer, Integer>> indicesSeleccionados = new ArrayList<>();
-        for (int m = 0; m < seleccionados.size(); ++m) {
-            Pair<Integer, Integer> par = new Pair(m, calculaCosteConjunto(seleccionados.get(m)));
-            indicesSeleccionados.add(par);
-        }
-        sortPairArray(indicesSeleccionados);
-
-        //LOS PEORES VAN AL FINAL
-        for (int m = indicesPobActualPeores.size() - 1; m > 0; --m) {
-            boolean noreemplazado = true;
-            for (int j = 0; j < indicesSeleccionados.size() && noreemplazado; ++j) {
-                // LA CONDICIÓN QUE SE DEBE CUMPLIR PARA EL REEMPLAZO ES ESTA
-                if (indicesSeleccionados.get(j).snd < indicesPobActualPeores.get(m).snd) {
-                    ArrayList<Integer> nuevo = new ArrayList<>();
-                    for (int k = 0; k < seleccionados.get(indicesSeleccionados.get(j).fst).size(); ++k) {
-                        nuevo.add(seleccionados.get(indicesSeleccionados.get(j).fst).get(k));
+        for (int i = 0; i < poblacion.size(); i++) {
+            for (int j = 0; j < seleccionados.size(); j++) {
+                if (poblacion.get(i) == seleccionados.get(j)) {
+                    boolean reemplaza = false;
+                    for (int k = 0; k < cruzados.size() && !reemplaza; k++) {
+                        if (reemplazaPoblacion(poblacion.get(i), cruzados.get(k))) {
+                            cruzados.remove(k);
+                            reemplaza = true;
+                        }
                     }
-                    poblacion.set(indicesPobActualPeores.get(m).fst, nuevo);
-                    indicesSeleccionados.remove(j);
-                    noreemplazado = false;
                 }
             }
+
         }
-        System.out.println();
+        return seleccionados;
+    }
+
+    private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
+        if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
+            return false;
+        } else {
+            for (int i = 0; i < seleccionado.size(); i++) {
+                seleccionado.set(i, cruzado.get(i));
+            }
+        }
+        return true;
     }
 
     private ArrayList<ArrayList<Integer>> cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
@@ -410,7 +407,6 @@ public class AGE_Clase3_Grupo9 {
                 auxVec1.set(j, auxQueue1.poll());
             }
 
-
             for (int j = aleatorioB + 1, cont = 0; cont < auxVec1.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
                 boolean esta = true;
                 for (int k = 0; k < auxVec1.size() && esta; k++) {
@@ -444,11 +440,6 @@ public class AGE_Clase3_Grupo9 {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
 
-            System.out.println("auxVec1");
-            debugMuestraArray(padre1);
-            debugMuestraArray(padre2);
-            debugMuestraArray(auxVec1);
-
             Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
@@ -457,7 +448,6 @@ public class AGE_Clase3_Grupo9 {
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxVec2.set(j, auxQueue2.poll());
             }
-
 
             for (int j = aleatorioB + 1, cont = 0; cont < auxVec2.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
                 boolean esta = true;
@@ -493,12 +483,6 @@ public class AGE_Clase3_Grupo9 {
             }
             //Se hace bien
             auxSel.add(auxVec2);
-
-            System.out.println("auxVec2");
-
-            debugMuestraArray(padre1);
-            debugMuestraArray(padre2);
-            debugMuestraArray(auxVec2);
             auxSel.add(auxVec2);
 
         }
@@ -524,49 +508,7 @@ public class AGE_Clase3_Grupo9 {
         }
     }
 
-    private void sortPairArray(ArrayList<Pair<Integer, Integer>> arr) {
-        boolean ordenado = false;
-        while (!ordenado) {
-            if (arr.size() == 2) {
-                // SI HAY DOS ELEMENTOS EL FOR NO VA BIEN Y ES MEJOR HACER LA COMPARACIÓN A MANO
-                if (arr.get(0).snd > arr.get(1).snd) {
-                    Pair<Integer, Integer> aux = new Pair(arr.get(1).fst, arr.get(1).snd);
-                    arr.set(0, arr.get(1));
-                    arr.set(1, aux);
-                }
-                ordenado = true;
-            } else {
-                if (arr.size() < 2) {
-                    // NO TIENE SENTIDO ORDENAR SI EN EL ARRAYLIST SOLO HAY UN ELEMENTO
-                    ordenado = true;
-                } else {
-                    if (arr.size() > 2) {
-                        for (int i = 1; i < arr.size() - 1; ++i) {
-                            if (arr.get(i).snd > arr.get(i + 1).snd) {
-                                Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                                arr.set(i, arr.get(i + 1));
-                                arr.set(i + 1, aux);
-                            }
-                            if (arr.get(i).snd < arr.get(i - 1).snd) {
-                                Pair<Integer, Integer> aux = new Pair(arr.get(i).fst, arr.get(i).snd);
-                                arr.set(i, arr.get(i - 1));
-                                arr.set(i - 1, aux);
-                            }
-                        }
-                        ordenado = true;
-                        for (int i = 0; i < arr.size() - 1 && ordenado; ++i) {
-                            if (arr.get(i).snd > arr.get(i + 1).snd) {
-                                ordenado = false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println();
-    }
-
-    private void evaluacion(){
+    private void evaluacion() {
 
     }
 }
