@@ -50,31 +50,20 @@ public class AGE_Clase3_Grupo9 {
     }
 
     public void hazGeneticoEstacionario() {
-        iniciaConjunto();
-        creaLRC();
-        creaPoblacionInicial();
-        ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
+        for (int i = 0; i < evaluaciones; ++i) {
+            iniciaConjunto();
+            creaLRC();
+            creaPoblacionInicial();
+            ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
+            if (probCruce * 100 >= random.nextInt(101)) {
+                cruceOX(seleccionados); //Cruces y mutación a la vez
 
-        if (probCruce * 100 >= random.nextInt(101)) {
-            cruceOX(seleccionados); //Cruces y mutacion a la vez
-
-        }
-        if (probCruce * 100 >= random.nextInt(101)) {
-            crucePMX(seleccionados); //Cruces y mutacion a la vez
-        }
-        System.out.println("POBLACIÓN ANTES:");
-        for (int i = 0; i < poblacion.size(); ++i) {
-            System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
-            debugMuestraArray(poblacion.get(i));
-        }
-        ArrayList<ArrayList<Integer>> pobantes = poblacion;
-        reemplazamiento();
-        ArrayList<ArrayList<Integer>> pobdespues = poblacion;
-
-        System.out.println("POBLACIÓN AHORA:");
-        for (int i = 0; i < poblacion.size(); ++i) {
-            System.out.print("COSTE " + calculaCosteConjunto(poblacion.get(i)) + " -> ");
-            debugMuestraArray(poblacion.get(i));
+            }
+            if (probCruce * 100 >= random.nextInt(101)) {
+                crucePMX(seleccionados); //Cruces y mutación a la vez
+            }
+            reemplazamiento();
+            evaluacion();
         }
     }
 
@@ -578,5 +567,9 @@ public class AGE_Clase3_Grupo9 {
             }
         }
         System.out.println();
+    }
+
+    private void evaluacion(){
+
     }
 }

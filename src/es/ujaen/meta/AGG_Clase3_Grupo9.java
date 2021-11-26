@@ -31,6 +31,7 @@ public class AGG_Clase3_Grupo9 {
     private final int vecesSeleccion;
     private final int tamTorneoSeleccion;
     private final int tamTorneoReemplazamiento;
+    private ArrayList<Integer> elite;
 
     public AGG_Clase3_Grupo9(Random random, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento) {
@@ -47,16 +48,25 @@ public class AGG_Clase3_Grupo9 {
         this.conjunto = new ArrayList<>();
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
+        this.elite = new ArrayList<>();
+
+    }
+
+    private void inicializaElite(){
+        for(int i = 0; i < archivo.getMatriz1().length; ++i){
+            elite.add(-1);
+        }
     }
 
     public void hazGeneticoGeneracional() {
+        inicializaElite();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-        reemplazamiento();
         cruceOX2(seleccionados);
         crucePMX(seleccionados);
+        reemplazamiento(seleccionados);
     }
 
     private void iniciaConjunto() {
@@ -122,6 +132,40 @@ public class AGG_Clase3_Grupo9 {
             }
             poblacion.add(individuos);
 
+        }
+
+        // INICIAMOS LA ÉLITE. EN EL REEMPLAZAMIENTO TRATAREMOS CON ELLA
+        nuevaElite(poblacion);
+    }
+
+    private void nuevaElite(ArrayList<ArrayList<Integer>> poblacion1){
+        int costeMin = Integer.MAX_VALUE;
+        int eliteIt = -1;
+        for (int i = 0; i < poblacion1.size(); ++i){
+            if(calculaCosteConjunto(poblacion1.get(i)) < costeMin){
+                eliteIt = i;
+                costeMin = calculaCosteConjunto(poblacion1.get(i));
+            }
+        }
+
+        for (int i = 0; i < poblacion1.get(eliteIt).size(); ++i){
+            elite.set(i,poblacion1.get(eliteIt).get(i));
+        }
+    }
+
+    // Esta función la llamaremos desde el reemplazamiento, para sustituir el peor de la nueva generación por la élite
+    // vigente
+    private void eliteReemplaza(ArrayList<ArrayList<Integer>> poblacion1, ArrayList<Integer> elite1){
+        int costeMin = Integer.MIN_VALUE;
+        int eliteIt = -1;
+        for (int i = 0; i < poblacion1.size(); ++i){
+            if(calculaCosteConjunto(poblacion1.get(i)) > costeMin){
+                eliteIt = i;
+            }
+        }
+
+        for (int i = 0; i < poblacion1.get(eliteIt).size(); ++i){
+            elite.set(i,elite1.get(i));
         }
     }
 
@@ -230,19 +274,42 @@ public class AGG_Clase3_Grupo9 {
         return peor;
     }
 
-    private void reemplazamiento() {
-        ArrayList<ArrayList<Integer>> nuevaPob = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> reemp = new ArrayList<>();
-        for (int k = 0; k < tamPoblacion; ++k) {
-            for (int i = 0; i < tamTorneoReemplazamiento; ++i) {
-                int ale = random.nextInt(tamPoblacion);
-                if (!reemp.contains(poblacion.get(ale))) {
-                    reemp.add(poblacion.get(ale));
+    private void reemplazamiento(ArrayList<ArrayList<Integer>> nuevaPob) {
+        // Habiendo cruzado y mutado toda la población nueva, tenemos que reemplazar la anterior.
+        // Primero, tenemos que ver si el élite está en esta nueva población.
+        boolean isElite = false;
+        int eliteIt2 = -1;
+        for (int i = 0; i < nuevaPob.size(); ++i){
+            isElite = true;
+            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++j){
+                int cual1 = elite.get(j);
+                int cual2 = nuevaPob.get(i).get(j);
+                if (cual1 != cual2) {
+                    isElite = false; // LA ÉLITE ANTERIOR NO ESTÁ EN i. SEGUIR BUSCANDO
+                    break;
                 }
             }
+            if (isElite == true){
+                eliteIt2 = i;
+                // LA ÉLITE ANTERIOR ESTARÍA EN i
+            }
+        }
 
-            // ME QUEDO CON EL PEOR
-//            nuevaPob.add(reemp.get(indicePeor));
+        // Si la élite no está en la población nueva, poner la élite de la población anterior.
+        // Si la élite sí está, no hacer nada aquí.
+        if (isElite == false){
+            eliteReemplaza(nuevaPob,elite);
+        }
+
+        // Buscamos una nueva élite en la nueva población (esto quizás no haga falta hacerlo aquí o ya se haga en la
+        // selección)
+        nuevaElite(nuevaPob);
+
+        // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
+        for(int i = 0; i < poblacion.size(); ++i){
+            for (int j = 0; j < poblacion.get(i).size(); ++j){
+                poblacion.get(i).set(j,nuevaPob.get(i).get(j));
+            }
         }
     }
 
@@ -263,38 +330,82 @@ public class AGG_Clase3_Grupo9 {
                 }
             }
 
-            ArrayList<Integer> auxVec1 = new ArrayList<>();
-            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            ArrayList<Pair<Integer,Integer>> paresEscogidosPadre2 = new ArrayList<>();
+            ArrayList<Pair<Integer,Integer>> paresOrdenadosPadre1 = new ArrayList<>();
 
-            for (int i = 0; i < padre1.size(); i++) {
-                auxVec1.add(-1);
+            // ¿Qué elementos de padre2 me ha escogido el aleatorio?
+            for (int i = 0; i < padre2.size(); ++i) {
+                for (int k = 0; k < listaAleatorios.size(); ++k) {
+                    if (listaAleatorios.get(k) == i) {
+                        Pair<Integer,Integer> par = new Pair<>(i,padre2.get(i));
+                        paresEscogidosPadre2.add(par);
+                    }
+                }
+            }
+
+            // ¿Qué elementos de padre1 están en las posiciones escogidas de padre2?
+            for (int i = 0; i < padre1.size(); ++i) {
+                for (int k = 0; k < paresEscogidosPadre2.size(); ++k) {
+                    int cual1 = paresEscogidosPadre2.get(k).snd;
+                    int cual2 = padre1.get(i);
+
+                    if (cual1 == cual2) {
+                        Pair<Integer,Integer> par = new Pair<>(i,padre1.get(i));
+                        paresOrdenadosPadre1.add(par);
+                    }
+                }
+            }
+
+            // Copiamos el padre1 exceptuando los valores escogidos
+            ArrayList<Integer> auxVec1 = new ArrayList<>();
+            for (int i = 0; i < padre1.size(); ++i) {
+                auxVec1.add(padre1.get(i));
+            }
+
+            for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
+                for (int k = 0; k < auxVec1.size(); ++k){
+                    if (paresEscogidosPadre2.get(i).snd == auxVec1.get(k)){
+                        auxVec1.set(k,-1);
+                    }
+                }
+            }
+
+            // Añadimos los elementos de padre2 en orden en padre1
+            int contadorPar = 0;
+            for (int i = 0; i < auxVec1.size(); ++i){
+                if(auxVec1.get(i) == -1){
+                    auxVec1.set(i,paresEscogidosPadre2.get(contadorPar).snd);
+                    contadorPar++;
+                }
+            }
+
+            // Ahora hay que hacer lo mismo pero con padre2
+            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            for (int i = 0; i < padre2.size(); ++i) {
                 auxVec2.add(-1);
             }
-
-            for (int i = 0; i < listaAleatorios.size(); i++) {
-                auxVec1.set(listaAleatorios.get(i), padre2.get(i));
-                auxVec2.set(listaAleatorios.get(i), padre1.get(i));
+            if (j == 4){
+                debugMuestraArray(padre1);
+            }
+            for (int i = 0; i < paresEscogidosPadre2.size(); ++i){
+                auxVec2.set(paresEscogidosPadre2.get(i).fst,paresOrdenadosPadre1.get(i).snd);
             }
 
-            // ES POSIBLE QUE ESTE BLOQUE SEA REDUNDANTE
-            ArrayList<Integer> elementosCorte = new ArrayList<>();
-            for (int i = 0; i < padre1.size(); ++i) {
-                if (listaAleatorios.contains(padre1.get(i))) {
-                    elementosCorte.add(padre1.get(i));
+            for (int i = 0; i < auxVec2.size(); ++i) {
+                if (auxVec2.get(i) == -1) {
+                    auxVec2.set(i, padre2.get(i));
                 }
             }
 
-            for (int i = 0; i < padre2.size(); ++i) {
-                if (elementosCorte.contains(padre2.get(i))) {
-                    padre2.set(i, -1);
-                }
-            }
-            for (int i = 0; i < padre2.size(); ++i) {
-                if (padre2.get(i) == -1) {
-                    padre2.set(i, elementosCorte.get(0));
-                    elementosCorte.remove(0);
-                }
-            }
+            // Ya tenemos los dos vectores cruzados. Meterlos en la población
+            auxSel.add(auxVec2);
+            auxSel.add(auxVec1);
+
+        }
+
+        // Se realiza la mutación con la nueva población generada
+        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+            mutacion(auxSel);
         }
         return auxSel;
     }
