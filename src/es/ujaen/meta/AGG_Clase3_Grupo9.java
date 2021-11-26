@@ -63,10 +63,18 @@ public class AGG_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-        ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-        cruceOX2(seleccionados);
-        crucePMX(seleccionados);
-        reemplazamiento(seleccionados);
+        for (int i = 0; i < evaluaciones; i++) {
+            ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
+            for (int j = 0; j < seleccion().size(); j++) {
+                seleccionados.add(j, seleccion().get(j));
+
+            }
+            cruceOX2(seleccionados);
+            crucePMX(seleccionados);
+            reemplazamiento(seleccionados);
+            System.out.println("A");
+        }
+
     }
 
     private void iniciaConjunto() {
@@ -339,14 +347,11 @@ public class AGG_Clase3_Grupo9 {
 
             for (int i = 0; i < padre1.size(); i++) {
                 if (boolPadre.poll()) {
-                    System.out.print("V ");
                     auxVec1.set(i, padre1.get(i));
                 } else {
-                    System.out.print("F ");
                     noEstan.add(padre1.get(i));
                 }
             }
-            System.out.println("");
             for (int i = 0; i < padre2.size(); i++) {
                 boolean noEsta = false;
                 for (int k = 0; k < noEstan.size() && !noEsta; k++) {
@@ -371,14 +376,11 @@ public class AGG_Clase3_Grupo9 {
 
             for (int i = 0; i < padre2.size(); i++) {
                 if (boolPadre.poll()) {
-                    System.out.print("V ");
                     auxVec2.set(i, padre2.get(i));
                 } else {
-                    System.out.print("F ");
                     noEstan.add(padre2.get(i));
                 }
             }
-            System.out.println("");
 
             for (int i = 0; i < padre1.size(); i++) {
                 boolean noEsta = false;
@@ -486,12 +488,6 @@ public class AGG_Clase3_Grupo9 {
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
-
-            System.out.println("auxVec1");
-            debugMuestraArray(padre1);
-            debugMuestraArray(padre2);
-            debugMuestraArray(auxVec1);
-
             Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
@@ -535,12 +531,6 @@ public class AGG_Clase3_Grupo9 {
             }
             //Se hace bien
             auxSel.add(auxVec2);
-
-            System.out.println("auxVec2");
-
-            debugMuestraArray(padre1);
-            debugMuestraArray(padre2);
-            debugMuestraArray(auxVec2);
             auxSel.add(auxVec2);
 
         }

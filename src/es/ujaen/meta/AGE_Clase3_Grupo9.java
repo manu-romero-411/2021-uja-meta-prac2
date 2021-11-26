@@ -54,7 +54,11 @@ public class AGE_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         for (int i = 0; i < evaluaciones; ++i) {
-            ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
+            ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
+            for (int j = 0; j < seleccion().size(); j++) {
+                seleccionados.add(j, seleccion().get(j));
+
+            }
             if (probCruce * 100 >= random.nextInt(101)) {
                 cruceOX(seleccionados); //Cruces y mutación a la vez
 
@@ -64,7 +68,7 @@ public class AGE_Clase3_Grupo9 {
             }
             reemplazamiento(seleccionados);
 
-            System.out.println("A");
+            
         }
     }
 
