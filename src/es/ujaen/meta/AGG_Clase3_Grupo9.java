@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 import com.sun.tools.javac.util.Pair;
-import sun.awt.image.ImageWatched;
 
 /**
  *
@@ -502,6 +501,7 @@ public class AGG_Clase3_Grupo9 {
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
+            
             Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
