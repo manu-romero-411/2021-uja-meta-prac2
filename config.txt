@@ -1,4 +1,4 @@
-Archivos=ford01.dat
+Archivos=nissan03.dat
 Semillas=77433193
 Algoritmos=Greedy
 Guardar=log
@@ -21,3 +21,4 @@ Gen-TamTorneoSeleccionEstacionario=3
 Gen-TamReemplazamientoGeneracional=50
 Gen-TamTorneoReemplazamientoEstacionario=4
 Gen-VecesTorneoReemplazamientoEstacionario=2
+Gen-NumCortesCruceOX2=3

@@ -5,6 +5,7 @@
  */
 package es.ujaen.meta;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,14 +31,15 @@ public class prac2 {
             arrayA.add(archivo);
         }
 
-        System.out.println("GENETICO");
+//        System.out.println("GENÉTICO ESTACIONARIO");
 //        for (int i = 0; i < arrayA.size(); i++) {
 //            AGE_Clase3_Grupo9 genetico = new AGE_Clase3_Grupo9(random, config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
 //                    config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
 //                    config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario());
 //            genetico.hazGeneticoEstacionario();
 //        }
-        
+
+        System.out.println("GENÉTICO GENERACIONAL");
         for (int i = 0; i < arrayA.size(); i++) {
             AGG_Clase3_Grupo9 genetico = new AGG_Clase3_Grupo9(random, config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
