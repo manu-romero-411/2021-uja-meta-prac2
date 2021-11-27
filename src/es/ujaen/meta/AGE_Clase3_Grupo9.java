@@ -19,6 +19,7 @@ public class AGE_Clase3_Grupo9 {
     private final Random random;
     private final int longitudLRC;
     private final ArrayList<Pair<Integer, Integer>> LRC;
+    private Log log;
     private ArrayList<Integer> conjunto;
     private ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
@@ -47,6 +48,7 @@ public class AGE_Clase3_Grupo9 {
         this.conjunto = new ArrayList<>();
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
+        this.log = null;
     }
 
     public void hazGeneticoEstacionario() {
@@ -67,12 +69,13 @@ public class AGE_Clase3_Grupo9 {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
             }
             reemplazamiento(seleccionados);
+            System.out.println("es.ujaen.meta.AGE_Clase3_Grupo9.hazGeneticoEstacionario() " + i);
         }
         int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i){
+        for (int i = 0; i < poblacion.size(); ++i) {
             int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin){
+            if (costeSel < costeMin) {
                 costeMin = costeSel;
                 mejorSol = i;
             }
@@ -163,7 +166,7 @@ public class AGE_Clase3_Grupo9 {
             ArrayList<Integer> torneos = new ArrayList<>();
 
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion,tamPoblacion);
+                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!arrayIntAleatoriosGeneradoBien(torneos));
 
             seleccionados.add(mejorTorneo(torneos));
@@ -242,18 +245,32 @@ public class AGE_Clase3_Grupo9 {
                     }
                 }
             }
+
             seleccionados.add(peorTorneo(torneos));
         }
-
+        int adsa = 0;
         for (int i = 0; i < poblacion.size(); i++) {
             for (int j = 0; j < seleccionados.size(); j++) {
-                if (poblacion.get(i) == seleccionados.get(j)) {
+                int contador = 0;
+                for (int k = 0; k < seleccionados.size(); k++) {
+                    if (poblacion.get(i).get(k) == seleccionados.get(j).get(k)) {
+                        contador++;
+                    }
+                }
+                if (contador == seleccionados.size()) {
+                    log = new Log("logs" + "_reemplazo" + adsa++);
+                    log.addTexto("Reemplazo: " + poblacion.get(i));
+                    log.addTexto("\n");
+
                     boolean reemplaza = false;
                     for (int k = 0; k < cruzados.size() && !reemplaza; k++) {
+
                         if (reemplazaPoblacion(poblacion.get(i), cruzados.get(k))) {
+
                             cruzados.remove(k);
                             reemplaza = true;
                         }
+
                     }
                 }
             }
@@ -262,9 +279,12 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
+        log.addTexto("Por: " + cruzado);
+        log.guardaLog();
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
+
             for (int i = 0; i < seleccionado.size(); i++) {
                 seleccionado.set(i, cruzado.get(i));
             }
@@ -510,10 +530,10 @@ public class AGE_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array){
-        for(int i = 0; i < array.size() - 1; ++i){
-            for (int j = i + 1; j < array.size(); ++j){
-                if (array.get(i) == array.get(j)){
+    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
+        for (int i = 0; i < array.size() - 1; ++i) {
+            for (int j = i + 1; j < array.size(); ++j) {
+                if (array.get(i) == array.get(j)) {
                     return false;
                 }
             }
@@ -523,7 +543,7 @@ public class AGE_Clase3_Grupo9 {
 
     private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
         ArrayList<Integer> array = new ArrayList<>();
-        for (int i = 0; i < cuantos; ++i){
+        for (int i = 0; i < cuantos; ++i) {
             array.add(random.nextInt(mod));
         }
         return array;
