@@ -5,7 +5,6 @@
  */
 package es.ujaen.meta;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import com.sun.tools.javac.util.Pair;
@@ -55,6 +54,9 @@ public class AGE_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
+        log = new Log("logs/log_poblacion_i");
+        log.addTexto(poblacion.toString());
+        log.guardaLog();
         for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             for (int j = 0; j < seleccion().size(); j++) {
@@ -69,6 +71,9 @@ public class AGE_Clase3_Grupo9 {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
             }
             reemplazamiento(seleccionados);
+            log=new Log("logs/log_poblacion_"+i);
+            log.addTexto(poblacion.toString());
+            log.guardaLog();
             System.out.println("es.ujaen.meta.AGE_Clase3_Grupo9.hazGeneticoEstacionario() " + i);
         }
         int costeMin = Integer.MAX_VALUE;
@@ -280,7 +285,7 @@ public class AGE_Clase3_Grupo9 {
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
         log.addTexto("Por: " + cruzado);
-        log.guardaLog();
+        //log.guardaLog();
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
