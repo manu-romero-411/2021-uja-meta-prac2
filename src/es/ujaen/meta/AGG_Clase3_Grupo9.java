@@ -19,6 +19,7 @@ import com.sun.tools.javac.util.Pair;
 public class AGG_Clase3_Grupo9 {
 
     private final Random random;
+    private Log log;
     private final int longitudLRC;
     private ArrayList<Pair<Integer, Integer>> LRC;
     private ArrayList<Integer> conjunto;
@@ -49,7 +50,7 @@ public class AGG_Clase3_Grupo9 {
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
         this.elite = new ArrayList<>();
-
+        this.log = null;
     }
 
     private void inicializaElite() {
@@ -63,6 +64,8 @@ public class AGG_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
+        guardarLog(0);
+        log.guardaLog();
         for (int i = 0; i < 800; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             //if (probCruce * 100 >= random.nextInt(101)) {
@@ -74,20 +77,9 @@ public class AGG_Clase3_Grupo9 {
             //}
             reemplazamiento(seleccionados);
             System.out.println("****** " + i);
+            guardarLog(i);
         }
 
-        int costeMin = Integer.MAX_VALUE;
-        int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i){
-            int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin){
-                costeMin = costeSel;
-                mejorSol = i;
-            }
-        }
-
-        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        debugMuestraArray(poblacion.get(mejorSol));
     }
 
     private void iniciaConjunto() {
@@ -596,4 +588,31 @@ public class AGG_Clase3_Grupo9 {
         return array;
     }
 
+    private void guardarLog(int generacion){
+        String nombre = archivo.getNombre().split("/")[1];
+        if (generacion == 0){
+            log=new Log("logs/" + nombre + "_AGG_poblacionInicial");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
+        } else {
+            log=new Log("logs/" + nombre + "_AGG_poblacion_" + generacion);
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
+        }
+
+        for (int j = 0; j < poblacion.size(); ++j){
+            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
+            log.addTexto("\n");
+        }
+
+        int costeMin = Integer.MAX_VALUE;
+        int mejorSol = -1;
+        for (int i = 0; i < poblacion.size(); ++i){
+            int costeSel = calculaCosteConjunto(poblacion.get(i));
+            if (costeSel < costeMin){
+                costeMin = costeSel;
+                mejorSol = i;
+            }
+        }
+        log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        log.guardaLog();
+    }
 }
