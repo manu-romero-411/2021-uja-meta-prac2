@@ -5,7 +5,6 @@
  */
 package es.ujaen.meta;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -32,19 +31,24 @@ public class prac2 {
         }
 
         System.out.println("GENETICO");
-/*
-        System.out.println("GENÉTICO ESTACIONARIO");
-        for (int i = 0; i < arrayA.size(); i++) {
-            AGE_Clase3_Grupo9 genetico = new AGE_Clase3_Grupo9(random, config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+        System.out.println("GENÉTICO ESTACIONARIO PMX");
+  /*      for (int i = 0; i < arrayA.size(); i++) {
+            AGEPMX_Clase3_Grupo9 genetico = new AGEPMX_Clase3_Grupo9(random, config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
                     config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario());
             genetico.hazGeneticoEstacionario();
         }
-*/
 
-        System.out.println("GENÉTICO GENERACIONAL");
+        System.out.println("GENÉTICO ESTACIONARIO OX");
         for (int i = 0; i < arrayA.size(); i++) {
-            AGG_Clase3_Grupo9 genetico = new AGG_Clase3_Grupo9(random, config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+            AGEOX_Clase3_Grupo9 genetico = new AGEOX_Clase3_Grupo9(random, config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+                    config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
+                    config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario());
+            genetico.hazGeneticoEstacionario();
+        }*/
+        System.out.println("GENÉTICO GENERACIONAL OX2");
+        for (int i = 0; i < arrayA.size(); i++) {
+            AGGOX2_Clase3_Grupo9 genetico = new AGGOX2_Clase3_Grupo9(random, config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
                     config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional());
             genetico.hazGeneticoGeneracional();
