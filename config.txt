@@ -1,9 +1,8 @@
 Archivos=nissan03.dat
 Semillas=77433193
 Algoritmos=Greedy
-Guardar=log
 Iteraciones=1000
-SalidaLog=log
+SalidaLog=stdout
 MA-OscilacionEstrategica=0.5
 MA-IteracionesOscilacion=0.05
 MA-LonguitudLRC=10

@@ -65,6 +65,13 @@ public class Configurador {
                         }
                         break;
 
+                    case "SalidaLog":
+                        salidaLog = split[1];
+                        if (salidaLog.equals("log"))
+                            if (salidaLog.equals("stdout"))
+                                throw new LogInvalidoException("Debes poner en config.txt si quieres salida por \"log\" o por \"stdout\"");
+                        break;
+
                     case "MA-LonguitudLRC":
                         LonguitudLRC = Integer.parseInt(split[1]);
                         break;
@@ -87,10 +94,6 @@ public class Configurador {
 
                     case "Iteraciones":
                         iteraciones = Integer.parseInt(split[1]);
-                        break;
-
-                    case "SalidaLog":
-                        salidaLog = split[1];
                         break;
                     case "Gen-TamPoblacion":
                         gen_tamPoblacion = Integer.parseInt(split[1]);
@@ -131,7 +134,7 @@ public class Configurador {
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | LogInvalidoException e) {
             System.out.println(e);
         }
     }
@@ -281,6 +284,10 @@ public class Configurador {
     public Integer getGen_vecesTorneoReemplazamientoEstacionario() {
         return gen_vecesTorneoReemplazamientoEstacionario;
     }
+}
 
-    
+class LogInvalidoException extends Exception {
+    public LogInvalidoException(String message) {
+        super(message);
+    }
 }

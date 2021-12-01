@@ -20,6 +20,7 @@ public class AGEOX_Clase3_Grupo9 {
     private final int longitudLRC;
     private final ArrayList<Pair<Integer, Integer>> LRC;
     private Log log;
+    private final String modoLog;
     private ArrayList<Integer> conjunto;
     private ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
@@ -33,7 +34,7 @@ public class AGEOX_Clase3_Grupo9 {
     private final int vecesTorneoReemplazamiento;
 
     public AGEOX_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-                             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, int vecesTorneoReemplazamiento) {
+                             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, int vecesTorneoReemplazamiento, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
@@ -50,6 +51,7 @@ public class AGEOX_Clase3_Grupo9 {
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
         this.log = null;
+        this.modoLog = modoLog;
     }
 
     public void hazGeneticoEstacionario() {
@@ -420,10 +422,10 @@ public class AGEOX_Clase3_Grupo9 {
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == 0){
-            log=new Log("logs/" + nombre + "_" + seed + "_" + "_AGEOX_poblacionInicial");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGEOX_poblacionInicial");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_" + "_AGEOX_poblacion_" + generacion);
+            log=new Log("logs/" + nombre + "_" + seed + "_AGEOX_poblacion_" + generacion);
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
         }
 
@@ -442,6 +444,7 @@ public class AGEOX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        log.setModo(modoLog);
         log.guardaLog();
     }
 }

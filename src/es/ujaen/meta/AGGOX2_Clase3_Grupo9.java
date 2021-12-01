@@ -21,6 +21,7 @@ public class AGGOX2_Clase3_Grupo9 {
     private final Random random;
     private final long seed;
     private Log log;
+    private final String modoLog;
     private final int longitudLRC;
     private ArrayList<Pair<Integer, Integer>> LRC;
     private ArrayList<Integer> conjunto;
@@ -36,7 +37,7 @@ public class AGGOX2_Clase3_Grupo9 {
     private ArrayList<Integer> elite;
 
     public AGGOX2_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-                             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento) {
+                             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
@@ -53,6 +54,7 @@ public class AGGOX2_Clase3_Grupo9 {
         this.LRC = new ArrayList<>();
         this.elite = new ArrayList<>();
         this.log = null;
+        this.modoLog = modoLog;
     }
 
     private void inicializaElite() {
@@ -67,8 +69,7 @@ public class AGGOX2_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(0);
-        log.guardaLog();
-        for (int i = 0; i < 800; ++i) {
+        for (int i = 0; i < 20; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             cruceOX2(seleccionados);
             reemplazamiento(seleccionados);
@@ -104,7 +105,6 @@ public class AGGOX2_Clase3_Grupo9 {
     }
 
     private void creaPoblacionInicial() {
-
         for (int j = 0; j < tamPoblacion; j++) {
             ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
@@ -212,13 +212,14 @@ public class AGGOX2_Clase3_Grupo9 {
             do {
                 torneos = generadorArrayIntAleatorios(tamTorneoSeleccion,tamPoblacion);
             } while (!arrayIntAleatoriosGeneradoBien(torneos));
+
             aux = mejorTorneo(torneos);
 
             int cont = 0;
             boolean estaTorneo = false;
             for (int j = 0; j < seleccionados.size() && !estaTorneo; j++) {
                 for (int k = 0; k < aux.size(); k++) {
-                    if (seleccionados.get(j).get(k) == aux.get(k)) {
+                    if (seleccionados.get(j).get(k) != aux.get(k)) {
                         cont++;
                     }
                 }
@@ -457,10 +458,10 @@ public class AGGOX2_Clase3_Grupo9 {
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == 0){
-            log=new Log("logs/" + nombre + "_" + seed + "_" + "_AGGOX2_poblacionInicial");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionInicial");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_" + "_AGGOX2_poblacion_" + generacion);
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacion_" + generacion);
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
         }
 
@@ -479,6 +480,7 @@ public class AGGOX2_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        log.setModo(modoLog);
         log.guardaLog();
     }
 }

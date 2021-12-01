@@ -21,6 +21,7 @@ public class AGGPMX_Clase3_Grupo9 {
     private final Random random;
     private final long seed;
     private Log log;
+    private final String modoLog;
     private final int longitudLRC;
     private ArrayList<Pair<Integer, Integer>> LRC;
     private ArrayList<Integer> conjunto;
@@ -36,7 +37,7 @@ public class AGGPMX_Clase3_Grupo9 {
     private ArrayList<Integer> elite;
 
     public AGGPMX_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-                                int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento) {
+                                int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
@@ -53,6 +54,7 @@ public class AGGPMX_Clase3_Grupo9 {
         this.LRC = new ArrayList<>();
         this.elite = new ArrayList<>();
         this.log = null;
+        this.modoLog = modoLog;
     }
 
     private void inicializaElite() {
@@ -67,7 +69,6 @@ public class AGGPMX_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(0);
-        log.guardaLog();
         for (int i = 0; i < 800; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             //if (probCruce * 100 >= random.nextInt(101)) {
@@ -472,10 +473,10 @@ public class AGGPMX_Clase3_Grupo9 {
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == 0){
-            log=new Log("logs/" + nombre + "_" + seed + "_" + "_AGGPMX_poblacionInicial");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionInicial");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_" + "_AGGPMX_poblacion_" + generacion);
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacion_" + generacion);
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
         }
 
@@ -494,6 +495,7 @@ public class AGGPMX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        log.setModo(modoLog);
         log.guardaLog();
     }
 }
