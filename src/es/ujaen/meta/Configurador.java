@@ -64,6 +64,39 @@ public class Configurador {
                             semillas.add(Long.parseLong(vsemillas[i]));
                         }
                         break;
+                    case "Algoritmos":
+                        String[] vAlg = split[1].split(",");
+                        for (int i = 0; i < vAlg.length; i++) {
+                            switch(vAlg[i]){
+                                case "AlgGRE":
+                                    break;
+                                case "AlgPMDLBit":
+                                    break;
+                                case "AlgPMDLBrandom":
+                                    break;
+                                case "AlgMA":
+                                    break;
+                                case "AGEOX":
+                                    break;
+                                case "AGEPMX":
+                                    break;
+                                case "AGGOX2":
+                                    break;
+                                case "AGGPMX":
+                                    break;
+                            }
+                        }
+
+                    case "SalidaLog":
+                        salidaLog = split[1];
+                        if (salidaLog.equals("log"))
+                            if (salidaLog.equals("stdout"))
+                                throw new LogInvalidoException("Debes poner en config.txt si quieres salida por \"log\" o por \"stdout\"");
+                        break;
+
+                    case "Iteraciones":
+                        iteraciones = Integer.parseInt(split[1]);
+                        break;
 
                     case "MA-LonguitudLRC":
                         LonguitudLRC = Integer.parseInt(split[1]);
@@ -85,13 +118,6 @@ public class Configurador {
                         iteracionesEstrategica = Float.parseFloat(split[1]);
                         break;
 
-                    case "Iteraciones":
-                        iteraciones = Integer.parseInt(split[1]);
-                        break;
-
-                    case "SalidaLog":
-                        salidaLog = split[1];
-                        break;
                     case "Gen-TamPoblacion":
                         gen_tamPoblacion = Integer.parseInt(split[1]);
                         break;
@@ -131,7 +157,7 @@ public class Configurador {
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | LogInvalidoException e) {
             System.out.println(e);
         }
     }
@@ -281,6 +307,10 @@ public class Configurador {
     public Integer getGen_vecesTorneoReemplazamientoEstacionario() {
         return gen_vecesTorneoReemplazamientoEstacionario;
     }
+}
 
-    
+class LogInvalidoException extends Exception {
+    public LogInvalidoException(String message) {
+        super(message);
+    }
 }
