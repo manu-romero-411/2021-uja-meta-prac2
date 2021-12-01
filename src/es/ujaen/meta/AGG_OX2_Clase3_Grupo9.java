@@ -221,7 +221,6 @@ public class AGG_OX2_Clase3_Grupo9 {
 
             if (!(estaSeleccionado(seleccionados, ganador))) {
                 seleccionados.add(ganador);
-
             }
         }
         for (int j = 0; j < seleccionados.size(); j++) {
@@ -232,18 +231,16 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     private boolean estaSeleccionado(ArrayList<ArrayList<Integer>> seleccionados, ArrayList<Integer> ganador) {
-
-        for (int i = 0, cont = 0; i < seleccionados.size(); i++) {
+        boolean esta = false;
+        for (int i = 0; i < seleccionados.size(); i++) {
             for (int j = 0; j < seleccionados.get(i).size(); j++) {
-                if (seleccionados.get(i).get(j) == ganador.get(j)) {
-                    cont++;
+                if (!(seleccionados.get(i).get(j).equals(ganador.get(j)))) {
+                    return false; // SI YA HAY ALGÚN CROMOSOMA NO IGUAL, NO TIENE SENTIDO SEGUIR ITERANDO
                 }
             }
-            if (cont >= seleccionados.size()) {
-                return true;
-            }
         }
-        return false;
+        if (seleccionados.size() == 0) return false; // SI NO HAY SELECCIONADOS ES TRIVIAL CONSIDERAR QUE EL GANADOR DEBE ENTRAR EN LOS SELECCIONADOS
+        return true;
     }
 
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
@@ -251,15 +248,19 @@ public class AGG_OX2_Clase3_Grupo9 {
         for (int i = 0; i < conjunto.size(); i++) {
             mejor.add(0);
         }
-        int mejorCoste = Integer.MIN_VALUE;
+        debugMuestraArray(poblacion.get(torneos.get(0)));
+        debugMuestraArray(poblacion.get(torneos.get(1)));
+        int mejorCoste = Integer.MAX_VALUE;
         for (int i = 0; i < torneos.size(); i++) {
-            if (calculaCosteConjunto(poblacion.get(torneos.get(i))) > mejorCoste) {
+            int cos = calculaCosteConjunto(poblacion.get(torneos.get(i)));
+            if (cos < mejorCoste) {
                 for (int j = 0; j < poblacion.get(torneos.get(i)).size(); j++) {
                     mejor.set(j, poblacion.get(torneos.get(i)).get(j));
                 }
-                mejorCoste = calculaCosteConjunto(poblacion.get(torneos.get(i)));
+                mejorCoste = cos;
             }
         }
+        debugMuestraArray(mejor);
         return mejor;
     }
 
