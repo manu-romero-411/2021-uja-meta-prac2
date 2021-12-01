@@ -39,7 +39,7 @@ public class prac2 {
         System.out.println("GENÉTICO ESTACIONARIO PMX");
   /*      for (int i = 0; i < arrayA.size(); i++) {
             AGEPMX_Clase3_Grupo9 genetico = new AGEPMX_Clase3_Grupo9(random, config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
-                    config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
+                    config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionaio(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
                     config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario() config.getSalidaLog);
             genetico.hazGeneticoEstacionario();
         }
