@@ -71,18 +71,13 @@ public class AGGPMX_Clase3_Grupo9 {
         guardarLog(0);
         for (int i = 0; i < 800; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-            //if (probCruce * 100 >= random.nextInt(101)) {
-            //    cruceOX2(seleccionados); //Cruces y mutación a la vez
-            //}
-
-            //if (probCruce * 100 >= random.nextInt(101)) {
+            if (random.nextFloat() < probCruce) {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
-            //}
+            }
             reemplazamiento(seleccionados);
-            System.out.println("****** " + i);
             guardarLog(i);
+            System.out.println("\nGeneración " + i + " generada");
         }
-
     }
 
     private void iniciaConjunto() {
@@ -423,7 +418,7 @@ public class AGGPMX_Clase3_Grupo9 {
 
         }
 
-        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+        if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
 
@@ -495,7 +490,7 @@ public class AGGPMX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
-        log.setModo(modoLog);
+        log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
 }

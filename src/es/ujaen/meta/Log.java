@@ -5,6 +5,7 @@
  */
 package es.ujaen.meta;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,6 +39,8 @@ public class Log {
             FileWriter fichero = null;
             PrintWriter pw = null;
             try {
+                File carpetaLogs = new File("logs");
+                carpetaLogs.mkdir();
                 fichero = new FileWriter(ruta + ".txt");
                 pw = new PrintWriter(fichero);
                 pw.print(texto);
@@ -45,7 +48,7 @@ public class Log {
 
             } finally {
                 try {
-                    if (null != fichero) {
+                    if (fichero != null) {
                         fichero.close();
                     }
                 } catch (IOException e2) {

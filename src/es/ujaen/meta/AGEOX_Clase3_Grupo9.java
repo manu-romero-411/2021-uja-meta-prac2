@@ -61,14 +61,17 @@ public class AGEOX_Clase3_Grupo9 {
         guardarLog(0);
         for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
-            for (int j = 0; j < seleccion().size(); j++) {
-                seleccionados.add(j, seleccion().get(j));
+            ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
+            for (int j = 0; j < torneoSel.size(); j++) {
+                seleccionados.add(j, torneoSel.get(j));
 
             }
-            cruceOX(seleccionados); //Cruces y mutación a la vez
+            if (random.nextFloat() < probCruce) {
+                cruceOX(seleccionados); //Cruces y mutación a la vez
+            }
             reemplazamiento(seleccionados);
             guardarLog(i);
-            System.out.println("Generación " + i + " generada");
+            System.out.println("\nGeneración " + i + " generada");
         }
 
         int costeMin = Integer.MAX_VALUE;
@@ -380,7 +383,7 @@ public class AGEOX_Clase3_Grupo9 {
             }
             auxSel.add(auxVec2);
         }
-        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+        if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
         return auxSel;
@@ -444,7 +447,7 @@ public class AGEOX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
-        log.setModo(modoLog);
+        log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
 }

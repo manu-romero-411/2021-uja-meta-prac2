@@ -69,12 +69,14 @@ public class AGGOX2_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(0);
-        for (int i = 0; i < 20; ++i) {
+        for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
-            cruceOX2(seleccionados);
+            if (random.nextFloat() < probCruce) {
+                cruceOX2(seleccionados);
+            }
             reemplazamiento(seleccionados);
-            System.out.println("****** " + i);
             guardarLog(i);
+            System.out.println("\nGeneración " + i + " generada");
         }
 
     }
@@ -409,7 +411,7 @@ public class AGGOX2_Clase3_Grupo9 {
         }
 
         // Se realiza la mutación con la nueva población generada
-        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+        if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
         return auxSel;
@@ -480,7 +482,7 @@ public class AGGOX2_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
-        log.setModo(modoLog);
+        log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
 }

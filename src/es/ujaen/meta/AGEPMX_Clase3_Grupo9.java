@@ -61,14 +61,17 @@ public class AGEPMX_Clase3_Grupo9 {
         guardarLog(0);
         for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
-            for (int j = 0; j < seleccion().size(); j++) {
-                seleccionados.add(j, seleccion().get(j));
-
+            ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
+            for (int j = 0; j < torneoSel.size(); j++) {
+                seleccionados.add(j, torneoSel.get(j));
             }
-            crucePMX(seleccionados); //Cruces y mutación a la vez
+
+            if (random.nextFloat() < probCruce) {
+                crucePMX(seleccionados); //Cruces y mutación a la vez
+            }
             reemplazamiento(seleccionados);
             guardarLog(i);
-            System.out.println("Generación " + i + " generada");
+            System.out.println("\nGeneración " + i + " generada");
         }
 
         int costeMin = Integer.MAX_VALUE;
@@ -111,7 +114,6 @@ public class AGEPMX_Clase3_Grupo9 {
     }
 
     private void creaPoblacionInicial() {
-
         for (int j = 0; j < tamPoblacion; j++) {
             ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
@@ -415,7 +417,7 @@ public class AGEPMX_Clase3_Grupo9 {
 
         }
 
-        if (probMutacion * evaluaciones >= random.nextInt(101)) {
+        if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
 
@@ -466,8 +468,7 @@ public class AGEPMX_Clase3_Grupo9 {
         }
 
         for (int j = 0; j < poblacion.size(); ++j){
-            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
-            log.addTexto("\n");
+            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString() + "\n");
         }
 
         int costeMin = Integer.MAX_VALUE;
@@ -480,7 +481,7 @@ public class AGEPMX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
-        log.setModo(modoLog);
+        log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
 }

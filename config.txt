@@ -1,8 +1,8 @@
-Archivos=nissan03.dat
+Archivos=ford01.dat ford02.dat ford03.dat ford04.dat nissan01.dat nissan02.dat nissan03.dat nissan04.dat
 Semillas=77433193
-Algoritmos=Greedy
-Iteraciones=1000
+Algoritmos=AlgGRE,AlgPMDLBit,AlgPMDLBrandom,AlgMA,AGEOX,AGEPMX,AGGOX2,AGGPMX 
 SalidaLog=stdout
+Iteraciones=1000
 MA-OscilacionEstrategica=0.5
 MA-IteracionesOscilacion=0.05
 MA-LonguitudLRC=10
@@ -20,4 +20,3 @@ Gen-TamTorneoSeleccionEstacionario=3
 Gen-TamReemplazamientoGeneracional=50
 Gen-TamTorneoReemplazamientoEstacionario=4
 Gen-VecesTorneoReemplazamientoEstacionario=2
-Gen-NumCortesCruceOX2=3
