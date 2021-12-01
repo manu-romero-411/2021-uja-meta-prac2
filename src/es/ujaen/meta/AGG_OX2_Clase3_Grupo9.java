@@ -212,16 +212,21 @@ public class AGG_OX2_Clase3_Grupo9 {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
         ArrayList<Integer> torneos = new ArrayList<>();
-        while (seleccionados.size() <= tamPoblacion) {
+        while (seleccionados.size() < tamPoblacion) {
             do {
                 torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!arrayIntAleatoriosGeneradoBien(torneos));
             ArrayList<Integer> ganador = new ArrayList<>(mejorTorneo(torneos));
             ganador = mejorTorneo(torneos);
 
-            if (!(estaSeleccionado(seleccionados, ganador))) {
+            boolean auxs = estaSeleccionado(seleccionados, ganador);
+            if (seleccionados.size() == 0) {
                 seleccionados.add(ganador);
             }
+            if (!(auxs)) {
+                seleccionados.add(ganador);
+            }
+
         }
         for (int j = 0; j < seleccionados.size(); j++) {
             System.out.println("Seleccion " + j + " : " + seleccionados.get(j));
@@ -231,16 +236,19 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     private boolean estaSeleccionado(ArrayList<ArrayList<Integer>> seleccionados, ArrayList<Integer> ganador) {
-        boolean esta = false;
+
+        int cont = 0;
         for (int i = 0; i < seleccionados.size(); i++) {
             for (int j = 0; j < seleccionados.get(i).size(); j++) {
-                if (!(seleccionados.get(i).get(j).equals(ganador.get(j)))) {
-                    return false; // SI YA HAY ALGÚN CROMOSOMA NO IGUAL, NO TIENE SENTIDO SEGUIR ITERANDO
+                if (seleccionados.get(i).get(j) == ganador.get(j)) {
+                    cont++;
                 }
             }
+            if (cont >= seleccionados.get(i).size() - 1) {
+                return true;
+            }
         }
-        if (seleccionados.size() == 0) return false; // SI NO HAY SELECCIONADOS ES TRIVIAL CONSIDERAR QUE EL GANADOR DEBE ENTRAR EN LOS SELECCIONADOS
-        return true;
+        return false;
     }
 
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {

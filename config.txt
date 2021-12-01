@@ -1,4 +1,4 @@
-Archivos=nissan01.dat nissan02.dat nissan03.dat nissan04.dat
+Archivos=ford01.dat nissan01.dat nissan02.dat nissan03.dat nissan04.dat
 Semillas=77433193
 Algoritmos=AlgGRE,AlgPMDLBit,AlgPMDLBrandom,AlgMA,AGEOX,AGEPMX,AGGOX2,AGGPMX 
 SalidaLog=log
