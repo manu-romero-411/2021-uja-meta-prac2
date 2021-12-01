@@ -16,7 +16,7 @@ import com.sun.tools.javac.util.Pair;
  *
  * @author admin
  */
-public class AGGPMX_Clase3_Grupo9 {
+public class AGG_OX2_Clase3_Grupo9 {
 
     private final Random random;
     private final long seed;
@@ -36,8 +36,8 @@ public class AGGPMX_Clase3_Grupo9 {
     private final int tamTorneoReemplazamiento;
     private ArrayList<Integer> elite;
 
-    public AGGPMX_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-                                int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
+    public AGG_OX2_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
+            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
@@ -69,15 +69,19 @@ public class AGGPMX_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(0);
-        for (int i = 0; i < 800; ++i) {
+        for (int j = 0; j < poblacion.size(); j++) {
+            System.out.println("Poblacion " + j + " : " + poblacion.get(j));
+        }
+        for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (random.nextFloat() < probCruce) {
-                crucePMX(seleccionados); //Cruces y mutación a la vez
+                cruceOX2(seleccionados);
             }
             reemplazamiento(seleccionados);
             guardarLog(i);
             System.out.println("\nGeneración " + i + " generada");
         }
+        System.out.println("Terminado");
     }
 
     private void iniciaConjunto() {
@@ -106,7 +110,6 @@ public class AGGPMX_Clase3_Grupo9 {
     }
 
     private void creaPoblacionInicial() {
-
         for (int j = 0; j < tamPoblacion; j++) {
             ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
@@ -191,36 +194,56 @@ public class AGGPMX_Clase3_Grupo9 {
         return coste;
     }
 
+    /*private ArrayList<Integer> evolucion() {
+        ArrayList<Integer> elite = new ArrayList<>(conjunto);
+        int mejorValorElite = calculaCosteConjunto(elite);
+        for (int i = 0; i < tamPoblacion; i++) {
+            if (calculaCosteConjunto(poblacion.get(i)) > mejorValorElite) {
+                for (int j = 0; j < elite.size(); j++) {
+                    elite.set(i, poblacion.get(i).get(j));
+                    mejorValorElite = calculaCosteConjunto(elite);
+                }
+            }
+        }
+        return elite;
+    }*/
     private ArrayList<ArrayList<Integer>> seleccion() {
+        System.out.println();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
-        //int i = 0;
-        while (seleccionados.size() != tamPoblacion) {
-            ArrayList<Integer> aux = new ArrayList<>();
-            ArrayList<Integer> torneos = new ArrayList<>();
+
+        ArrayList<Integer> torneos = new ArrayList<>();
+        while (seleccionados.size() <= tamPoblacion) {
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion,tamPoblacion);
+                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!arrayIntAleatoriosGeneradoBien(torneos));
-            aux = mejorTorneo(torneos);
+            ArrayList<Integer> ganador = new ArrayList<>(mejorTorneo(torneos));
+            ganador = mejorTorneo(torneos);
 
-            int cont = 0;
-            boolean estaTorneo = false;
-            for (int j = 0; j < seleccionados.size() && !estaTorneo; j++) {
-                for (int k = 0; k < aux.size(); k++) {
-                    if (seleccionados.get(j).get(k) == aux.get(k)) {
-                        cont++;
-                    }
-                }
+            if (!(estaSeleccionado(seleccionados, ganador))) {
+                seleccionados.add(ganador);
 
-                if (cont == aux.size()) {
-                    estaTorneo = true;
-                }
             }
-            if (!(estaTorneo)){
-                seleccionados.add(aux);
-            }
+        }
+        for (int j = 0; j < seleccionados.size(); j++) {
+            System.out.println("Seleccion " + j + " : " + seleccionados.get(j));
         }
         nuevaElite(poblacion);
         return seleccionados;
+    }
+
+    private boolean estaSeleccionado(ArrayList<ArrayList<Integer>> seleccionados, ArrayList<Integer> ganador) {
+
+        for (int i = 0, cont = 0; i < seleccionados.size(); i++) {
+            for (int j = 0; j < seleccionados.get(i).size(); j++) {
+                if (seleccionados.get(i).get(j) == ganador.get(j)) {
+                    cont++;
+                }
+            }
+            if (cont >= seleccionados.size()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
@@ -290,138 +313,117 @@ public class AGGPMX_Clase3_Grupo9 {
         // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
         for (int i = 0; i < poblacion.size(); ++i) {
             //for (int j = 0; j < poblacion.get(i).size(); ++j) {
-                poblacion.set(i, nuevaPob.get(i));
+            poblacion.set(i, nuevaPob.get(i));
             //}
         }
     }
 
-    private ArrayList<ArrayList<Integer>> crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
+    private ArrayList<ArrayList<Integer>> cruceOX2(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
-        for (int i = 0; i < seleccionados.size(); i = i + 2) {
-
-            ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(i));
-            ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(i + 1));
-            int aleatorioA, aleatorioB;
-            do {
-                aleatorioA = random.nextInt(seleccionados.get(i).size() - 2) + 1;
-                aleatorioB = random.nextInt(seleccionados.get(i).size() - 2) + 1;
-            } while (aleatorioA == aleatorioB);
-            if (aleatorioA > aleatorioB) {
-                int aux;
-                aux = aleatorioB;
-                aleatorioB = aleatorioA;
-                aleatorioA = aux;
+        for (int j = 0; j < seleccionados.size() - 1; j = j + 2) {
+            if (j == 0) {
+                System.out.println();
             }
-            ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
+            ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(j));
+            ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(j + 1));
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
-            for (int j = 0; j < padre1.size(); j++) {
-                auxVec1.add(-1);
+            for (int i = 0; i < padre1.size(); i++) {
+                auxVec1.add(padre1.get(i));
             }
-
             ArrayList<Integer> auxVec2 = new ArrayList<>();
-            for (int j = 0; j < padre2.size(); j++) {
-                auxVec2.add(-1);
+            for (int i = 0; i < padre2.size(); i++) {
+                auxVec2.add(padre2.get(i));
             }
 
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
+            Queue<Boolean> boolPadre = new LinkedList<>();
+            Queue<Integer> cruzados = new LinkedList<>();
+            ArrayList<Integer> noEstan = new ArrayList<>();
+
+            for (int i = 0; i < padre1.size(); i++) {
+                boolPadre.add(random.nextBoolean());
             }
 
-            Queue<Integer> auxQueue1 = new LinkedList<>();
+            Queue<Boolean> copia = new LinkedList<>(boolPadre);
 
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxQueue1.add(padre2.get(j));
-            }
-
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxVec1.set(j, auxQueue1.poll());
-            }
-
-            for (int j = aleatorioB + 1, cont = 0; cont < auxVec1.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
-                boolean esta = true;
-                for (int k = 0; k < auxVec1.size() && esta; k++) {
-                    if (auxVec1.get(k) == padre1.get(j % auxVec1.size())) {
-                        esta = false;
-                    }
-                }
-                if (esta) {
-                    auxVec1.set(j % auxVec1.size(), padre1.get(j % auxVec1.size()));
+            for (int i = 0; i < padre1.size(); i++) {
+                if (boolPadre.poll()) {
+                    //System.out.print("V ");
+                    auxVec1.set(i, padre1.get(i));
                 } else {
-                    auxQueue1.add(padre1.get(j % auxVec1.size()));
+                    //System.out.print("F ");
+                    noEstan.add(padre1.get(i));
                 }
             }
 
-            while (!auxQueue1.isEmpty()) {
-                boolean esta = true;
-                int aux = 0;
-                for (int j = 0; j < padre1.size() && esta; j++) {
-                    if (padre1.get(j) == auxQueue1.peek()) {
-                        aux = j;
-                        esta = false;
+            for (int i = 0; i < padre2.size(); i++) {
+                boolean noEsta = false;
+                for (int k = 0; k < noEstan.size() && !noEsta; k++) {
+                    if (padre2.get(i) == noEstan.get(k)) {
+                        cruzados.add(padre2.get(i));
+                        noEsta = true;
                     }
                 }
-                if (!esta) {
-                    int auxas = padre1.get(auxQueue1.poll());
-                    auxVec1.set(aux, auxas);
+            }
+
+            for (int i = 0; i < auxVec1.size(); i++) {
+                if (auxVec1.get(i) == -1) {
+                    auxVec1.set(i, cruzados.poll());
                 }
             }
 
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
-            }
-            
-            Queue<Integer> auxQueue2 = new LinkedList<>();
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxQueue2.add(padre1.get(j));
+            noEstan.clear();
+
+            for (int i = 0; i < padre2.size(); i++) {
+                boolPadre.add(random.nextBoolean());
             }
 
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxVec2.set(j, auxQueue2.poll());
-            }
-
-            for (int j = aleatorioB + 1, cont = 0; cont < auxVec2.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
-                boolean esta = true;
-                for (int k = 0; k < auxVec2.size() && esta; k++) {
-                    if (auxVec2.get(k) == padre2.get(j % auxVec2.size())) {
-                        esta = false;
-                    }
-                }
-                if (esta) {
-                    auxVec2.set(j % auxVec2.size(), padre2.get(j % auxVec2.size()));
+            for (int i = 0; i < padre2.size(); i++) {
+                if (boolPadre.poll()) {
+                    auxVec2.set(i, padre2.get(i));
                 } else {
-                    auxQueue2.add(padre2.get(j % auxVec2.size()));
+                    noEstan.add(padre2.get(i));
                 }
             }
 
-            while (!auxQueue2.isEmpty()) {
-                boolean esta = true;
-                int aux = 0;
-                for (int j = 0; j < padre2.size() && esta; j++) {
-                    if (padre2.get(j) == auxQueue2.peek()) {
-                        aux = j;
-                        esta = false;
+            for (int i = 0; i < padre1.size(); i++) {
+                boolean noEsta = false;
+                for (int k = 0; k < noEstan.size() && !noEsta; k++) {
+                    if (padre1.get(i) == noEstan.get(k)) {
+                        cruzados.add(padre1.get(i));
+                        noEsta = true;
                     }
                 }
-                if (!esta) {
-                    int auxas = padre2.get(auxQueue2.poll());
-                    auxVec2.set(aux, auxas);
+            }
+
+            for (int i = 0; i < auxVec2.size(); i++) {
+                if (auxVec2.get(i) == -1) {
+                    auxVec2.set(i, cruzados.poll());
                 }
             }
 
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
-            }
-            //Se hace bien
-            auxSel.add(auxVec2);
-            auxSel.add(auxVec2);
+            noEstan.clear();
 
+            // Ya tenemos los dos vectores cruzados. Meterlos en la población
+            for (int i = 0; i < auxVec1.size(); ++i) {
+                if (auxVec1.get(i) == null || auxVec2.get(i) == null) {
+                    for (int k = 0; k < auxVec1.size(); ++k) {
+                        if (!(auxVec1.contains(k) || !auxVec2.contains(k))) {
+                            System.out.println(k);
+                        } else {
+                            System.out.println(k + "está");
+                        }
+                    }
+                }
+            }
+            auxSel.add(auxVec2);
+            auxSel.add(auxVec1);
         }
 
+        // Se realiza la mutación con la nueva población generada
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
-
         return auxSel;
     }
 
@@ -446,10 +448,10 @@ public class AGGPMX_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array){
-        for(int i = 0; i < array.size() - 1; ++i){
-            for (int j = i + 1; j < array.size(); ++j){
-                if (array.get(i) == array.get(j)){
+    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
+        for (int i = 0; i < array.size() - 1; ++i) {
+            for (int j = i + 1; j < array.size(); ++j) {
+                if (array.get(i) == array.get(j)) {
                     return false;
                 }
             }
@@ -459,32 +461,32 @@ public class AGGPMX_Clase3_Grupo9 {
 
     private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
         ArrayList<Integer> array = new ArrayList<>();
-        for (int i = 0; i < cuantos; ++i){
+        for (int i = 0; i < cuantos; ++i) {
             array.add(random.nextInt(mod));
         }
         return array;
     }
 
-    private void guardarLog(int generacion){
+    private void guardarLog(int generacion) {
         String nombre = archivo.getNombre().split("/")[1];
-        if (generacion == 0){
-            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionInicial");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
+        if (generacion == 0) {
+            log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionInicial");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacion_" + generacion);
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
+            log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacion_" + generacion);
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
         }
 
-        for (int j = 0; j < poblacion.size(); ++j){
+        for (int j = 0; j < poblacion.size(); ++j) {
             log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
             log.addTexto("\n");
         }
 
         int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i){
+        for (int i = 0; i < poblacion.size(); ++i) {
             int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin){
+            if (costeSel < costeMin) {
                 costeMin = costeSel;
                 mejorSol = i;
             }

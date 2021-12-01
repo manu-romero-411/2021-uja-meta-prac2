@@ -13,14 +13,14 @@ import com.sun.tools.javac.util.Pair;
  *
  * @author admin
  */
-public class AGEPMX_Clase3_Grupo9 {
+public class AGE_OX_Clase3_Grupo9 {
 
     private final Random random;
     private final long seed;
-    private Log log;
-    private final String modoLog;
     private final int longitudLRC;
     private final ArrayList<Pair<Integer, Integer>> LRC;
+    private Log log;
+    private final String modoLog;
     private ArrayList<Integer> conjunto;
     private ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
@@ -33,8 +33,8 @@ public class AGEPMX_Clase3_Grupo9 {
     private final int tamTorneoReemplazamiento;
     private final int vecesTorneoReemplazamiento;
 
-    public AGEPMX_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, int vecesTorneoReemplazamiento, String modoLog) {
+    public AGE_OX_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
+                             int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, int vecesTorneoReemplazamiento, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
@@ -64,10 +64,10 @@ public class AGEPMX_Clase3_Grupo9 {
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
             for (int j = 0; j < torneoSel.size(); j++) {
                 seleccionados.add(j, torneoSel.get(j));
-            }
 
+            }
             if (random.nextFloat() < probCruce) {
-                crucePMX(seleccionados); //Cruces y mutación a la vez
+                cruceOX(seleccionados); //Cruces y mutación a la vez
             }
             reemplazamiento(seleccionados);
             guardarLog(i);
@@ -114,6 +114,7 @@ public class AGEPMX_Clase3_Grupo9 {
     }
 
     private void creaPoblacionInicial() {
+
         for (int j = 0; j < tamPoblacion; j++) {
             ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
@@ -250,6 +251,7 @@ public class AGEPMX_Clase3_Grupo9 {
 
             seleccionados.add(peorTorneo(torneos));
         }
+        int adsa = 0;
         for (int i = 0; i < poblacion.size(); i++) {
             for (int j = 0; j < seleccionados.size(); j++) {
                 int contador = 0;
@@ -259,6 +261,9 @@ public class AGEPMX_Clase3_Grupo9 {
                     }
                 }
                 if (contador == seleccionados.size()) {
+                    log = new Log("logs" + "_reemplazo" + adsa++);
+                    log.addTexto("Reemplazo: " + poblacion.get(i));
+                    log.addTexto("\n");
 
                     boolean reemplaza = false;
                     for (int k = 0; k < cruzados.size() && !reemplaza; k++) {
@@ -277,6 +282,8 @@ public class AGEPMX_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
+        log.addTexto("Por: " + cruzado);
+        //log.guardaLog();
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
@@ -288,10 +295,9 @@ public class AGEPMX_Clase3_Grupo9 {
         return true;
     }
 
-    private ArrayList<ArrayList<Integer>> crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
+    private ArrayList<ArrayList<Integer>> cruceOX(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         for (int i = 0; i < seleccionados.size(); i = i + 2) {
-
             ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(i));
             ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(i + 1));
             int aleatorioA, aleatorioB;
@@ -305,116 +311,81 @@ public class AGEPMX_Clase3_Grupo9 {
                 aleatorioB = aleatorioA;
                 aleatorioA = aux;
             }
-            ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
+            Queue<Integer> auxQueue1 = new LinkedList<>();
             ArrayList<Integer> auxVec1 = new ArrayList<>();
             for (int j = 0; j < padre1.size(); j++) {
                 auxVec1.add(-1);
             }
-
+            Queue<Integer> auxQueue2 = new LinkedList<>();
             ArrayList<Integer> auxVec2 = new ArrayList<>();
             for (int j = 0; j < padre2.size(); j++) {
                 auxVec2.add(-1);
             }
 
+            //Añade los valores de enmedio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
-                posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
+                auxQueue1.add(padre1.get(j));
             }
 
-            Queue<Integer> auxQueue1 = new LinkedList<>();
-
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
-                auxQueue1.add(padre2.get(j));
-            }
-
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
+            //Mete los valores de la queue en un vector auxiliar
+            for (int j = aleatorioA; !auxQueue1.isEmpty(); j++) {
                 auxVec1.set(j, auxQueue1.poll());
             }
 
-            for (int j = aleatorioB + 1, cont = 0; cont < auxVec1.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
-                boolean esta = true;
-                for (int k = 0; k < auxVec1.size() && esta; k++) {
-                    if (auxVec1.get(k) == padre1.get(j % auxVec1.size())) {
-                        esta = false;
-                    }
-                }
-                if (esta) {
-                    auxVec1.set(j % auxVec1.size(), padre1.get(j % auxVec1.size()));
-                } else {
-                    auxQueue1.add(padre1.get(j % auxVec1.size()));
-                }
-            }
-
-            while (!auxQueue1.isEmpty()) {
-                boolean esta = true;
-                int aux = 0;
-                for (int j = 0; j < padre1.size() && esta; j++) {
-                    if (padre1.get(j) == auxQueue1.peek()) {
-                        aux = j;
-                        esta = false;
+            //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
+            for (int contador = 0, contador2 = aleatorioB + 1; contador < padre1.size(); contador++, contador2++) {
+                boolean esta = false;
+                for (int j = 0; j < auxVec1.size() && !esta; j++) {
+                    if (auxVec1.get(j) == padre2.get(contador2 % padre1.size())) {
+                        esta = true;
                     }
                 }
                 if (!esta) {
-                    int auxas = padre1.get(auxQueue1.poll());
-                    auxVec1.set(aux, auxas);
+                    auxQueue1.add(padre1.get(contador2 % padre1.size()));
                 }
             }
 
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
+            //Saca los valores de la queue y los pone en la posicion que este vacia
+            for (int j = aleatorioB + 1; !auxQueue1.isEmpty(); j++) {
+                auxVec1.set(j % padre2.size(), auxQueue1.poll());
             }
 
-            Queue<Integer> auxQueue2 = new LinkedList<>();
+            auxSel.add(auxVec1);
+
+            //Segundo hijo
+            //Añade los valores de enmedio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
             }
 
-            for (int j = aleatorioA; j <= aleatorioB; j++) {
+            //Mete los valores de la queue en un vector auxiliar
+            for (int j = aleatorioA; !auxQueue2.isEmpty(); j++) {
                 auxVec2.set(j, auxQueue2.poll());
             }
 
-            for (int j = aleatorioB + 1, cont = 0; cont < auxVec2.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
-                boolean esta = true;
-                for (int k = 0; k < auxVec2.size() && esta; k++) {
-                    if (auxVec2.get(k) == padre2.get(j % auxVec2.size())) {
-                        esta = false;
-                    }
-                }
-                if (esta) {
-                    auxVec2.set(j % auxVec2.size(), padre2.get(j % auxVec2.size()));
-                } else {
-                    auxQueue2.add(padre2.get(j % auxVec2.size()));
-                }
-            }
-
-            while (!auxQueue2.isEmpty()) {
-                boolean esta = true;
-                int aux = 0;
-                for (int j = 0; j < padre2.size() && esta; j++) {
-                    if (padre2.get(j) == auxQueue2.peek()) {
-                        aux = j;
-                        esta = false;
+            //Comprueba si esta metido en el vector auxiliar respecto el segundo seleccionado
+            for (int contador = 0, contador2 = aleatorioB + 1; contador < padre2.size(); contador++, contador2++) {
+                boolean esta = false;
+                for (int j = 0; j < auxVec2.size() && !esta; j++) {
+                    if (auxVec2.get(j) == padre1.get(contador2 % padre2.size())) {
+                        esta = true;
                     }
                 }
                 if (!esta) {
-                    int auxas = padre2.get(auxQueue2.poll());
-                    auxVec2.set(aux, auxas);
+                    auxQueue2.add(padre1.get(contador2 % padre2.size()));
                 }
             }
 
-            for (int j = 0; j < posiciones.size(); j++) {
-                auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
+            //Saca los valores de la queue y los pone en la posicion que este vacia
+            for (int j = aleatorioB + 1; !auxQueue2.isEmpty(); j++) {
+                auxVec2.set(j % padre1.size(), auxQueue2.poll());
             }
-            //Se hace bien
             auxSel.add(auxVec2);
-            auxSel.add(auxVec2);
-
         }
-
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
-
         return auxSel;
     }
 
@@ -454,15 +425,16 @@ public class AGEPMX_Clase3_Grupo9 {
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == 0){
-            log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacionInicial");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGEOX_poblacionInicial");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacion_" + generacion);
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGEOX_poblacion_" + generacion);
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
         }
 
         for (int j = 0; j < poblacion.size(); ++j){
-            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString() + "\n");
+            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
+            log.addTexto("\n");
         }
 
         int costeMin = Integer.MAX_VALUE;
@@ -475,7 +447,7 @@ public class AGEPMX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
-        log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
+        //log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
 }
