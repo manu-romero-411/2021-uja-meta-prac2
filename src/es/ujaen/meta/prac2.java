@@ -53,7 +53,7 @@ public class prac2 {
         }*/
         System.out.println("GENÉTICO GENERACIONAL OX2");
         for (int i = 0; i < arrayA.size(); i++) {
-            AGGOX2_Clase3_Grupo9 genetico = new AGGOX2_Clase3_Grupo9(new Random(config.getSemillas().get(0)), config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+            AGG_OX2_Clase3_Grupo9 genetico = new AGG_OX2_Clase3_Grupo9(new Random(config.getSemillas().get(0)), config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
                     config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional(), config.getSalidaLog());
             genetico.hazGeneticoGeneracional();
