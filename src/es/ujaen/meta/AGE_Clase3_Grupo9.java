@@ -249,7 +249,6 @@ public class AGE_Clase3_Grupo9 {
 
             seleccionados.add(peorTorneo(torneos));
         }
-        int adsa = 0;
         for (int i = 0; i < poblacion.size(); i++) {
             for (int j = 0; j < seleccionados.size(); j++) {
                 int contador = 0;
@@ -259,9 +258,6 @@ public class AGE_Clase3_Grupo9 {
                     }
                 }
                 if (contador == seleccionados.size()) {
-                    log = new Log("logs" + "_reemplazo" + adsa++);
-                    log.addTexto("Reemplazo: " + poblacion.get(i));
-                    log.addTexto("\n");
 
                     boolean reemplaza = false;
                     for (int k = 0; k < cruzados.size() && !reemplaza; k++) {
@@ -280,8 +276,6 @@ public class AGE_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
-        log.addTexto("Por: " + cruzado);
-        //log.guardaLog();
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
