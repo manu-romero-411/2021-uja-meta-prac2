@@ -76,9 +76,10 @@ public class AGG_OX2_Clase3_Grupo9 {
                 cruceOX2(seleccionados);
             }
             reemplazamiento(seleccionados);
-            guardarLog(i);
             System.out.println("\nGeneración " + i + " generada");
         }
+
+        guardarLog(evaluaciones - 1);
         int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
         for (int i = 0; i < poblacion.size(); ++i) {
