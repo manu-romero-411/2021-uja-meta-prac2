@@ -5,7 +5,6 @@
  */
 package es.ujaen.meta;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -70,15 +69,16 @@ public class AGG_OX2_Clase3_Grupo9 {
         creaPoblacionInicial();
         guardarLog(-1);
         for (int i = 0; i < evaluaciones; ++i) {
-            cogeElite();
+            escogeElite();
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (random.nextFloat() < probCruce) {
                 cruceOX2(seleccionados);
             }
             reemplazamiento(seleccionados);
-            guardarLog(i);
             System.out.println("\nGeneración " + i + " generada");
         }
+
+        guardarLog(evaluaciones - 1);
         int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
         for (int i = 0; i < poblacion.size(); ++i) {
@@ -94,7 +94,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         System.out.println("Terminado");
     }
 
-    private void cogeElite() {
+    private void escogeElite() {
         int indice = 0;
         int mejorCoste = Integer.MIN_VALUE;
         for (int i = 0; i < poblacion.size(); i++) {
