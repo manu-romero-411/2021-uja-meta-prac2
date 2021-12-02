@@ -68,7 +68,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-        guardarLog(0);
+        guardarLog(-1);
         for (int i = 0; i < evaluaciones; ++i) {
             cogeElite();
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
@@ -509,26 +509,29 @@ public class AGG_OX2_Clase3_Grupo9 {
         return array;
     }
 
-    private void guardarLog(int generacion) {
+    private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
-        if (generacion == 0) {
-            log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionInicial");
+        if (generacion == -1){
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionInicial");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
+        } else if (generacion+1 == evaluaciones) {
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionFinal");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
         } else {
-            log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacion_" + generacion);
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacion_" + (generacion+1));
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion+1) + "\n\n");
         }
 
-        for (int j = 0; j < poblacion.size(); ++j) {
+        for (int j = 0; j < poblacion.size(); ++j){
             log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
             log.addTexto("\n");
         }
 
         int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i) {
+        for (int i = 0; i < poblacion.size(); ++i){
             int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin) {
+            if (costeSel < costeMin){
                 costeMin = costeSel;
                 mejorSol = i;
             }

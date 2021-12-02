@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+enum listaAlgoritmos{AlgGRE,AlgPMDLBit,AlgPMDLBrandom,AlgMA,AGEOX,AGEPMX,AGGOX2,AGGPMX};
 /**
  *
  * @author Usuario
@@ -18,10 +19,12 @@ public class Configurador {
 
     private ArrayList<String> archivos;
     private ArrayList<Long> semillas;
+
+    private boolean[] algoritmos;
     private Float oscilacionEstrategica;
     private Float iteracionesEstrategica;
     private Integer iteraciones;
-    private Integer LonguitudLRC;
+    private Integer longitudLRC;
     private Integer candidatosGreedy;
     private Integer tamLista;
     private String salidaLog;
@@ -42,6 +45,10 @@ public class Configurador {
     public Configurador(String ruta) {
         archivos = new ArrayList<>();
         semillas = new ArrayList<>();
+        algoritmos = new boolean[8];
+        for (int i = 0; i < algoritmos.length; ++i){
+            algoritmos[i] = false;
+        }
 
         String linea;
         FileReader f = null;
@@ -66,26 +73,36 @@ public class Configurador {
                         break;
                     case "Algoritmos":
                         String[] vAlg = split[1].split(",");
+                        vAlg[vAlg.length-1] = vAlg[vAlg.length-1].split(" ")[0];
                         for (int i = 0; i < vAlg.length; i++) {
                             switch(vAlg[i]){
                                 case "AlgGRE":
+                                    algoritmos[0] = true;
                                     break;
                                 case "AlgPMDLBit":
+                                    algoritmos[1] = true;
                                     break;
                                 case "AlgPMDLBrandom":
+                                    algoritmos[2] = true;
                                     break;
                                 case "AlgMA":
+                                    algoritmos[3] = true;
                                     break;
                                 case "AGEOX":
+                                    algoritmos[4] = true;
                                     break;
                                 case "AGEPMX":
+                                    algoritmos[5] = true;
                                     break;
                                 case "AGGOX2":
+                                    algoritmos[6] = true;
                                     break;
                                 case "AGGPMX":
+                                    algoritmos[7] = true;
                                     break;
                             }
                         }
+                        break;
 
                     case "SalidaLog":
                         salidaLog = split[1];
@@ -99,7 +116,7 @@ public class Configurador {
                         break;
 
                     case "MA-LonguitudLRC":
-                        LonguitudLRC = Integer.parseInt(split[1]);
+                        longitudLRC = Integer.parseInt(split[1]);
                         break;
 
                     case "MA-CandidatosGreedy":
@@ -166,6 +183,10 @@ public class Configurador {
         return archivos;
     }
 
+    public boolean[] getAlgoritmos() {
+        return algoritmos;
+    }
+
     public ArrayList<Long> getSemillas() {
         return semillas;
     }
@@ -190,8 +211,8 @@ public class Configurador {
         return iteracionesEstrategica;
     }
 
-    public Integer getLonguitudLRC() {
-        return LonguitudLRC;
+    public Integer getLongitudLRC() {
+        return longitudLRC;
     }
 
     public Float getOscilacionEstrategica() {
