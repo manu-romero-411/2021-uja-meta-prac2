@@ -1,6 +1,6 @@
 Archivos=nissan01.dat
 Semillas=77433193
-Algoritmos=AGEOX 
+Algoritmos=AGGOX2,AGGPMX,AGEOX,AGEPMX
 SalidaLog=log
 Iteraciones=1000
 MA-OscilacionEstrategica=0.5
