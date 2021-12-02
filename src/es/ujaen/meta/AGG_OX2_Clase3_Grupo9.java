@@ -69,10 +69,8 @@ public class AGG_OX2_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(0);
-        for (int j = 0; j < poblacion.size(); j++) {
-            System.out.println("Poblacion " + j + " : " + poblacion.get(j));
-        }
         for (int i = 0; i < evaluaciones; ++i) {
+            cogeElite();
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (random.nextFloat() < probCruce) {
                 cruceOX2(seleccionados);
@@ -81,7 +79,33 @@ public class AGG_OX2_Clase3_Grupo9 {
             guardarLog(i);
             System.out.println("\nGeneración " + i + " generada");
         }
+        int costeMin = Integer.MAX_VALUE;
+        int mejorSol = -1;
+        for (int i = 0; i < poblacion.size(); ++i) {
+            int costeSel = calculaCosteConjunto(poblacion.get(i));
+            if (costeSel < costeMin) {
+                costeMin = costeSel;
+                mejorSol = i;
+            }
+        }
+
+        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
+        debugMuestraArray(poblacion.get(mejorSol));
         System.out.println("Terminado");
+    }
+
+    private void cogeElite() {
+        int indice = 0;
+        int mejorCoste = Integer.MIN_VALUE;
+        for (int i = 0; i < poblacion.size(); i++) {
+            if (mejorCoste < calculaCosteConjunto(poblacion.get(i))) {
+                indice = i;
+                mejorCoste = calculaCosteConjunto(poblacion.get(i));
+            }
+        }
+        for (int i = 0; i < poblacion.get(indice).size(); i++) {
+            elite.set(i, poblacion.get(indice).get(i));
+        }
     }
 
     private void iniciaConjunto() {
@@ -212,35 +236,18 @@ public class AGG_OX2_Clase3_Grupo9 {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
         ArrayList<Integer> torneos = new ArrayList<>();
-        while (seleccionados.size() <= tamPoblacion) {
+        while (seleccionados.size() < tamPoblacion) {
             do {
                 torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!arrayIntAleatoriosGeneradoBien(torneos));
             ArrayList<Integer> ganador = new ArrayList<>(mejorTorneo(torneos));
             ganador = mejorTorneo(torneos);
 
-            if (!(estaSeleccionado(seleccionados, ganador))) {
-                seleccionados.add(ganador);
-            }
-        }
-        for (int j = 0; j < seleccionados.size(); j++) {
-            System.out.println("Seleccion " + j + " : " + seleccionados.get(j));
+            seleccionados.add(ganador);
+
         }
         nuevaElite(poblacion);
         return seleccionados;
-    }
-
-    private boolean estaSeleccionado(ArrayList<ArrayList<Integer>> seleccionados, ArrayList<Integer> ganador) {
-        boolean esta = false;
-        for (int i = 0; i < seleccionados.size(); i++) {
-            for (int j = 0; j < seleccionados.get(i).size(); j++) {
-                if (!(seleccionados.get(i).get(j).equals(ganador.get(j)))) {
-                    return false; // SI YA HAY ALGÚN CROMOSOMA NO IGUAL, NO TIENE SENTIDO SEGUIR ITERANDO
-                }
-            }
-        }
-        if (seleccionados.size() == 0) return false; // SI NO HAY SELECCIONADOS ES TRIVIAL CONSIDERAR QUE EL GANADOR DEBE ENTRAR EN LOS SELECCIONADOS
-        return true;
     }
 
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
@@ -248,8 +255,6 @@ public class AGG_OX2_Clase3_Grupo9 {
         for (int i = 0; i < conjunto.size(); i++) {
             mejor.add(0);
         }
-        debugMuestraArray(poblacion.get(torneos.get(0)));
-        debugMuestraArray(poblacion.get(torneos.get(1)));
         int mejorCoste = Integer.MAX_VALUE;
         for (int i = 0; i < torneos.size(); i++) {
             int cos = calculaCosteConjunto(poblacion.get(torneos.get(i)));
@@ -260,7 +265,6 @@ public class AGG_OX2_Clase3_Grupo9 {
                 mejorCoste = cos;
             }
         }
-        debugMuestraArray(mejor);
         return mejor;
     }
 
@@ -282,40 +286,77 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     private void reemplazamiento(ArrayList<ArrayList<Integer>> nuevaPob) {
-        // Habiendo cruzado y mutado toda la población nueva, tenemos que reemplazar la anterior.
-        // Primero, tenemos que ver si el élite está en esta nueva población.
-        boolean isElite = false;
-        int eliteIt2 = -1;
-        for (int i = 0; i < nuevaPob.size(); ++i) {
-            isElite = true;
-            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++j) {
-                int cual1 = elite.get(j);
-                int cual2 = nuevaPob.get(i).get(j);
-                if (cual1 != cual2) {
-                    isElite = false; // LA ÉLITE ANTERIOR NO ESTÁ EN i. SEGUIR BUSCANDO
-                    break;
+        for (int i = 0; i < nuevaPob.size(); i++) {
+            for (int j = 0; j < nuevaPob.get(i).size(); j++) {
+                poblacion.get(i).set(j, nuevaPob.get(i).get(j));
+            }
+        }
+
+        boolean estaElite = false;
+        for (int i = 0; i < poblacion.size() && !estaElite; i++) {
+            int contador = 0;
+            for (int j = 0; j < poblacion.get(i).size(); j++) {
+                if (poblacion.get(i).get(j) == elite.get(j)) {
+                    contador++;
                 }
             }
-            if (isElite == true) {
-                eliteIt2 = i;
-                // LA ÉLITE ANTERIOR ESTARÍA EN i
+            if (contador == elite.size()) {
+                estaElite = true;
             }
         }
 
-        // Si la élite no está en la población nueva, poner la élite de la población anterior.
-        // Si la élite sí está, no hacer nada aquí.
-        if (isElite == false) {
-            eliteReemplaza(nuevaPob, elite);
+        if (!estaElite) {
+            cambiaAElite();
         }
 
-        // Buscamos una nueva élite en la nueva población (esto quizás no haga falta hacerlo aquí o ya se haga en la
-        // selección)
-        //nuevaElite(nuevaPob);
-        // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
-        for (int i = 0; i < poblacion.size(); ++i) {
-            //for (int j = 0; j < poblacion.get(i).size(); ++j) {
-            poblacion.set(i, nuevaPob.get(i));
-            //}
+//        // Habiendo cruzado y mutado toda la población nueva, tenemos que reemplazar la anterior.
+//        // Primero, tenemos que ver si el élite está en esta nueva población.
+//        boolean isElite = false;
+//        int eliteIt2 = -1;
+//        for (int i = 0; i < nuevaPob.size(); ++i) {
+//            isElite = true;
+//            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++j) {
+//                int cual1 = elite.get(j);
+//                int cual2 = nuevaPob.get(i).get(j);
+//                if (cual1 != cual2) {
+//                    isElite = false; // LA ÉLITE ANTERIOR NO ESTÁ EN i. SEGUIR BUSCANDO
+//                    break;
+//                }
+//            }
+//            if (isElite == true) {
+//                eliteIt2 = i;
+//                // LA ÉLITE ANTERIOR ESTARÍA EN i
+//            }
+//        }
+//
+//        // Si la élite no está en la población nueva, poner la élite de la población anterior.
+//        // Si la élite sí está, no hacer nada aquí.
+//        if (isElite == false) {
+//            eliteReemplaza(nuevaPob, elite);
+//        }
+//
+//        // Buscamos una nueva élite en la nueva población (esto quizás no haga falta hacerlo aquí o ya se haga en la
+//        // selección)
+//        //nuevaElite(nuevaPob);
+//        // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
+//        for (int i = 0; i < poblacion.size(); ++i) {
+//            //for (int j = 0; j < poblacion.get(i).size(); ++j) {
+//            poblacion.set(i, nuevaPob.get(i));
+//            //}
+//        }
+    }
+
+    private void cambiaAElite() {
+        int indice = 0;
+        int peorCoste = Integer.MAX_VALUE;
+        for (int i = 0; i < poblacion.size(); i++) {
+            if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
+                indice = i;
+                peorCoste = calculaCosteConjunto(poblacion.get(i));
+            }
+        }
+        for (int i = 0; i < poblacion.get(indice).size(); i++) {
+            poblacion.get(indice).set(i, elite.get(i));
         }
     }
 

@@ -27,33 +27,40 @@ public class prac2 {
             Archivodedatos archivo = new Archivodedatos(config.getArchivos().get(i));
             arrayA.add(archivo);
         }
-
-        for(int i = 0; i < config.getSemillas().size(); ++i){
+        //Random random;
+        for (int i = 0; i < config.getSemillas().size(); ++i) {
             Random random = new Random(config.getSemillas().get(i));
-            for(int j = 0; j < arrayA.size(); ++j){
+            for (int j = 0; j < arrayA.size(); ++j) {
                 System.out.println("Ejecución " + i + " para archivo ");
             }
         }
 
         System.out.println("GENETICO");
         System.out.println("GENÉTICO ESTACIONARIO PMX");
-  /*      for (int i = 0; i < arrayA.size(); i++) {
-            AGEPMX_Clase3_Grupo9 genetico = new AGEPMX_Clase3_Grupo9(random, config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
-                    config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionaio(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
-                    config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario() config.getSalidaLog);
+        for (int i = 0; i < arrayA.size(); i++) {
+            AGE_PMX_Clase3_Grupo9 genetico = new AGE_PMX_Clase3_Grupo9(new Random(config.getSemillas().get(0)), config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+                    config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
+                    config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario(), config.getSalidaLog());
             genetico.hazGeneticoEstacionario();
         }
 
         System.out.println("GENÉTICO ESTACIONARIO OX");
         for (int i = 0; i < arrayA.size(); i++) {
-            AGEOX_Clase3_Grupo9 genetico = new AGEOX_Clase3_Grupo9(random, config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+            AGE_OX_Clase3_Grupo9 genetico = new AGE_OX_Clase3_Grupo9(new Random(config.getSemillas().get(0)), config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
                     config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario(), config.getSalidaLog());
             genetico.hazGeneticoEstacionario();
-        }*/
+        }
         System.out.println("GENÉTICO GENERACIONAL OX2");
         for (int i = 0; i < arrayA.size(); i++) {
             AGG_OX2_Clase3_Grupo9 genetico = new AGG_OX2_Clase3_Grupo9(new Random(config.getSemillas().get(0)), config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
+                    config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
+                    config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional(), config.getSalidaLog());
+            genetico.hazGeneticoGeneracional();
+        }
+        System.out.println("GENÉTICO GENERACIONAL PMX");
+        for (int i = 0; i < arrayA.size(); i++) {
+            AGG_PMX_Clase3_Grupo9 genetico = new AGG_PMX_Clase3_Grupo9(new Random(config.getSemillas().get(0)), config.getSemillas().get(0), config.getLonguitudLRC(), arrayA.get(i), config.getGenTamPoblacion(),
                     config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
                     config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional(), config.getSalidaLog());
             genetico.hazGeneticoGeneracional();
