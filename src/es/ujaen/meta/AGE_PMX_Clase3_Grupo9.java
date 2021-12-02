@@ -58,7 +58,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
-        guardarLog(0);
+        guardarLog(-1);
         for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
@@ -453,16 +453,20 @@ public class AGE_PMX_Clase3_Grupo9 {
 
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
-        if (generacion == 0){
+        if (generacion == -1){
             log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacionInicial");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
+        } else if (generacion+1 == evaluaciones) {
+            log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacionFinal");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacion_" + generacion);
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + generacion + "\n\n");
+            log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacion_" + (generacion+1));
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion+1) + "\n\n");
         }
 
         for (int j = 0; j < poblacion.size(); ++j){
-            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString() + "\n");
+            log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
+            log.addTexto("\n");
         }
 
         int costeMin = Integer.MAX_VALUE;
