@@ -59,7 +59,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones/tamTorneoReemplazamiento; ++i) {
+        for (int i = 0; i < evaluaciones; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
             for (int j = 0; j < torneoSel.size(); j++) {
@@ -115,7 +115,7 @@ public class AGE_PMX_Clase3_Grupo9 {
 
     private void creaPoblacionInicial() {
         for (int j = 0; j < tamPoblacion; j++) {
-            ArrayList<Integer> repetidos = new ArrayList<>();
+            //ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(-1);
@@ -123,31 +123,38 @@ public class AGE_PMX_Clase3_Grupo9 {
 
             for (int i = 0; i < longitudLRC; i++) {
                 individuos.set(LRC.get(i).fst, LRC.get(i).snd);
-                repetidos.add(LRC.get(i).fst);
             }
 
-            int i = 0;
-            while (i < conjunto.size()) {
-                if (!repetidos.contains(i)) {
-                    boolean diferente = false;
-                    int aleatorio = 0;
-                    while (!diferente) {
-                        aleatorio = random.nextInt(conjunto.size());
-                        diferente = true;
-                        for (int k = 0; k < individuos.size() && diferente; k++) {
-                            if (aleatorio == individuos.get(k)) {
-                                diferente = false;
+            for (int i = 0; i < conjunto.size(); ++i) {
+                if (individuos.get(i) == -1) {
+                    do {
+                        boolean repetido = false;
+                        int num = random.nextInt(conjunto.size());
+
+                        // Comprobamos si el aleatorio que hemos generado está antes de la posición donde lo queremos poner
+                        for (int k = 0; k < i && repetido == false; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
                             }
                         }
-                    }
-                    individuos.set(i, aleatorio);
-                    repetidos.add(i);
-                    i++;
 
-                } else {
-                    i++;
+                        // Comprobamos si el aleatorio que hemos generado está después de la posición donde lo queremos poner
+                        for (int k = i + 1; k < conjunto.size() && repetido == false; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
+                            }
+                        }
+
+                        // Si el aleatorio generado todavía no está en el individuo (sea valor de la LRC o aleatorio anterior)
+                        // se introduce en esta posición, i
+                        if (repetido == false) {
+                            individuos.set(i, num);
+                        }
+                        // El proceso anterior se realiza dentro de la misma posición siempre que ésta sea igual a -1
+                    } while (individuos.get(i) == -1);
                 }
             }
+            // Una vez generada el individuo, se añade a la población
             poblacion.add(individuos);
         }
     }
