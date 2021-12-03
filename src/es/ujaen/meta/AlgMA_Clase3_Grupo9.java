@@ -149,7 +149,7 @@ public class AlgMA_Clase3_Grupo9 {
 
     private void oscilacionEstrategica(ArrayList<Integer> conjuntoAux) {
         int aleatorio = random.nextInt(3);
-        Pair<Integer, Integer> aux = listaTabu.get(aleatorio);
+        Pair<Integer, Integer> aux = listaTabu.get(aleatorio % listaTabu.size());
         cambiaConjunto(aux.fst, aux.snd, conjuntoAux);
     }
 

@@ -79,25 +79,49 @@ public class Configurador {
                                 case "AlgGRE":
                                     algoritmos[0] = true;
                                     break;
+                                case "greedy":
+                                    algoritmos[0] = true;
+                                    break;
                                 case "AlgPMDLBit":
+                                    algoritmos[1] = true;
+                                    break;
+                                case "primerMejorIterativo":
                                     algoritmos[1] = true;
                                     break;
                                 case "AlgPMDLBrandom":
                                     algoritmos[2] = true;
                                     break;
+                                case "primerMejorRandom":
+                                    algoritmos[2] = true;
+                                    break;
                                 case "AlgMA":
+                                    algoritmos[3] = true;
+                                    break;
+                                case "multiarranque":
                                     algoritmos[3] = true;
                                     break;
                                 case "AGEOX":
                                     algoritmos[4] = true;
                                     break;
+                                case "estacionarioOX":
+                                    algoritmos[4] = true;
+                                    break;
                                 case "AGEPMX":
+                                    algoritmos[5] = true;
+                                    break;
+                                case "estacionarioPMX":
                                     algoritmos[5] = true;
                                     break;
                                 case "AGGOX2":
                                     algoritmos[6] = true;
                                     break;
+                                case "generacionalOX2":
+                                    algoritmos[6] = true;
+                                    break;
                                 case "AGGPMX":
+                                    algoritmos[7] = true;
+                                    break;
+                                case "generacionalPMX":
                                     algoritmos[7] = true;
                                     break;
                             }

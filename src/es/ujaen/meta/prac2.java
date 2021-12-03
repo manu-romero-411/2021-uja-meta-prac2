@@ -32,6 +32,52 @@ public class prac2 {
         for (int i = 0; i < config.getSemillas().size(); ++i) {
             Random random = new Random(config.getSemillas().get(i));
             for (int j = 0; j < arrayA.size(); ++j) {
+                String nombre = arrayA.get(j).getNombre().split("/")[1];
+                if (config.getAlgoritmos()[0]){
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgGRE");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Greedy\n\n");
+                    AlgGRE_Clase3_Grupo9 greedy = new AlgGRE_Clase3_Grupo9(arrayA.get(j));
+                    greedy.calculaGreedy();
+                    System.out.print(greedy.muestraDatos());
+                    log.addTexto(greedy.muestraDatos());
+                    log.guardaLog();
+                }
+
+                if (config.getAlgoritmos()[1]){
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgPMDLBit");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Primer Mejor Iterativo con DLB\n\n");
+                    AlgPMDLBit_Clase3_Grupo9 primero = new AlgPMDLBit_Clase3_Grupo9(arrayA.get(j), config.getIteraciones());
+                    primero.calculaPrimerMejor();
+                    System.out.print(primero.muestraDatos());
+                    log.addTexto(primero.muestraDatos());
+                    log.guardaLog();
+                }
+
+                if (config.getAlgoritmos()[2]){
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgPMDLBrandom");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Primer Mejor Aleatorio con DLB\n\n");
+                    AlgPMDLBrandom_Clase3_Grupo9 primeroAle = new AlgPMDLBrandom_Clase3_Grupo9(arrayA.get(j), config.getIteraciones(), random);
+                    primeroAle.calculaPrimeroElMejor();
+                    System.out.print(primeroAle.muestraDatos());
+                    log.addTexto(primeroAle.muestraDatos());
+                    log.guardaLog();
+                }
+
+                if (config.getAlgoritmos()[3]){
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgMA");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Multiarranque\n\n");
+                    AlgMA_Clase3_Grupo9 multiA = new AlgMA_Clase3_Grupo9(arrayA.get(j), config.getIteraciones(),
+                            config.getLongitudLRC(), config.getCandidatosGreedy(), config.getTamLista(), config.getIteracionesEstrategica(), random);
+                    multiA.calculaMultiarranque();
+                    System.out.print(multiA.muestraDatos());
+                    log.addTexto(multiA.muestraDatos());
+                    log.guardaLog();
+                }
+
                 if (config.getAlgoritmos()[4]) {
                     System.out.println("Ejecución " + i + " del algoritmo genético estacionario (cruce OX) para archivo " + arrayA.get(j).getNombre().split("/"));
                     AGE_OX_Clase3_Grupo9 genetico = new AGE_OX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
@@ -39,6 +85,7 @@ public class prac2 {
                             config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario(), config.getSalidaLog());
                     genetico.hazGeneticoEstacionario();
                 }
+
                 if (config.getAlgoritmos()[5]) {
                     System.out.println("Ejecución " + i + " del algoritmo genético estacionario (cruce PMX) para archivo " + arrayA.get(j).getNombre().split("/"));
                     AGE_PMX_Clase3_Grupo9 genetico = new AGE_PMX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
@@ -46,6 +93,7 @@ public class prac2 {
                             config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario(), config.getSalidaLog());
                     genetico.hazGeneticoEstacionario();
                 }
+
                 if (config.getAlgoritmos()[6]) {
                     System.out.println("Ejecución " + i + " del algoritmo genético generacional (cruce OX2) para archivo " + arrayA.get(j).getNombre().split("/"));
                     AGG_OX2_Clase3_Grupo9 genetico = new AGG_OX2_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
@@ -53,6 +101,7 @@ public class prac2 {
                             config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional(), config.getSalidaLog());
                     genetico.hazGeneticoGeneracional();
                 }
+
                 if (config.getAlgoritmos()[7]) {
                     System.out.println("Ejecución " + i + " del algoritmo genético generacional (cruce PMX) para archivo " + arrayA.get(j).getNombre().split("/"));
                     AGG_PMX_Clase3_Grupo9 genetico = new AGG_PMX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
