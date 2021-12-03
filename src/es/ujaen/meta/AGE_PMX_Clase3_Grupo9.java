@@ -21,8 +21,8 @@ public class AGE_PMX_Clase3_Grupo9 {
     private final String modoLog;
     private final int longitudLRC;
     private final ArrayList<Pair<Integer, Integer>> LRC;
-    private ArrayList<Integer> conjunto;
-    private ArrayList<ArrayList<Integer>> poblacion;
+    private final ArrayList<Integer> conjunto;
+    private final ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
@@ -83,9 +83,6 @@ public class AGE_PMX_Clase3_Grupo9 {
                 mejorSol = i;
             }
         }
-
-        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        debugMuestraArray(poblacion.get(mejorSol));
     }
 
     private void iniciaConjunto() {
@@ -210,24 +207,13 @@ public class AGE_PMX_Clase3_Grupo9 {
         return peor;
     }
 
-    private void debugMuestraArray(ArrayList<Integer> debug) {
-        for (int i = 0; i < debug.size(); i++) {
-            System.out.print(debug.get(i) + " ");
-        }
-        System.out.println("");
-    }
-
-    private void debugMuestraMensaje(String debug) {
-        System.out.println(debug);
-    }
-
     private void reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
             while (!aleatorioDiferentes) {
-                if (torneos.size() == 0) {
+                if (torneos.isEmpty()) {
                     for (int j = 0; j < tamTorneoReemplazamiento; j++) {
                         torneos.add(random.nextInt(tamPoblacion));
                     }

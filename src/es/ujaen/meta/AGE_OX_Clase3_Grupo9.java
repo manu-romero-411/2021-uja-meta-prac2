@@ -21,8 +21,8 @@ public class AGE_OX_Clase3_Grupo9 {
     private final ArrayList<Pair<Integer, Integer>> LRC;
     private Log log;
     private final String modoLog;
-    private ArrayList<Integer> conjunto;
-    private ArrayList<ArrayList<Integer>> poblacion;
+    private final ArrayList<Integer> conjunto;
+    private final ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
@@ -84,8 +84,6 @@ public class AGE_OX_Clase3_Grupo9 {
             }
         }
 
-        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        debugMuestraArray(poblacion.get(mejorSol));
     }
 
     private void iniciaConjunto() {
@@ -211,24 +209,13 @@ public class AGE_OX_Clase3_Grupo9 {
         return peor;
     }
 
-    private void debugMuestraArray(ArrayList<Integer> debug) {
-        for (int i = 0; i < debug.size(); i++) {
-            System.out.print(debug.get(i) + " ");
-        }
-        System.out.println("");
-    }
-
-    private void debugMuestraMensaje(String debug) {
-        System.out.println(debug);
-    }
-
     private void reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
             while (!aleatorioDiferentes) {
-                if (torneos.size() == 0) {
+                if (torneos.isEmpty()) {
                     for (int j = 0; j < tamTorneoReemplazamiento; j++) {
                         torneos.add(random.nextInt(tamPoblacion));
                     }
@@ -251,7 +238,6 @@ public class AGE_OX_Clase3_Grupo9 {
 
             seleccionados.add(peorTorneo(torneos));
         }
-        int adsa = 0;
         for (int i = 0; i < poblacion.size(); i++) {
             for (int j = 0; j < seleccionados.size(); j++) {
                 int contador = 0;
@@ -261,9 +247,6 @@ public class AGE_OX_Clase3_Grupo9 {
                     }
                 }
                 if (contador == seleccionados.size()) {
-                    log = new Log("logs" + "_reemplazo" + adsa++);
-                    log.addTexto("Reemplazo: " + poblacion.get(i));
-                    log.addTexto("\n");
 
                     boolean reemplaza = false;
                     for (int k = 0; k < cruzados.size() && !reemplaza; k++) {
@@ -282,8 +265,6 @@ public class AGE_OX_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
-        log.addTexto("Por: " + cruzado);
-        //log.guardaLog();
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
@@ -323,7 +304,7 @@ public class AGE_OX_Clase3_Grupo9 {
                 auxVec2.add(-1);
             }
 
-            //Añade los valores de enmedio a la queue
+            //Añade los valores de en medio a la queue
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre1.get(j));
             }

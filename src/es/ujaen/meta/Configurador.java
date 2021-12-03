@@ -162,9 +162,6 @@ public class Configurador {
                     case "Gen-TamTorneoSeleccionEstacionario":
                         gen_tamTorneoSeleccionEstacionario = Integer.parseInt(split[1]);
                         break;
-                    case "Gen-TamReemplazamientoGeneracional":
-                        gen_tamReemplazamientoGeneracional = Integer.parseInt(split[1]);
-                        break;
                     case "Gen-TamTorneoReemplazamientoEstacionario":
                         gen_tamTorneoReemplazamientoEstacionario = Integer.parseInt(split[1]);
                         break;
@@ -313,13 +310,6 @@ public class Configurador {
      */
     public Integer getGen_tamTorneoSeleccionGeneracional() {
         return gen_tamTorneoSeleccionGeneracional;
-    }
-
-    /**
-     * @return the gen_tamReemplazamientoGeneracional
-     */
-    public Integer getGen_tamReemplazamientoGeneracional() {
-        return gen_tamReemplazamientoGeneracional;
     }
 
     /**
