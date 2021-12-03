@@ -16,7 +16,8 @@ import com.sun.tools.javac.util.Pair;
  * @author admin
  */
 public class AGG_PMX_Clase3_Grupo9 {
-
+    private long tiempoInicio;
+    private long tiempoFin;
     private final Random random;
     private final long seed;
     private Log log;
@@ -63,6 +64,7 @@ public class AGG_PMX_Clase3_Grupo9 {
     }
 
     public void hazGeneticoGeneracional() {
+        this.tiempoInicio = System.currentTimeMillis();
         inicializaElite();
         iniciaConjunto();
         creaLRC();
@@ -91,7 +93,7 @@ public class AGG_PMX_Clase3_Grupo9 {
 
         System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
         debugMuestraArray(poblacion.get(mejorSol));
-        System.out.println("Terminado");
+        System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
     private void escogeElite() {
@@ -524,7 +526,7 @@ public class AGG_PMX_Clase3_Grupo9 {
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else if (generacion + 1 == evaluaciones) {
             log = new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionFinal");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final (Generación " + (generacion + 1) +")\n\n");
         } else {
             log = new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacion_" + (generacion + 1));
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion + 1) + "\n\n");
@@ -545,6 +547,11 @@ public class AGG_PMX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        if (generacion + 1 == evaluaciones) {
+            tiempoFin = System.currentTimeMillis();
+            long tiempo = tiempoFin-tiempoInicio;
+            log.addTexto("\nTiempo de ejecución del algoritmo para este archivo y semilla: " + tiempo + " ms");
+        }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }

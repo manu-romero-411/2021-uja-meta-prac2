@@ -15,6 +15,8 @@ import com.sun.tools.javac.util.Pair;
  */
 public class AGE_OX_Clase3_Grupo9 {
 
+    private long tiempoInicio;
+    private long tiempoFin;
     private final Random random;
     private final long seed;
     private final int longitudLRC;
@@ -55,6 +57,7 @@ public class AGE_OX_Clase3_Grupo9 {
     }
 
     public void hazGeneticoEstacionario() {
+        this.tiempoInicio=System.currentTimeMillis();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
@@ -86,6 +89,7 @@ public class AGE_OX_Clase3_Grupo9 {
 
         System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
         debugMuestraArray(poblacion.get(mejorSol));
+        System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
     private void iniciaConjunto() {
@@ -471,6 +475,11 @@ public class AGE_OX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        if (generacion + 1 == evaluaciones) {
+            tiempoFin = System.currentTimeMillis();
+            long tiempo = tiempoFin-tiempoInicio;
+            log.addTexto("\nTiempo de ejecución del algoritmo para este archivo y semilla: " + tiempo + " ms");
+        }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
