@@ -36,7 +36,7 @@ public class AGG_PMX_Clase3_Grupo9 {
     private ArrayList<Integer> elite;
 
     public AGG_PMX_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-                                int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
+            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
@@ -68,7 +68,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones; ++i) {
+        for (int i = 0; i < (evaluaciones / vecesSeleccion); ++i) {
             escogeElite();
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (random.nextFloat() < probCruce) {
@@ -93,7 +93,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         debugMuestraArray(poblacion.get(mejorSol));
         System.out.println("Terminado");
     }
-    
+
     private void escogeElite() {
         int indice = 0;
         int mejorCoste = Integer.MIN_VALUE;
@@ -219,7 +219,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         return coste;
     }
 
-private ArrayList<ArrayList<Integer>> seleccion() {
+    private ArrayList<ArrayList<Integer>> seleccion() {
         System.out.println();
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
@@ -332,7 +332,7 @@ private ArrayList<ArrayList<Integer>> seleccion() {
 //            //}
 //        }
     }
-    
+
     private void cambiaAElite() {
         int indice = 0;
         int peorCoste = Integer.MAX_VALUE;
@@ -422,7 +422,7 @@ private ArrayList<ArrayList<Integer>> seleccion() {
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
-            
+
             Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
@@ -498,10 +498,10 @@ private ArrayList<ArrayList<Integer>> seleccion() {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array){
-        for(int i = 0; i < array.size() - 1; ++i){
-            for (int j = i + 1; j < array.size(); ++j){
-                if (array.get(i) == array.get(j)){
+    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
+        for (int i = 0; i < array.size() - 1; ++i) {
+            for (int j = i + 1; j < array.size(); ++j) {
+                if (array.get(i) == array.get(j)) {
                     return false;
                 }
             }
@@ -511,35 +511,35 @@ private ArrayList<ArrayList<Integer>> seleccion() {
 
     private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
         ArrayList<Integer> array = new ArrayList<>();
-        for (int i = 0; i < cuantos; ++i){
+        for (int i = 0; i < cuantos; ++i) {
             array.add(random.nextInt(mod));
         }
         return array;
     }
 
-    private void guardarLog(int generacion){
+    private void guardarLog(int generacion) {
         String nombre = archivo.getNombre().split("/")[1];
-        if (generacion == -1){
-            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionInicial");
+        if (generacion == -1) {
+            log = new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionInicial");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
-        } else if (generacion+1 == evaluaciones) {
-            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionFinal");
+        } else if (generacion + 1 == evaluaciones) {
+            log = new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacionFinal");
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
         } else {
-            log=new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacion_" + (generacion+1));
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion+1) + "\n\n");
+            log = new Log("logs/" + nombre + "_" + seed + "_AGGPMX_poblacion_" + (generacion + 1));
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion + 1) + "\n\n");
         }
 
-        for (int j = 0; j < poblacion.size(); ++j){
+        for (int j = 0; j < poblacion.size(); ++j) {
             log.addTexto("(" + calculaCosteConjunto(poblacion.get(j)) + ") " + poblacion.get(j).toString());
             log.addTexto("\n");
         }
 
         int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i){
+        for (int i = 0; i < poblacion.size(); ++i) {
             int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin){
+            if (costeSel < costeMin) {
                 costeMin = costeSel;
                 mejorSol = i;
             }

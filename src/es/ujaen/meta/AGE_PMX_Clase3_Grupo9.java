@@ -59,7 +59,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones; ++i) {
+        for (int i = 0; i < evaluaciones/tamTorneoReemplazamiento; ++i) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
             for (int j = 0; j < torneoSel.size(); j++) {
