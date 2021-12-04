@@ -98,7 +98,7 @@ public class prac2 {
                     System.out.println("Ejecución " + i + " del algoritmo genético generacional (cruce OX2) para archivo " + arrayA.get(j).getNombre().split("/"));
                     AGG_OX2_Clase3_Grupo9 genetico = new AGG_OX2_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
                             config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
-                            config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional(), config.getSalidaLog());
+                            config.getGen_tamTorneoSeleccionGeneracional(), config.getSalidaLog());
                     genetico.hazGeneticoGeneracional();
                 }
 
@@ -106,7 +106,7 @@ public class prac2 {
                     System.out.println("Ejecución " + i + " del algoritmo genético generacional (cruce PMX) para archivo " + arrayA.get(j).getNombre().split("/"));
                     AGG_PMX_Clase3_Grupo9 genetico = new AGG_PMX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
                             config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
-                            config.getGen_tamTorneoSeleccionGeneracional(), config.getGen_tamReemplazamientoGeneracional(), config.getSalidaLog());
+                            config.getGen_tamTorneoSeleccionGeneracional(), config.getSalidaLog());
                     genetico.hazGeneticoGeneracional();
                 }
             }

@@ -1,6 +1,6 @@
 Archivos=nissan01.dat nissan02.dat nissan03.dat nissan04.dat
 Semillas=77371841 73718417 37184177 71841773 18417737
-Algoritmos=greedy,primerMejorIterativo,primerMejorRandom,multiarranque
+Algoritmos=generacionalOX2,generacionalPMX,estacionarioOX,estacionarioPMX
 SalidaLog=log
 Iteraciones=1000
 MA-OscilacionEstrategica=0.5
@@ -17,6 +17,5 @@ Gen-TamSeleccionGeneracional=50
 Gen-TamSeleccionEstacionario=2
 Gen-TamTorneoSeleccionGeneracional=2
 Gen-TamTorneoSeleccionEstacionario=3
-Gen-TamReemplazamientoGeneracional=50
 Gen-TamTorneoReemplazamientoEstacionario=4
 Gen-VecesTorneoReemplazamientoEstacionario=2
