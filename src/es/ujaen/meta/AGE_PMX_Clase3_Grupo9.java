@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.*;
 
 import com.sun.tools.javac.util.Pair;
 
-/**
- *
- * @author admin
- */
 public class AGE_PMX_Clase3_Grupo9 {
 
     private long tiempoInicio;
@@ -28,6 +19,8 @@ public class AGE_PMX_Clase3_Grupo9 {
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
+    private int contEv;
+    private int contGen;
     private final float probCruce;
     private final float probMutacion;
     private final int vecesSeleccion;
@@ -43,6 +36,8 @@ public class AGE_PMX_Clase3_Grupo9 {
         this.archivo = archivo;
         this.tamPoblacion = tamPoblacion;
         this.evaluaciones = evaluaciones;
+        this.contEv = 0;
+        this.contGen = 0;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
         this.vecesSeleccion = vecesSeleccion;
@@ -62,7 +57,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones; ++i) {
+        while (contEv <= (evaluaciones - tamTorneoReemplazamiento)) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
             for (int j = 0; j < torneoSel.size(); j++) {
@@ -73,11 +68,11 @@ public class AGE_PMX_Clase3_Grupo9 {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
             }
             reemplazamiento(seleccionados);
-            System.out.println("\nGeneración " + i + " generada");
+            contGen++;
         }
 
         guardarLog(evaluaciones - 1);
-        int costeMin = Integer.MAX_VALUE;
+        /*int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
         for (int i = 0; i < poblacion.size(); ++i) {
             int costeSel = calculaCosteConjunto(poblacion.get(i));
@@ -85,7 +80,7 @@ public class AGE_PMX_Clase3_Grupo9 {
                 costeMin = costeSel;
                 mejorSol = i;
             }
-        }
+        }*/
 
         //System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
         //debugMuestraArray(poblacion.get(mejorSol));
@@ -160,7 +155,9 @@ public class AGE_PMX_Clase3_Grupo9 {
             }
             // Una vez generada el individuo, se añade a la población
             poblacion.add(individuos);
+            contEv++;
         }
+        contGen++;
     }
 
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
@@ -277,6 +274,7 @@ public class AGE_PMX_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
+        contEv++; // ESTAMOS EVALUANDO EL ELEMENTO CRUZADO
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
@@ -458,10 +456,10 @@ public class AGE_PMX_Clase3_Grupo9 {
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else if (generacion+1 == evaluaciones) {
             log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacionFinal");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final (generación " + contGen + ")\n\n");
         } else {
             log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacion_" + (generacion+1));
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion+1) + "\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + contGen + "\n\n");
         }
 
         for (int j = 0; j < poblacion.size(); ++j){
