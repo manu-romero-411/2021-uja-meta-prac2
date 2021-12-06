@@ -1,6 +1,6 @@
-Archivos=ford01.dat ford02.dat ford03.dat ford04.dat nissan01.dat nissan02.dat nissan03.dat nissan04.dat
-Semillas=77371841
-Algoritmos=AGGPMX
+Archivos=ford01.dat
+Semillas=77371841 73718417 37184177 71841773 18417737
+Algoritmos=estacionarioOX,estacionarioPMX
 SalidaLog=log
 Iteraciones=1000
 MA-OscilacionEstrategica=0.5

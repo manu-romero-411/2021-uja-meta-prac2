@@ -1,20 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.*;
 
 import com.sun.tools.javac.util.Pair;
 
-/**
- *
- * @author admin
- */
 public class AGE_PMX_Clase3_Grupo9 {
 
+    private long tiempoInicio;
+    private long tiempoFin;
     private final Random random;
     private final long seed;
     private Log log;
@@ -26,6 +19,8 @@ public class AGE_PMX_Clase3_Grupo9 {
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
+    private int contEv;
+    private int contGen;
     private final float probCruce;
     private final float probMutacion;
     private final int vecesSeleccion;
@@ -41,6 +36,8 @@ public class AGE_PMX_Clase3_Grupo9 {
         this.archivo = archivo;
         this.tamPoblacion = tamPoblacion;
         this.evaluaciones = evaluaciones;
+        this.contEv = 0;
+        this.contGen = 0;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
         this.vecesSeleccion = vecesSeleccion;
@@ -55,11 +52,12 @@ public class AGE_PMX_Clase3_Grupo9 {
     }
 
     public void hazGeneticoEstacionario() {
+        tiempoInicio = System.currentTimeMillis();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones/tamTorneoReemplazamiento; ++i) {
+        while (contEv <= (evaluaciones - tamTorneoReemplazamiento)) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
             for (int j = 0; j < torneoSel.size(); j++) {
@@ -70,11 +68,11 @@ public class AGE_PMX_Clase3_Grupo9 {
                 crucePMX(seleccionados); //Cruces y mutación a la vez
             }
             reemplazamiento(seleccionados);
-            System.out.println("\nGeneración " + i + " generada");
+            contGen++;
         }
 
         guardarLog(evaluaciones - 1);
-        int costeMin = Integer.MAX_VALUE;
+        /*int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
         for (int i = 0; i < poblacion.size(); ++i) {
             int costeSel = calculaCosteConjunto(poblacion.get(i));
@@ -82,7 +80,11 @@ public class AGE_PMX_Clase3_Grupo9 {
                 costeMin = costeSel;
                 mejorSol = i;
             }
-        }
+        }*/
+
+        //System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
+        //debugMuestraArray(poblacion.get(mejorSol));
+        System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
     private void iniciaConjunto() {
@@ -112,7 +114,7 @@ public class AGE_PMX_Clase3_Grupo9 {
 
     private void creaPoblacionInicial() {
         for (int j = 0; j < tamPoblacion; j++) {
-            ArrayList<Integer> repetidos = new ArrayList<>();
+            //ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(-1);
@@ -120,33 +122,42 @@ public class AGE_PMX_Clase3_Grupo9 {
 
             for (int i = 0; i < longitudLRC; i++) {
                 individuos.set(LRC.get(i).fst, LRC.get(i).snd);
-                repetidos.add(LRC.get(i).fst);
             }
 
-            int i = 0;
-            while (i < conjunto.size()) {
-                if (!repetidos.contains(i)) {
-                    boolean diferente = false;
-                    int aleatorio = 0;
-                    while (!diferente) {
-                        aleatorio = random.nextInt(conjunto.size());
-                        diferente = true;
-                        for (int k = 0; k < individuos.size() && diferente; k++) {
-                            if (aleatorio == individuos.get(k)) {
-                                diferente = false;
+            for (int i = 0; i < conjunto.size(); ++i) {
+                if (individuos.get(i) == -1) {
+                    do {
+                        boolean repetido = false;
+                        int num = random.nextInt(conjunto.size());
+
+                        // Comprobamos si el aleatorio que hemos generado está antes de la posición donde lo queremos poner
+                        for (int k = 0; k < i && repetido == false; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
                             }
                         }
-                    }
-                    individuos.set(i, aleatorio);
-                    repetidos.add(i);
-                    i++;
 
-                } else {
-                    i++;
+                        // Comprobamos si el aleatorio que hemos generado está después de la posición donde lo queremos poner
+                        for (int k = i + 1; k < conjunto.size() && repetido == false; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
+                            }
+                        }
+
+                        // Si el aleatorio generado todavía no está en el individuo (sea valor de la LRC o aleatorio anterior)
+                        // se introduce en esta posición, i
+                        if (repetido == false) {
+                            individuos.set(i, num);
+                        }
+                        // El proceso anterior se realiza dentro de la misma posición siempre que ésta sea igual a -1
+                    } while (individuos.get(i) == -1);
                 }
             }
+            // Una vez generada el individuo, se añade a la población
             poblacion.add(individuos);
+            contEv++;
         }
+        contGen++;
     }
 
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
@@ -263,6 +274,7 @@ public class AGE_PMX_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
+        contEv++; // ESTAMOS EVALUANDO EL ELEMENTO CRUZADO
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
@@ -444,10 +456,10 @@ public class AGE_PMX_Clase3_Grupo9 {
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else if (generacion+1 == evaluaciones) {
             log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacionFinal");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Población final (generación " + contGen + ")\n\n");
         } else {
             log=new Log("logs/" + nombre + "_" + seed + "_AGEPMX_poblacion_" + (generacion+1));
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion+1) + "\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce PMX | Tamaño de la población: " + tamPoblacion + "| Generación: " + contGen + "\n\n");
         }
 
         for (int j = 0; j < poblacion.size(); ++j){
@@ -465,6 +477,11 @@ public class AGE_PMX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        if (generacion + 1 == evaluaciones) {
+            tiempoFin = System.currentTimeMillis();
+            long tiempo = tiempoFin-tiempoInicio;
+            log.addTexto("\nTiempo de ejecución del algoritmo para este archivo y semilla: " + tiempo + " ms");
+        }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }

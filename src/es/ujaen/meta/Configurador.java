@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.io.BufferedReader;
@@ -10,11 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-enum listaAlgoritmos{AlgGRE,AlgPMDLBit,AlgPMDLBrandom,AlgMA,AGEOX,AGEPMX,AGGOX2,AGGPMX};
-/**
- *
- * @author Usuario
- */
 public class Configurador {
 
     private ArrayList<String> archivos;
@@ -79,25 +69,49 @@ public class Configurador {
                                 case "AlgGRE":
                                     algoritmos[0] = true;
                                     break;
+                                case "greedy":
+                                    algoritmos[0] = true;
+                                    break;
                                 case "AlgPMDLBit":
+                                    algoritmos[1] = true;
+                                    break;
+                                case "primerMejorIterativo":
                                     algoritmos[1] = true;
                                     break;
                                 case "AlgPMDLBrandom":
                                     algoritmos[2] = true;
                                     break;
+                                case "primerMejorRandom":
+                                    algoritmos[2] = true;
+                                    break;
                                 case "AlgMA":
+                                    algoritmos[3] = true;
+                                    break;
+                                case "multiarranque":
                                     algoritmos[3] = true;
                                     break;
                                 case "AGEOX":
                                     algoritmos[4] = true;
                                     break;
+                                case "estacionarioOX":
+                                    algoritmos[4] = true;
+                                    break;
                                 case "AGEPMX":
+                                    algoritmos[5] = true;
+                                    break;
+                                case "estacionarioPMX":
                                     algoritmos[5] = true;
                                     break;
                                 case "AGGOX2":
                                     algoritmos[6] = true;
                                     break;
+                                case "generacionalOX2":
+                                    algoritmos[6] = true;
+                                    break;
                                 case "AGGPMX":
+                                    algoritmos[7] = true;
+                                    break;
+                                case "generacionalPMX":
                                     algoritmos[7] = true;
                                     break;
                             }

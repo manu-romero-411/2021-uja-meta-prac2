@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.ArrayList;
@@ -11,12 +6,9 @@ import java.util.Queue;
 import java.util.Random;
 import com.sun.tools.javac.util.Pair;
 
-/**
- *
- * @author admin
- */
 public class AGG_OX2_Clase3_Grupo9 {
-
+    private long tiempoInicio;
+    private long tiempoFin;
     private final Random random;
     private final long seed;
     private Log log;
@@ -28,6 +20,8 @@ public class AGG_OX2_Clase3_Grupo9 {
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
+    private int contEv;
+    private int contGen;
     private final float probCruce;
     private final float probMutacion;
     private final int vecesSeleccion;
@@ -42,6 +36,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         this.archivo = archivo;
         this.tamPoblacion = tamPoblacion;
         this.evaluaciones = evaluaciones;
+        this.contEv = 0;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
         this.vecesSeleccion = vecesSeleccion;
@@ -61,22 +56,23 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     public void hazGeneticoGeneracional() {
+        tiempoInicio = System.currentTimeMillis();
         inicializaElite();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones; ++i) {
+        while (contEv < evaluaciones){
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (random.nextFloat() < probCruce) {
                 cruceOX2(seleccionados);
             }
             reemplazamiento(seleccionados);
-            System.out.println("\nGeneración " + i + " generada");
+            contGen++;
         }
 
         guardarLog(evaluaciones - 1);
-        int costeMin = Integer.MAX_VALUE;
+        /*int costeMin = Integer.MAX_VALUE;
         int mejorSol = -1;
         for (int i = 0; i < poblacion.size(); ++i) {
             int costeSel = calculaCosteConjunto(poblacion.get(i));
@@ -84,7 +80,11 @@ public class AGG_OX2_Clase3_Grupo9 {
                 costeMin = costeSel;
                 mejorSol = i;
             }
-        }
+        }*/
+
+        //System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
+        //debugMuestraArray(poblacion.get(mejorSol));
+        System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
     private void iniciaConjunto() {
@@ -147,10 +147,10 @@ public class AGG_OX2_Clase3_Grupo9 {
                     i++;
                 }
             }
+            contEv++;
             poblacion.add(individuos);
-
         }
-
+        contGen++;
         nuevaElite(poblacion);
     }
 
@@ -247,6 +247,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         int indice = 0;
         int peorCoste = Integer.MAX_VALUE;
         for (int i = 0; i < poblacion.size(); i++) {
+            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
             if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
                 indice = i;
                 peorCoste = calculaCosteConjunto(poblacion.get(i));
@@ -402,7 +403,7 @@ public class AGG_OX2_Clase3_Grupo9 {
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else if (generacion + 1 == evaluaciones) {
             log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionFinal");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población final (generación " + contGen + ")\n\n");
         } else {
             log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacion_" + (generacion + 1));
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion + 1) + "\n\n");
@@ -423,6 +424,11 @@ public class AGG_OX2_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        if (generacion + 1 == evaluaciones) {
+            tiempoFin = System.currentTimeMillis();
+            long tiempo = tiempoFin-tiempoInicio;
+            log.addTexto("\nTiempo de ejecución del algoritmo para este archivo y semilla: " + tiempo + " ms");
+        }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
