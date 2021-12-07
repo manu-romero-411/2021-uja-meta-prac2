@@ -2,7 +2,7 @@ function hazGeneticoEstacionario()
 	iniciaConjunto
 	creaLRC
 	creaPoblacionInicial
-	guardarLog
+	guardarLog(-1)
 	while contEV <= (evaluaciones - tamTorneoReemplazamiento)
 		seleccionados <- matriz de enteros
 		torneoSel = seleccionados
@@ -14,6 +14,7 @@ function hazGeneticoEstacionario()
 		end if
 		reemplazamiento(seleccionados)
 		contGen++
+		guardarLog(evaluaciones - 1);
 	end while
 end function
 
