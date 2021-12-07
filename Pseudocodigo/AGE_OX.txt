@@ -224,7 +224,18 @@ end function
 function generadorAleatorios(cuantos, tam)
 	aleatorios <- vector de enteros
 	for i <- 0 to cuantos do
-		aleatorios[i] = random(tam)
+		do
+			repetido = false
+			num = aleatorio(tam)
+			for j <- 0 to i && !repetido do
+				if(num == aleatorios[j])
+					repetido = true
+				end if
+			end for
+			if(!repetido)
+				aleatorio[i] = num
+			end if
+		while(aleatorio[i] == -1)
 	end for
 	return aleatorios
 end function

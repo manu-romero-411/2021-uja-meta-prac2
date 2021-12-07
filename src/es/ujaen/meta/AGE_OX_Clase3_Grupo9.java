@@ -392,10 +392,26 @@ public class AGE_OX_Clase3_Grupo9 {
     private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
         ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
-            aleatorios.add(random.nextInt(tam));
+            aleatorios.add(-1);
+        }
+
+        for (int i = 0; i < cuantos; ++i) {
+            do {
+                boolean repetido = false;
+                int num = random.nextInt(tam);
+                for (int j = 0; j < i && !repetido; ++j) {
+                    if (num == aleatorios.get(j)) {
+                        repetido = true;
+                    }
+                }
+                if (!repetido) {
+                    aleatorios.set(i, num);
+                }
+            } while (aleatorios.get(i) == -1);
         }
         return aleatorios;
     }
+    
 
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
