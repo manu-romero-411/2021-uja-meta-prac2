@@ -73,18 +73,6 @@ public class AGG_PMX_Clase3_Grupo9 {
         }
 
         guardarLog(evaluaciones - 1);
-        /*int costeMin = Integer.MAX_VALUE;
-        int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i) {
-            int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin) {
-                costeMin = costeSel;
-                mejorSol = i;
-            }
-        }*/
-
-        //System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        //debugMuestraArray(poblacion.get(mejorSol));
         System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
@@ -205,8 +193,8 @@ public class AGG_PMX_Clase3_Grupo9 {
         ArrayList<Integer> torneos = new ArrayList<>();
         while (seleccionados.size() < vecesSeleccion) {
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
-            } while (!arrayIntAleatoriosGeneradoBien(torneos));
+                torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
+            } while (!aleatoriosBien(torneos));
             ArrayList<Integer> ganador = new ArrayList<>(mejorTorneo(torneos));
             ganador = mejorTorneo(torneos);
 
@@ -379,7 +367,7 @@ public class AGG_PMX_Clase3_Grupo9 {
             auxSel.add(auxVec2);
 
         }
-
+        //Aleatorio para ver si muta la poblacion
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
@@ -401,10 +389,10 @@ public class AGG_PMX_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
-        for (int i = 0; i < array.size() - 1; ++i) {
-            for (int j = i + 1; j < array.size(); ++j) {
-                if (array.get(i) == array.get(j)) {
+    private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
+        for (int i = 0; i < aleatorios.size() - 1; ++i) {
+            for (int j = i + 1; j < aleatorios.size(); ++j) {
+                if (aleatorios.get(i) == aleatorios.get(j)) {
                     return false;
                 }
             }
@@ -412,12 +400,12 @@ public class AGG_PMX_Clase3_Grupo9 {
         return true;
     }
 
-    private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
-        ArrayList<Integer> array = new ArrayList<>();
+    private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
+        ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
-            array.add(random.nextInt(mod));
+            aleatorios.add(random.nextInt(tam));
         }
-        return array;
+        return aleatorios;
     }
 
     private void guardarLog(int generacion) {
