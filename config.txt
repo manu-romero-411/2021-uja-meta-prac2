@@ -1,6 +1,6 @@
-Archivos=ford01.dat
+Archivos=ford01.dat nissan04.dat
 Semillas=77371841 73718417 37184177 71841773 18417737
-Algoritmos=estacionarioOX,estacionarioPMX
+Algoritmos=generacionalPMX,generacionalOX2
 SalidaLog=log
 Iteraciones=1000
 MA-OscilacionEstrategica=0.5
@@ -9,7 +9,7 @@ MA-LonguitudLRC=10
 MA-CandidatosGreedy=5
 MA-TamListaTabu=3
 Gen-TamPoblacion=50
-Gen-NumEvaluaciones=50000
+Gen-NumEvaluaciones=5
 Gen-ProbCruceGeneracional=0.7
 Gen-ProbCruceEstacionario=1
 Gen-FactorProbabilidadMutacion=0.001
