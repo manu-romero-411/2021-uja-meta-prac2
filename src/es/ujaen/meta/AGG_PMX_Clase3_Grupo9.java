@@ -363,7 +363,7 @@ public class AGG_PMX_Clase3_Grupo9 {
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
             }
-            auxSel.add(auxVec2);
+            auxSel.add(auxVec1);
             auxSel.add(auxVec2);
 
         }

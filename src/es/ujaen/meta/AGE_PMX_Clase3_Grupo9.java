@@ -293,11 +293,14 @@ public class AGE_PMX_Clase3_Grupo9 {
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = 0; j < padre1.size(); j++) {
                 auxVec1.add(-1);
             }
 
-            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            
             for (int j = 0; j < padre2.size(); j++) {
                 auxVec2.add(-1);
             }
@@ -306,7 +309,7 @@ public class AGE_PMX_Clase3_Grupo9 {
                 posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
             }
 
-            Queue<Integer> auxQueue1 = new LinkedList<>();
+            
 
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre2.get(j));
@@ -349,7 +352,7 @@ public class AGE_PMX_Clase3_Grupo9 {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
 
-            Queue<Integer> auxQueue2 = new LinkedList<>();
+            
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
             }
@@ -390,7 +393,7 @@ public class AGE_PMX_Clase3_Grupo9 {
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
             }
-            auxSel.add(auxVec2);
+            auxSel.add(auxVec1);
             auxSel.add(auxVec2);
 
         }
