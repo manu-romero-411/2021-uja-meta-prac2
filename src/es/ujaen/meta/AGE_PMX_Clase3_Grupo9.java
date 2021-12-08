@@ -118,14 +118,14 @@ public class AGE_PMX_Clase3_Grupo9 {
                         int num = random.nextInt(conjunto.size());
 
                         // Comprobamos si el aleatorio que hemos generado está antes de la posición donde lo queremos poner
-                        for (int k = 0; k < i && repetido == false; ++k) {
+                        for (int k = 0; k < i && !repetido; ++k) {
                             if (num == individuos.get(k)) {
                                 repetido = true;
                             }
                         }
 
                         // Comprobamos si el aleatorio que hemos generado está después de la posición donde lo queremos poner
-                        for (int k = i + 1; k < conjunto.size() && repetido == false; ++k) {
+                        for (int k = i + 1; k < conjunto.size() && !repetido; ++k) {
                             if (num == individuos.get(k)) {
                                 repetido = true;
                             }
@@ -133,7 +133,7 @@ public class AGE_PMX_Clase3_Grupo9 {
 
                         // Si el aleatorio generado todavía no está en el individuo (sea valor de la LRC o aleatorio anterior)
                         // se introduce en esta posición, i
-                        if (repetido == false) {
+                        if (!repetido) {
                             individuos.set(i, num);
                         }
                         // El proceso anterior se realiza dentro de la misma posición siempre que ésta sea igual a -1

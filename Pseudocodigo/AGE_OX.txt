@@ -3,7 +3,7 @@ function hazGeneticoEstacionario()
 	creaLRC
 	creaPoblacionInicial
 	guardarLog(-1)
-	while contEV <= (evaluaciones - tamTorneoReemplazamiento)
+	while contEV <= (evaluaciones - tamTorneoReemplazamiento) do
 		seleccionados <- matriz de enteros
 		torneoSel = seleccionados
 		for j <- 0 to torneoSel.tamaño do
@@ -14,8 +14,8 @@ function hazGeneticoEstacionario()
 		end if
 		reemplazamiento(seleccionados)
 		contGen++
-		guardarLog(evaluaciones - 1);
 	end while
+	guardarLog(evaluaciones - 1);
 end function
 
 function calculaCosteConjunto(conjunto) -> entero
