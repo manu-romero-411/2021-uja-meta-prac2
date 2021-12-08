@@ -48,7 +48,27 @@ function creaPoblacionInicial()
 				do
 					repetido = false
 					num = random(conjunto.tamaño)
-					for k <- 0 to i && !repetido
+					for k <- 0 to i && !repetido do
+						if(num == individuos[k]) do
+							repetido = true
+						end if
+					end for
+					for k <- i+1 to conjunto.tamaño && !repetido do
+						if(num == individuos[k]) do
+							repetido = true
+						end if
+					end for
+					if(!repetido) do
+						individuos[i]=num
+					end if
+				while(individuos[i]==-1)
+			end if
+		end for
+		contEv++
+		poblacion[j]=individuos
+	end for
+	contGen++
+end function
 
 function calculaCosteConjunto(conjunto) -> entero
 	coste <- 0
