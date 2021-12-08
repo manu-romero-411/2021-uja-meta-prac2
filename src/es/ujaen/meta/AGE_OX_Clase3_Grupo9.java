@@ -72,18 +72,6 @@ public class AGE_OX_Clase3_Grupo9 {
         }
 
         guardarLog(evaluaciones - 1);
-        /*int costeMin = Integer.MAX_VALUE;
-        int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i) {
-            int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin) {
-                costeMin = costeSel;
-                mejorSol = i;
-            }
-        }*/
-
-        //System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        //debugMuestraArray(poblacion.get(mejorSol));
         System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
@@ -176,8 +164,8 @@ public class AGE_OX_Clase3_Grupo9 {
             ArrayList<Integer> torneos = new ArrayList<>();
 
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
-            } while (!arrayIntAleatoriosGeneradoBien(torneos));
+                torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
+            } while (!aleatoriosBien(torneos));
 
             seleccionados.add(mejorTorneo(torneos));
         }
@@ -309,7 +297,7 @@ public class AGE_OX_Clase3_Grupo9 {
                 auxVec2.add(-1);
             }
 
-            //Añade los valores de en medio a la queue
+            //Añade los valores de en medio a la cola
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre1.get(j));
             }
@@ -340,7 +328,7 @@ public class AGE_OX_Clase3_Grupo9 {
             auxSel.add(auxVec1);
 
             //Segundo hijo
-            //Añade los valores de enmedio a la queue
+            //Añade los valores de en medio a la cola
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
             }
@@ -369,6 +357,7 @@ public class AGE_OX_Clase3_Grupo9 {
             }
             auxSel.add(auxVec2);
         }
+        //Aleatorio para ver si muta la poblacion
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
@@ -389,10 +378,10 @@ public class AGE_OX_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
-        for (int i = 0; i < array.size() - 1; ++i) {
-            for (int j = i + 1; j < array.size(); ++j) {
-                if (array.get(i) == array.get(j)) {
+    private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
+        for (int i = 0; i < aleatorios.size() - 1; ++i) {
+            for (int j = i + 1; j < aleatorios.size(); ++j) {
+                if (aleatorios.get(i) == aleatorios.get(j)) {
                     return false;
                 }
             }
@@ -400,28 +389,29 @@ public class AGE_OX_Clase3_Grupo9 {
         return true;
     }
 
-    private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
-        ArrayList<Integer> array = new ArrayList<>();
+    private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
+        ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
-            array.add(-1);
+            aleatorios.add(-1);
         }
 
         for (int i = 0; i < cuantos; ++i) {
             do {
                 boolean repetido = false;
-                int num = random.nextInt(mod);
-                for (int j = 0; j < i && repetido == false; ++j) {
-                    if (num == array.get(j)) {
+                int num = random.nextInt(tam);
+                for (int j = 0; j < i && !repetido; ++j) {
+                    if (num == aleatorios.get(j)) {
                         repetido = true;
                     }
                 }
-                if (repetido == false) {
-                    array.set(i, num);
+                if (!repetido) {
+                    aleatorios.set(i, num);
                 }
-            } while (array.get(i) == -1);
+            } while (aleatorios.get(i) == -1);
         }
-        return array;
+        return aleatorios;
     }
+    
 
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];

@@ -72,18 +72,6 @@ public class AGE_PMX_Clase3_Grupo9 {
         }
 
         guardarLog(evaluaciones - 1);
-        /*int costeMin = Integer.MAX_VALUE;
-        int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i) {
-            int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin) {
-                costeMin = costeSel;
-                mejorSol = i;
-            }
-        }*/
-
-        //System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        //debugMuestraArray(poblacion.get(mejorSol));
         System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
@@ -114,7 +102,6 @@ public class AGE_PMX_Clase3_Grupo9 {
 
     private void creaPoblacionInicial() {
         for (int j = 0; j < tamPoblacion; j++) {
-            //ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(-1);
@@ -176,8 +163,8 @@ public class AGE_PMX_Clase3_Grupo9 {
             ArrayList<Integer> torneos = new ArrayList<>();
 
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
-            } while (!arrayIntAleatoriosGeneradoBien(torneos));
+                torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
+            } while (!aleatoriosBien(torneos));
 
             seleccionados.add(mejorTorneo(torneos));
         }
@@ -306,11 +293,14 @@ public class AGE_PMX_Clase3_Grupo9 {
             ArrayList<Pair<Integer, Integer>> posiciones = new ArrayList<>();
 
             ArrayList<Integer> auxVec1 = new ArrayList<>();
+            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            Queue<Integer> auxQueue1 = new LinkedList<>();
+            Queue<Integer> auxQueue2 = new LinkedList<>();
             for (int j = 0; j < padre1.size(); j++) {
                 auxVec1.add(-1);
             }
 
-            ArrayList<Integer> auxVec2 = new ArrayList<>();
+            
             for (int j = 0; j < padre2.size(); j++) {
                 auxVec2.add(-1);
             }
@@ -319,7 +309,7 @@ public class AGE_PMX_Clase3_Grupo9 {
                 posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
             }
 
-            Queue<Integer> auxQueue1 = new LinkedList<>();
+            
 
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre2.get(j));
@@ -362,7 +352,7 @@ public class AGE_PMX_Clase3_Grupo9 {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
 
-            Queue<Integer> auxQueue2 = new LinkedList<>();
+            
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
             }
@@ -403,12 +393,11 @@ public class AGE_PMX_Clase3_Grupo9 {
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec2.set(posiciones.get(j).fst, posiciones.get(j).snd);
             }
-            //Se hace bien
-            auxSel.add(auxVec2);
+            auxSel.add(auxVec1);
             auxSel.add(auxVec2);
 
         }
-
+        //Aleatorio para ver si muta la poblacion
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
@@ -430,10 +419,10 @@ public class AGE_PMX_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
-        for (int i = 0; i < array.size() - 1; ++i) {
-            for (int j = i + 1; j < array.size(); ++j) {
-                if (array.get(i) == array.get(j)) {
+    private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
+        for (int i = 0; i < aleatorios.size() - 1; ++i) {
+            for (int j = i + 1; j < aleatorios.size(); ++j) {
+                if (aleatorios.get(i) == aleatorios.get(j)) {
                     return false;
                 }
             }
@@ -441,12 +430,27 @@ public class AGE_PMX_Clase3_Grupo9 {
         return true;
     }
 
-    private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
-        ArrayList<Integer> array = new ArrayList<>();
+    private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
+        ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
-            array.add(random.nextInt(mod));
+            aleatorios.add(-1);
         }
-        return array;
+
+        for (int i = 0; i < cuantos; ++i) {
+            do {
+                boolean repetido = false;
+                int num = random.nextInt(tam);
+                for (int j = 0; j < i && !repetido; ++j) {
+                    if (num == aleatorios.get(j)) {
+                        repetido = true;
+                    }
+                }
+                if (!repetido) {
+                    aleatorios.set(i, num);
+                }
+            } while (aleatorios.get(i) == -1);
+        }
+        return aleatorios;
     }
 
     private void guardarLog(int generacion){
