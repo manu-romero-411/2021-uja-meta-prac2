@@ -8,7 +8,7 @@ function hazGeneticoGeneracional()
 		seleccionados <- matriz de enteros
 		seleccionados = seleccion
 		if(aleatorio < probCruce) do
-			crucePMX(seleccionados)
+			cruceOX2(seleccionados)
 		end if
 		reemplazamiento(seleccionados)
 		contGen++
@@ -147,9 +147,9 @@ function reemplazamiento(nuevaPob)
 	end if
 end function
 
-function crucePMX(seleccionados) -> matriz de enteros
+function cruceOX2(seleccionados) -> matriz de enteros
 	auxSel <- matriz de enteros
-	for i <- 0 to seleccionados.tamaño incremento i=i+2 do
+	for j <- 0 to seleccionados.tamaño incremento j=j+2 do
 		padre1 = seleccionados[i]
 		padre2 = seleccionados[i+1]
 		aleatorioA <- entero
