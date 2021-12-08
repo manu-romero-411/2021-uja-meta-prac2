@@ -1,14 +1,12 @@
-function hazGeneticoEstacionario()
+function hazGeneticoGeneracional()
+	inicializaElite
 	iniciaConjunto
 	creaLRC
 	creaPoblacionInicial
 	guardarLog(-1)
-	while contEV <= (evaluaciones - tamTorneoReemplazamiento) do
+	while contEV < evaluaciones do
 		seleccionados <- matriz de enteros
-		torneoSel = seleccionados
-		for j <- 0 to torneoSel.tamaño do
-			seleccionados.añade(torneoSel[j])
-		end for 
+		seleccionados = seleccion
 		if(aleatorio < probCruce) do
 			crucePMX(seleccionados)
 		end if
@@ -68,6 +66,33 @@ function creaPoblacionInicial()
 		poblacion[j]=individuos
 	end for
 	contGen++
+	nuevaElite(poblacion)
+end function
+
+function nuevaElite(poblacion1)
+	costeMin = MAX_INTEGER
+	eliteIt = -1
+	for i <- 0 to poblacion.tamaño do
+		costeBuscado = calculaCosteConjunto(poblacion1[i])
+		if(costeBuscado < costeMin) do
+			eliteIt = i
+			costeMin = costeBuscado
+		end if
+	end for
+	elite = poblacion1[eliteIt]
+end function
+
+function cambiaAElite()
+	indice = 0
+	peorCoste = MAX_INTEGER
+	for i <- 0 to poblacion.tamaño do
+		contEv++
+		if(peorCoste > calculaCosteConjunto(poblacion[i])) do
+			indice = i
+			peorCoste = calculaCosteConjunto(poblacion[i])
+		end if
+	end for
+	poblacion[indice] = elite
 end function
 
 function calculaCosteConjunto(conjunto) -> entero
@@ -81,14 +106,16 @@ function calculaCosteConjunto(conjunto) -> entero
 end function
 
 function seleccion() -> matriz de enteros
+	nuevaElite(poblacion)
 	seleccionados <- matriz de enteros
-	for i <- 0 to vecesSeleccion do
-		torneos <- vector de enteros
-		do
-			torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion)
-		while (!arrayIntAletoriosGeneradoBien(torneos))
-		seleccionados[i]=mejorTorneo(torneos))
-	end for
+	torneos <- vector de enteros
+	while(seleccionados.tamaño < vecesSeleccion) do
+		do 
+			torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion)
+		while(!aleatoriosBien(torneos))
+		ganador = mejorTorneo(torneos)
+		seleccionados.añade(ganador)
+	end while
 	return seleccionados
 end function
 
@@ -107,79 +134,17 @@ function mejorTorneo(torneos) -> vector de enteros
 	return mejor
 end function
 
-function peorTorneo(torneos) -> vector de enteros
-	peor -> vector de enteros
-	for i <- conjunto.tamaño do
-		peor[i] = 0
-	end for
-	peorCoste = MAX_INTEGER
-	for i <- 0 to torneos.tamaño do
-		if(calculaCosteConjunto(poblacion[torneos[i]] < peorCoste)
-			peor = poblacion[torneos[i]]
-			peorCoste = calculaCosteConjunto(poblacion[torneos[i]]
+function reemplazamiento(nuevaPob)
+	poblacion = nuevaPob
+	estaElite = false
+	for i <- 0 to poblacion.tamaño && !estaElite do
+		if(poblacion[i] == elite) do
+			estaElite = true
 		end if
 	end for
-	return peor
-end function
-
-function reemplazamiento(cruzados)
-	seleccionados <- matriz de enteros
-	for i <- 0 to vecesTorneoReemplazamiento do
-		torneos <- vector de enteros
-		aleatorioDiferentes = false
-		while(!aleatorioDiferentes)
-			if(torneos.estaVacio)
-				for j <- 0 to tamTorneoReemplazamiento do
-					torneos[j] = random(tamPoblacion)
-				end for
-			end if
-			else
-				for j <- 0 to tamTorneoReemplazamiento do
-					torneos[j] = random(tamPoblacion)
-				end for
-			end else
-			aleatorioDiferentes = true
-			for j <- 0 to tamTorneoReemplazamiento && aleatorioDiferentes do
-				cont = tamTorneoReemplazamiento -1
-				for k <- j + 1 while cont > 0 && aleatorioDiferentes do
-					if(torneos[j] == torneos[k mod tamTorneoReemplazamiento]) do
-						aleatorioDiferentes = false
-					end if
-				end for
-			end for
-		end while
-		seleccionados[i] = peorTorneo(torneos)
-	end for
-	for i <- 0 to poblacion.tamaño do
-		for j <- 0 to seleccionados.tamaño do
-			contador = 0
-			for k <- 0 to seleccionados.tamaño do
-				if(poblacion[i][j] == seleccionados[j][k])
-					contador++
-				end if
-			end for
-			if(contador == seleccionados.tamaño)
-				reemplaza = false
-				for k <- 0 to cruzados.tamaño && !reemplaza do
-					if(reemplazaPoblacion(poblacion[i], cruzados[k])
-						cruzados.elimina(k)
-						reemplaza = true
-					end if
-				end for
-			end if
-		end for
-	end for
-end function
-
-function reemplazaPoblacion(seleccionado, cruzado) -> boolean
-	contEv++
-	if(calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) do
-		return false
+	if(!estaElite)
+		cambiaAElite()
 	end if
-	else
-		seleccionado = cruzado
-	end else
-	return true
 end function
 
 function crucePMX(seleccionados) -> matriz de enteros

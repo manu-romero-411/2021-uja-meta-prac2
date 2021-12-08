@@ -3,7 +3,7 @@ function hazGeneticoEstacionario()
 	creaLRC
 	creaPoblacionInicial
 	guardarLog(-1)
-	while contEV <= (evaluaciones - tamTorneoReemplazamiento)
+	while contEV <= (evaluaciones - tamTorneoReemplazamiento) do
 		seleccionados <- matriz de enteros
 		torneoSel = seleccionados
 		for j <- 0 to torneoSel.tamaño do
@@ -14,8 +14,60 @@ function hazGeneticoEstacionario()
 		end if
 		reemplazamiento(seleccionados)
 		contGen++
-		guardarLog(evaluaciones - 1);
 	end while
+	guardarLog(evaluaciones - 1);
+end function
+
+function creaLRC() 
+	i = 0
+	while(i < longitudLRC) do
+		contenido = false
+		flujo = random(tamañoFlujos)
+		distancia = random(tamañoDistancias)
+		aux = Par(flujo, distancia)
+		for j <- 0 to LRC.tamaño && !contenido do
+			if(LRC[j].key == aux.key || LRC[j].value == aux.value) do
+				contenido = true
+			end if
+		end for
+		if(!contenido)
+			LRC[i] = aux
+			i++
+		end if
+	end while
+end function
+
+function creaPoblacionInicial()
+	for j <- 0 to tamPoblacion do
+		individuos <- vector de enteros
+		for i <- 0 to longitudLRC do
+			individuos[LRC[i].key] = individuos[LRC[i].value]
+		end for
+		for i <- 0 to conjunto.tamaño do
+			if(individuos[i] == -1) do
+				do
+					repetido = false
+					num = random(conjunto.tamaño)
+					for k <- 0 to i && !repetido do
+						if(num == individuos[k]) do
+							repetido = true
+						end if
+					end for
+					for k <- i+1 to conjunto.tamaño && !repetido do
+						if(num == individuos[k]) do
+							repetido = true
+						end if
+					end for
+					if(!repetido) do
+						individuos[i]=num
+					end if
+				while(individuos[i]==-1)
+			end if
+		end for
+		contEv++
+		poblacion[j]=individuos
+	end for
+	contGen++
 end function
 
 function calculaCosteConjunto(conjunto) -> entero
