@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.ArrayList;
 import java.util.Random;
 import com.sun.tools.javac.util.Pair;
 
-/**
- *
- * @author admin
- */
 public class AlgMA_Clase3_Grupo9 {
 
     private final long inicio;
@@ -149,7 +140,7 @@ public class AlgMA_Clase3_Grupo9 {
 
     private void oscilacionEstrategica(ArrayList<Integer> conjuntoAux) {
         int aleatorio = random.nextInt(3);
-        Pair<Integer, Integer> aux = listaTabu.get(aleatorio);
+        Pair<Integer, Integer> aux = listaTabu.get(aleatorio % listaTabu.size());
         cambiaConjunto(aux.fst, aux.snd, conjuntoAux);
     }
 

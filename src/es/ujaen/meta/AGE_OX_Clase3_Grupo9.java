@@ -1,31 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.*;
 
 import com.sun.tools.javac.util.Pair;
 
-/**
- *
- * @author admin
- */
 public class AGE_OX_Clase3_Grupo9 {
 
+    private long tiempoInicio;
+    private long tiempoFin;
     private final Random random;
     private final long seed;
     private final int longitudLRC;
     private final ArrayList<Pair<Integer, Integer>> LRC;
     private Log log;
     private final String modoLog;
-    private ArrayList<Integer> conjunto;
-    private ArrayList<ArrayList<Integer>> poblacion;
+    private final ArrayList<Integer> conjunto;
+    private final ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
+    private int contEv;
+    private int contGen;
     private final float probCruce;
     private final float probMutacion;
     private final int vecesSeleccion;
@@ -41,6 +36,8 @@ public class AGE_OX_Clase3_Grupo9 {
         this.archivo = archivo;
         this.tamPoblacion = tamPoblacion;
         this.evaluaciones = evaluaciones;
+        this.contEv = 0;
+        this.contGen = 0;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
         this.vecesSeleccion = vecesSeleccion;
@@ -55,11 +52,12 @@ public class AGE_OX_Clase3_Grupo9 {
     }
 
     public void hazGeneticoEstacionario() {
+        this.tiempoInicio=System.currentTimeMillis();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones/tamTorneoReemplazamiento; ++i) {
+        while (contEv <= (evaluaciones - tamTorneoReemplazamiento)) {
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
             ArrayList<ArrayList<Integer>> torneoSel = new ArrayList<>(seleccion());
             for (int j = 0; j < torneoSel.size(); j++) {
@@ -70,22 +68,11 @@ public class AGE_OX_Clase3_Grupo9 {
                 cruceOX(seleccionados); //Cruces y mutación a la vez
             }
             reemplazamiento(seleccionados);
-            System.out.println("\nGeneración " + i + " generada");
+            contGen++;
         }
 
         guardarLog(evaluaciones - 1);
-        int costeMin = Integer.MAX_VALUE;
-        int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i) {
-            int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin) {
-                costeMin = costeSel;
-                mejorSol = i;
-            }
-        }
-
-        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        debugMuestraArray(poblacion.get(mejorSol));
+        System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
     private void iniciaConjunto() {
@@ -114,9 +101,8 @@ public class AGE_OX_Clase3_Grupo9 {
     }
 
     private void creaPoblacionInicial() {
-
         for (int j = 0; j < tamPoblacion; j++) {
-            ArrayList<Integer> repetidos = new ArrayList<>();
+            //ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(-1);
@@ -124,33 +110,42 @@ public class AGE_OX_Clase3_Grupo9 {
 
             for (int i = 0; i < longitudLRC; i++) {
                 individuos.set(LRC.get(i).fst, LRC.get(i).snd);
-                repetidos.add(LRC.get(i).fst);
             }
 
-            int i = 0;
-            while (i < conjunto.size()) {
-                if (!repetidos.contains(i)) {
-                    boolean diferente = false;
-                    int aleatorio = 0;
-                    while (!diferente) {
-                        aleatorio = random.nextInt(conjunto.size());
-                        diferente = true;
-                        for (int k = 0; k < individuos.size() && diferente; k++) {
-                            if (aleatorio == individuos.get(k)) {
-                                diferente = false;
+            for (int i = 0; i < conjunto.size(); ++i) {
+                if (individuos.get(i) == -1) {
+                    do {
+                        boolean repetido = false;
+                        int num = random.nextInt(conjunto.size());
+
+                        // Comprobamos si el aleatorio que hemos generado está antes de la posición donde lo queremos poner
+                        for (int k = 0; k < i && !repetido; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
                             }
                         }
-                    }
-                    individuos.set(i, aleatorio);
-                    repetidos.add(i);
-                    i++;
 
-                } else {
-                    i++;
+                        // Comprobamos si el aleatorio que hemos generado está después de la posición donde lo queremos poner
+                        for (int k = i + 1; k < conjunto.size() && !repetido; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
+                            }
+                        }
+
+                        // Si el aleatorio generado todavía no está en el individuo (sea valor de la LRC o aleatorio anterior)
+                        // se introduce en esta posición, i
+                        if (!repetido) {
+                            individuos.set(i, num);
+                        }
+                        // El proceso anterior se realiza dentro de la misma posición siempre que ésta sea igual a -1
+                    } while (individuos.get(i) == -1);
                 }
             }
+            // Una vez generada el individuo, se añade a la población
+            contEv++; // ESTAMOS EVALUANDO CADA ELEMENTO NUEVO DE LA POBLACIÓN INICIAL
             poblacion.add(individuos);
         }
+        contGen++;
     }
 
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
@@ -169,8 +164,8 @@ public class AGE_OX_Clase3_Grupo9 {
             ArrayList<Integer> torneos = new ArrayList<>();
 
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
-            } while (!arrayIntAleatoriosGeneradoBien(torneos));
+                torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
+            } while (!aleatoriosBien(torneos));
 
             seleccionados.add(mejorTorneo(torneos));
         }
@@ -211,24 +206,13 @@ public class AGE_OX_Clase3_Grupo9 {
         return peor;
     }
 
-    private void debugMuestraArray(ArrayList<Integer> debug) {
-        for (int i = 0; i < debug.size(); i++) {
-            System.out.print(debug.get(i) + " ");
-        }
-        System.out.println("");
-    }
-
-    private void debugMuestraMensaje(String debug) {
-        System.out.println(debug);
-    }
-
     private void reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
             boolean aleatorioDiferentes = false;
             while (!aleatorioDiferentes) {
-                if (torneos.size() == 0) {
+                if (torneos.isEmpty()) {
                     for (int j = 0; j < tamTorneoReemplazamiento; j++) {
                         torneos.add(random.nextInt(tamPoblacion));
                     }
@@ -248,10 +232,8 @@ public class AGE_OX_Clase3_Grupo9 {
                     }
                 }
             }
-
             seleccionados.add(peorTorneo(torneos));
         }
-        int adsa = 0;
         for (int i = 0; i < poblacion.size(); i++) {
             for (int j = 0; j < seleccionados.size(); j++) {
                 int contador = 0;
@@ -261,19 +243,13 @@ public class AGE_OX_Clase3_Grupo9 {
                     }
                 }
                 if (contador == seleccionados.size()) {
-                    log = new Log("logs" + "_reemplazo" + adsa++);
-                    log.addTexto("Reemplazo: " + poblacion.get(i));
-                    log.addTexto("\n");
 
                     boolean reemplaza = false;
                     for (int k = 0; k < cruzados.size() && !reemplaza; k++) {
-
                         if (reemplazaPoblacion(poblacion.get(i), cruzados.get(k))) {
-
                             cruzados.remove(k);
                             reemplaza = true;
                         }
-
                     }
                 }
             }
@@ -282,12 +258,10 @@ public class AGE_OX_Clase3_Grupo9 {
     }
 
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
-        log.addTexto("Por: " + cruzado);
-        //log.guardaLog();
+        contEv++; // ESTAMOS EVALUANDO EL ELEMENTO CRUZADO
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
             return false;
         } else {
-
             for (int i = 0; i < seleccionado.size(); i++) {
                 seleccionado.set(i, cruzado.get(i));
             }
@@ -323,7 +297,7 @@ public class AGE_OX_Clase3_Grupo9 {
                 auxVec2.add(-1);
             }
 
-            //Añade los valores de enmedio a la queue
+            //Añade los valores de en medio a la cola
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre1.get(j));
             }
@@ -354,7 +328,7 @@ public class AGE_OX_Clase3_Grupo9 {
             auxSel.add(auxVec1);
 
             //Segundo hijo
-            //Añade los valores de enmedio a la queue
+            //Añade los valores de en medio a la cola
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue2.add(padre1.get(j));
             }
@@ -383,6 +357,7 @@ public class AGE_OX_Clase3_Grupo9 {
             }
             auxSel.add(auxVec2);
         }
+        //Aleatorio para ver si muta la poblacion
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
@@ -403,10 +378,10 @@ public class AGE_OX_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
-        for (int i = 0; i < array.size() - 1; ++i) {
-            for (int j = i + 1; j < array.size(); ++j) {
-                if (array.get(i) == array.get(j)) {
+    private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
+        for (int i = 0; i < aleatorios.size() - 1; ++i) {
+            for (int j = i + 1; j < aleatorios.size(); ++j) {
+                if (aleatorios.get(i) == aleatorios.get(j)) {
                     return false;
                 }
             }
@@ -414,13 +389,29 @@ public class AGE_OX_Clase3_Grupo9 {
         return true;
     }
 
-    private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
-        ArrayList<Integer> array = new ArrayList<>();
+    private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
+        ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
-            array.add(random.nextInt(mod));
+            aleatorios.add(-1);
         }
-        return array;
+
+        for (int i = 0; i < cuantos; ++i) {
+            do {
+                boolean repetido = false;
+                int num = random.nextInt(tam);
+                for (int j = 0; j < i && !repetido; ++j) {
+                    if (num == aleatorios.get(j)) {
+                        repetido = true;
+                    }
+                }
+                if (!repetido) {
+                    aleatorios.set(i, num);
+                }
+            } while (aleatorios.get(i) == -1);
+        }
+        return aleatorios;
     }
+    
 
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
@@ -429,10 +420,10 @@ public class AGE_OX_Clase3_Grupo9 {
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else if (generacion+1 == evaluaciones) {
             log=new Log("logs/" + nombre + "_" + seed + "_AGEOX_poblacionFinal");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Población final (generación " + contGen + ")\n\n");
         } else {
             log=new Log("logs/" + nombre + "_" + seed + "_AGEOX_poblacion_" + (generacion+1));
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion+1) + "\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Estacionario con cruce OX | Tamaño de la población: " + tamPoblacion + "| Generación: " + contGen + "\n\n");
         }
 
         for (int j = 0; j < poblacion.size(); ++j){
@@ -450,6 +441,11 @@ public class AGE_OX_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        if (generacion + 1 == evaluaciones) {
+            tiempoFin = System.currentTimeMillis();
+            long tiempo = tiempoFin-tiempoInicio;
+            log.addTexto("\nTiempo de ejecución del algoritmo para este archivo y semilla: " + tiempo + " ms");
+        }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }

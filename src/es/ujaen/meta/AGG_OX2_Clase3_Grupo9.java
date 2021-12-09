@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.ArrayList;
@@ -11,43 +6,41 @@ import java.util.Queue;
 import java.util.Random;
 import com.sun.tools.javac.util.Pair;
 
-/**
- *
- * @author admin
- */
 public class AGG_OX2_Clase3_Grupo9 {
-
+    private long tiempoInicio;
+    private long tiempoFin;
     private final Random random;
     private final long seed;
     private Log log;
     private final String modoLog;
     private final int longitudLRC;
-    private ArrayList<Pair<Integer, Integer>> LRC;
-    private ArrayList<Integer> conjunto;
-    private ArrayList<ArrayList<Integer>> poblacion;
+    private final ArrayList<Pair<Integer, Integer>> LRC;
+    private final ArrayList<Integer> conjunto;
+    private final ArrayList<ArrayList<Integer>> poblacion;
     private final Archivodedatos archivo;
     private final int tamPoblacion;
     private final int evaluaciones;
+    private int contEv;
+    private int contGen;
     private final float probCruce;
     private final float probMutacion;
     private final int vecesSeleccion;
     private final int tamTorneoSeleccion;
-    private final int tamTorneoReemplazamiento;
-    private ArrayList<Integer> elite;
+    private final ArrayList<Integer> elite;
 
     public AGG_OX2_Clase3_Grupo9(Random random, long seed, int longitudLRC, Archivodedatos archivo, int tamPoblacion, int evaluaciones, float probCruce, float probMutacion,
-            int vecesSeleccion, int tamTorneoSeleccion, int tamTorneoReemplazamiento, String modoLog) {
+            int vecesSeleccion, int tamTorneoSeleccion, String modoLog) {
         this.random = random;
         this.seed = seed;
         this.longitudLRC = longitudLRC;
         this.archivo = archivo;
         this.tamPoblacion = tamPoblacion;
         this.evaluaciones = evaluaciones;
+        this.contEv = 0;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
         this.vecesSeleccion = vecesSeleccion;
         this.tamTorneoSeleccion = tamTorneoSeleccion;
-        this.tamTorneoReemplazamiento = tamTorneoReemplazamiento;
         this.conjunto = new ArrayList<>();
         this.poblacion = new ArrayList<>();
         this.LRC = new ArrayList<>();
@@ -63,49 +56,23 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     public void hazGeneticoGeneracional() {
+        tiempoInicio = System.currentTimeMillis();
         inicializaElite();
         iniciaConjunto();
         creaLRC();
         creaPoblacionInicial();
         guardarLog(-1);
-        for (int i = 0; i < evaluaciones / tamTorneoReemplazamiento; ++i) {
-            escogeElite();
+        while (contEv < evaluaciones){
             ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>(seleccion());
             if (random.nextFloat() < probCruce) {
                 cruceOX2(seleccionados);
             }
             reemplazamiento(seleccionados);
-            System.out.println("\nGeneración " + i + " generada");
+            contGen++;
         }
 
         guardarLog(evaluaciones - 1);
-        int costeMin = Integer.MAX_VALUE;
-        int mejorSol = -1;
-        for (int i = 0; i < poblacion.size(); ++i) {
-            int costeSel = calculaCosteConjunto(poblacion.get(i));
-            if (costeSel < costeMin) {
-                costeMin = costeSel;
-                mejorSol = i;
-            }
-        }
-
-        System.out.println("La mejor solución para " + archivo.getNombre() + " es la " + mejorSol + ", coste " + costeMin + ":");
-        debugMuestraArray(poblacion.get(mejorSol));
-        System.out.println("Terminado");
-    }
-
-    private void escogeElite() {
-        int indice = 0;
-        int mejorCoste = Integer.MIN_VALUE;
-        for (int i = 0; i < poblacion.size(); i++) {
-            if (mejorCoste < calculaCosteConjunto(poblacion.get(i))) {
-                indice = i;
-                mejorCoste = calculaCosteConjunto(poblacion.get(i));
-            }
-        }
-        for (int i = 0; i < poblacion.get(indice).size(); i++) {
-            elite.set(i, poblacion.get(indice).get(i));
-        }
+        System.out.println("Terminado (tiempo: " + (tiempoFin-tiempoInicio) + " ms)");
     }
 
     private void iniciaConjunto() {
@@ -135,44 +102,50 @@ public class AGG_OX2_Clase3_Grupo9 {
 
     private void creaPoblacionInicial() {
         for (int j = 0; j < tamPoblacion; j++) {
-            ArrayList<Integer> repetidos = new ArrayList<>();
+            //ArrayList<Integer> repetidos = new ArrayList<>();
             ArrayList<Integer> individuos = new ArrayList<>();
             for (int i = 0; i < conjunto.size(); i++) {
                 individuos.add(-1);
             }
 
-            for (int i = 0; i < longitudLRC; i++) {
+            for (int i = 0; i < LRC.size(); i++) {
                 individuos.set(LRC.get(i).fst, LRC.get(i).snd);
-                repetidos.add(LRC.get(i).fst);
             }
 
-            int i = 0;
-            while (i < conjunto.size()) {
-                if (!repetidos.contains(i)) {
-                    boolean diferente = false;
-                    int aleatorio = 0;
-                    while (!diferente) {
-                        aleatorio = random.nextInt(conjunto.size());
-                        diferente = true;
-                        for (int k = 0; k < individuos.size() && diferente; k++) {
-                            if (aleatorio == individuos.get(k)) {
-                                diferente = false;
+            for (int i = 0; i < conjunto.size(); ++i) {
+                if (individuos.get(i) == -1) {
+                    do {
+                        boolean repetido = false;
+                        int num = random.nextInt(conjunto.size());
+
+                        // Comprobamos si el aleatorio que hemos generado está antes de la posición donde lo queremos poner
+                        for (int k = 0; k < i && !repetido; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
                             }
                         }
-                    }
-                    individuos.set(i, aleatorio);
-                    repetidos.add(i);
-                    i++;
 
-                } else {
-                    i++;
+                        // Comprobamos si el aleatorio que hemos generado está después de la posición donde lo queremos poner
+                        for (int k = i + 1; k < conjunto.size() && !repetido; ++k) {
+                            if (num == individuos.get(k)) {
+                                repetido = true;
+                            }
+                        }
+
+                        // Si el aleatorio generado todavía no está en el individuo (sea valor de la LRC o aleatorio anterior)
+                        // se introduce en esta posición, i
+                        if (!repetido) {
+                            individuos.set(i, num);
+                        }
+                        // El proceso anterior se realiza dentro de la misma posición siempre que ésta sea igual a -1
+                    } while (individuos.get(i) == -1);
                 }
             }
+            // Una vez generada el individuo, se añade a la población
+            contEv++; // ESTAMOS EVALUANDO CADA ELEMENTO NUEVO DE LA POBLACIÓN INICIAL
             poblacion.add(individuos);
-
         }
-
-        // INICIAMOS LA ÉLITE. EN EL REEMPLAZAMIENTO TRATAREMOS CON ELLA
+        contGen++;
         nuevaElite(poblacion);
     }
 
@@ -192,22 +165,6 @@ public class AGG_OX2_Clase3_Grupo9 {
         }
     }
 
-    // Esta función la llamaremos desde el reemplazamiento, para sustituir el peor de la nueva generación por la élite
-    // vigente
-    private void eliteReemplaza(ArrayList<ArrayList<Integer>> poblacion1, ArrayList<Integer> elite1) {
-        int costeMin = Integer.MIN_VALUE;
-        int eliteIt = -1;
-        for (int i = 0; i < poblacion1.size(); ++i) {
-            if (calculaCosteConjunto(poblacion1.get(i)) > costeMin) {
-                eliteIt = i;
-            }
-        }
-
-        for (int i = 0; i < poblacion1.get(eliteIt).size(); ++i) {
-            elite.set(i, elite1.get(i));
-        }
-    }
-
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
         int coste = 0;
         for (int i = 0; i < conjunto.size(); i++) {
@@ -218,35 +175,23 @@ public class AGG_OX2_Clase3_Grupo9 {
         return coste;
     }
 
-    /*private ArrayList<Integer> evolucion() {
-        ArrayList<Integer> elite = new ArrayList<>(conjunto);
-        int mejorValorElite = calculaCosteConjunto(elite);
-        for (int i = 0; i < tamPoblacion; i++) {
-            if (calculaCosteConjunto(poblacion.get(i)) > mejorValorElite) {
-                for (int j = 0; j < elite.size(); j++) {
-                    elite.set(i, poblacion.get(i).get(j));
-                    mejorValorElite = calculaCosteConjunto(elite);
-                }
-            }
-        }
-        return elite;
-    }*/
     private ArrayList<ArrayList<Integer>> seleccion() {
         System.out.println();
+        nuevaElite(poblacion);
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
         ArrayList<Integer> torneos = new ArrayList<>();
-        while (seleccionados.size() < tamPoblacion) {
+        while (seleccionados.size() < vecesSeleccion) {
             do {
-                torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion);
-            } while (!arrayIntAleatoriosGeneradoBien(torneos));
+                torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
+            } while (!aleatoriosBien(torneos));
             ArrayList<Integer> ganador = new ArrayList<>(mejorTorneo(torneos));
             ganador = mejorTorneo(torneos);
 
             seleccionados.add(ganador);
 
         }
-        nuevaElite(poblacion);
+
         return seleccionados;
     }
 
@@ -266,23 +211,6 @@ public class AGG_OX2_Clase3_Grupo9 {
             }
         }
         return mejor;
-    }
-
-    private ArrayList<Integer> peorTorneo(ArrayList<Integer> torneos) {
-        ArrayList<Integer> peor = new ArrayList<>();
-        for (int i = 0; i < conjunto.size(); i++) {
-            peor.add(0);
-        }
-        int peorCoste = Integer.MAX_VALUE;
-        for (int i = 0; i < torneos.size(); i++) {
-            if (calculaCosteConjunto(poblacion.get(torneos.get(i))) < peorCoste) {
-                for (int j = 0; j < poblacion.get(torneos.get(i)).size(); j++) {
-                    peor.set(j, poblacion.get(torneos.get(i)).get(j));
-                }
-                peorCoste = calculaCosteConjunto(poblacion.get(torneos.get(i)));
-            }
-        }
-        return peor;
     }
 
     private void reemplazamiento(ArrayList<ArrayList<Integer>> nuevaPob) {
@@ -308,48 +236,13 @@ public class AGG_OX2_Clase3_Grupo9 {
         if (!estaElite) {
             cambiaAElite();
         }
-
-//        // Habiendo cruzado y mutado toda la población nueva, tenemos que reemplazar la anterior.
-//        // Primero, tenemos que ver si el élite está en esta nueva población.
-//        boolean isElite = false;
-//        int eliteIt2 = -1;
-//        for (int i = 0; i < nuevaPob.size(); ++i) {
-//            isElite = true;
-//            for (int j = 0; j < nuevaPob.get(i).size() && isElite; ++j) {
-//                int cual1 = elite.get(j);
-//                int cual2 = nuevaPob.get(i).get(j);
-//                if (cual1 != cual2) {
-//                    isElite = false; // LA ÉLITE ANTERIOR NO ESTÁ EN i. SEGUIR BUSCANDO
-//                    break;
-//                }
-//            }
-//            if (isElite == true) {
-//                eliteIt2 = i;
-//                // LA ÉLITE ANTERIOR ESTARÍA EN i
-//            }
-//        }
-//
-//        // Si la élite no está en la población nueva, poner la élite de la población anterior.
-//        // Si la élite sí está, no hacer nada aquí.
-//        if (isElite == false) {
-//            eliteReemplaza(nuevaPob, elite);
-//        }
-//
-//        // Buscamos una nueva élite en la nueva población (esto quizás no haga falta hacerlo aquí o ya se haga en la
-//        // selección)
-//        //nuevaElite(nuevaPob);
-//        // Reemplazamos la población (seguramente haya una mejor forma de hacerlo)
-//        for (int i = 0; i < poblacion.size(); ++i) {
-//            //for (int j = 0; j < poblacion.get(i).size(); ++j) {
-//            poblacion.set(i, nuevaPob.get(i));
-//            //}
-//        }
     }
 
     private void cambiaAElite() {
         int indice = 0;
         int peorCoste = Integer.MAX_VALUE;
         for (int i = 0; i < poblacion.size(); i++) {
+            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
             if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
                 indice = i;
                 peorCoste = calculaCosteConjunto(poblacion.get(i));
@@ -386,14 +279,10 @@ public class AGG_OX2_Clase3_Grupo9 {
                 boolPadre.add(random.nextBoolean());
             }
 
-            Queue<Boolean> copia = new LinkedList<>(boolPadre);
-
             for (int i = 0; i < padre1.size(); i++) {
                 if (boolPadre.poll()) {
-                    //System.out.print("V ");
                     auxVec1.set(i, padre1.get(i));
                 } else {
-                    //System.out.print("F ");
                     noEstan.add(padre1.get(i));
                 }
             }
@@ -462,18 +351,11 @@ public class AGG_OX2_Clase3_Grupo9 {
             auxSel.add(auxVec1);
         }
 
-        // Se realiza la mutación con la nueva población generada
+        //Aleatorio para ver si muta la poblacion
         if (random.nextFloat() < probMutacion) {
             mutacion(auxSel);
         }
         return auxSel;
-    }
-
-    private void debugMuestraArray(ArrayList<Integer> debug) {
-        for (int i = 0; i < debug.size(); i++) {
-            System.out.print(debug.get(i) + " ");
-        }
-        System.out.println("");
     }
 
     private void mutacion(ArrayList<ArrayList<Integer>> elementoAMutar) {
@@ -490,10 +372,10 @@ public class AGG_OX2_Clase3_Grupo9 {
         }
     }
 
-    private static boolean arrayIntAleatoriosGeneradoBien(ArrayList<Integer> array) {
-        for (int i = 0; i < array.size() - 1; ++i) {
-            for (int j = i + 1; j < array.size(); ++j) {
-                if (array.get(i) == array.get(j)) {
+    private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
+        for (int i = 0; i < aleatorios.size() - 1; ++i) {
+            for (int j = i + 1; j < aleatorios.size(); ++j) {
+                if (aleatorios.get(i) == aleatorios.get(j)) {
                     return false;
                 }
             }
@@ -501,12 +383,27 @@ public class AGG_OX2_Clase3_Grupo9 {
         return true;
     }
 
-    private ArrayList<Integer> generadorArrayIntAleatorios(int cuantos, int mod) {
-        ArrayList<Integer> array = new ArrayList<>();
+    private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
+        ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
-            array.add(random.nextInt(mod));
+            aleatorios.add(-1);
         }
-        return array;
+
+        for (int i = 0; i < cuantos; ++i) {
+            do {
+                boolean repetido = false;
+                int num = random.nextInt(tam);
+                for (int j = 0; j < i && !repetido; ++j) {
+                    if (num == aleatorios.get(j)) {
+                        repetido = true;
+                    }
+                }
+                if (!repetido) {
+                    aleatorios.set(i, num);
+                }
+            } while (aleatorios.get(i) == -1);
+        }
+        return aleatorios;
     }
 
     private void guardarLog(int generacion) {
@@ -516,7 +413,7 @@ public class AGG_OX2_Clase3_Grupo9 {
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población inicial\n\n");
         } else if (generacion + 1 == evaluaciones) {
             log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacionFinal");
-            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población final\n\n");
+            log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Población final (generación " + contGen + ")\n\n");
         } else {
             log = new Log("logs/" + nombre + "_" + seed + "_AGGOX2_poblacion_" + (generacion + 1));
             log.addTexto("Archivo de datos: " + archivo.getNombre() + " | Algoritmo: Genético Generacional con cruce OX2 | Tamaño de la población: " + tamPoblacion + "| Generación: " + (generacion + 1) + "\n\n");
@@ -537,6 +434,11 @@ public class AGG_OX2_Clase3_Grupo9 {
             }
         }
         log.addTexto("\n\nMejor individuo de esta generación: " + mejorSol + " (" + costeMin + ")");
+        if (generacion + 1 == evaluaciones) {
+            tiempoFin = System.currentTimeMillis();
+            long tiempo = tiempoFin-tiempoInicio;
+            log.addTexto("\nTiempo de ejecución del algoritmo para este archivo y semilla: " + tiempo + " ms");
+        }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
     }
