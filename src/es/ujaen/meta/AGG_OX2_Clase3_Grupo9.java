@@ -176,7 +176,6 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     private ArrayList<ArrayList<Integer>> seleccion() {
-        System.out.println();
         nuevaElite(poblacion);
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
@@ -223,6 +222,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         boolean estaElite = false;
         for (int i = 0; i < poblacion.size() && !estaElite; i++) {
             int contador = 0;
+            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
             for (int j = 0; j < poblacion.get(i).size(); j++) {
                 if (poblacion.get(i).get(j) == elite.get(j)) {
                     contador++;
@@ -242,7 +242,6 @@ public class AGG_OX2_Clase3_Grupo9 {
         int indice = 0;
         int peorCoste = Integer.MAX_VALUE;
         for (int i = 0; i < poblacion.size(); i++) {
-            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
             if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
                 indice = i;
                 peorCoste = calculaCosteConjunto(poblacion.get(i));
@@ -256,9 +255,6 @@ public class AGG_OX2_Clase3_Grupo9 {
     private ArrayList<ArrayList<Integer>> cruceOX2(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         for (int j = 0; j < seleccionados.size() - 1; j = j + 2) {
-            if (j == 0) {
-                System.out.println();
-            }
             ArrayList<Integer> padre1 = new ArrayList<>(seleccionados.get(j));
             ArrayList<Integer> padre2 = new ArrayList<>(seleccionados.get(j + 1));
 
@@ -336,17 +332,6 @@ public class AGG_OX2_Clase3_Grupo9 {
             noEstan.clear();
 
             // Ya tenemos los dos vectores cruzados. Meterlos en la población
-            for (int i = 0; i < auxVec1.size(); ++i) {
-                if (auxVec1.get(i) == null || auxVec2.get(i) == null) {
-                    for (int k = 0; k < auxVec1.size(); ++k) {
-                        if (!(auxVec1.contains(k) || !auxVec2.contains(k))) {
-                            System.out.println(k);
-                        } else {
-                            System.out.println(k + "está");
-                        }
-                    }
-                }
-            }
             auxSel.add(auxVec2);
             auxSel.add(auxVec1);
         }

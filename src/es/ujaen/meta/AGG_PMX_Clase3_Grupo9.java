@@ -170,7 +170,6 @@ public class AGG_PMX_Clase3_Grupo9 {
         int indice = 0;
         int peorCoste = Integer.MAX_VALUE;
         for (int i = 0; i < poblacion.size(); i++) {
-            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
             if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
                 indice = i;
                 peorCoste = calculaCosteConjunto(poblacion.get(i));
@@ -192,7 +191,6 @@ public class AGG_PMX_Clase3_Grupo9 {
     }
 
     private ArrayList<ArrayList<Integer>> seleccion() {
-        System.out.println();
         nuevaElite(poblacion);
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
@@ -237,6 +235,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         boolean estaElite = false;
         for (int i = 0; i < poblacion.size() && !estaElite; i++) {
             int contador = 0;
+            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
             for (int j = 0; j < poblacion.get(i).size(); j++) {
                 if (poblacion.get(i).get(j) == elite.get(j)) {
                     contador++;
