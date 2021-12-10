@@ -157,11 +157,13 @@ public class AGE_PMX_Clase3_Grupo9 {
         return coste;
     }
 
+    //Selecciona a los individuos de la poblacion mediante un torneo de tamaño tamTorneoSeleccion
     private ArrayList<ArrayList<Integer>> seleccion() {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesSeleccion; i++) {
             ArrayList<Integer> torneos = new ArrayList<>();
 
+            //Comprobacion de que los aleatorios generados no se repitan
             do {
                 torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!aleatoriosBien(torneos));
@@ -171,6 +173,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return seleccionados;
     }
 
+    //Busca el mejor del torneo dado
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
         ArrayList<Integer> mejor = new ArrayList<>();
         for (int i = 0; i < conjunto.size(); i++) {
@@ -188,6 +191,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return mejor;
     }
 
+    //Busca el peor del torneo dado
     private ArrayList<Integer> peorTorneo(ArrayList<Integer> torneos) {
         ArrayList<Integer> peor = new ArrayList<>();
         for (int i = 0; i < conjunto.size(); i++) {
@@ -205,6 +209,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return peor;
     }
 
+    //Reemplaza mediante una seleccion de torneo con tamaño tamTorneoReemplazamiento
     private void reemplazamiento(ArrayList<ArrayList<Integer>> cruzados) {
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
         for (int i = 0; i < vecesTorneoReemplazamiento; i++) {
@@ -260,6 +265,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         }
     }
 
+    //Reemplaza el individuo seleccionado por el cruzado si este es mejor, si no, no lo reemplaza
     private boolean reemplazaPoblacion(ArrayList<Integer> seleccionado, ArrayList<Integer> cruzado) {
         contEv++; // ESTAMOS EVALUANDO EL ELEMENTO CRUZADO
         if (calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) {
@@ -273,6 +279,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return true;
     }
 
+    //Cruce PMX
     private ArrayList<ArrayList<Integer>> crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         for (int i = 0; i < seleccionados.size(); i = i + 2) {
@@ -308,8 +315,6 @@ public class AGE_PMX_Clase3_Grupo9 {
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 posiciones.add(new Pair<>(seleccionados.get(i).get(j), seleccionados.get(i + 1).get(j)));
             }
-
-            
 
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre2.get(j));
@@ -405,6 +410,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return auxSel;
     }
 
+    //Se mutan los individuos pasados
     private void mutacion(ArrayList<ArrayList<Integer>> elementoAMutar) {
         for (int i = 0; i < elementoAMutar.size(); i++) {
             int pos1, pos2;
@@ -419,6 +425,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         }
     }
 
+    //Comprobacion de que los aleatorios no son iguales
     private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
         for (int i = 0; i < aleatorios.size() - 1; ++i) {
             for (int j = i + 1; j < aleatorios.size(); ++j) {
@@ -430,6 +437,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return true;
     }
 
+    //Generador de numeros aleatorios
     private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
         ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
@@ -453,6 +461,7 @@ public class AGE_PMX_Clase3_Grupo9 {
         return aleatorios;
     }
 
+    //Generador de logs
     private void guardarLog(int generacion){
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == -1){
