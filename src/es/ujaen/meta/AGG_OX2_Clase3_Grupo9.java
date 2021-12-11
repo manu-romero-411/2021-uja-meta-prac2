@@ -37,6 +37,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         this.tamPoblacion = tamPoblacion;
         this.evaluaciones = evaluaciones;
         this.contEv = 0;
+        this.contGen = 0;
         this.probCruce = probCruce;
         this.probMutacion = probMutacion;
         this.vecesSeleccion = vecesSeleccion;
@@ -56,7 +57,7 @@ public class AGG_OX2_Clase3_Grupo9 {
     }
 
     public void hazGeneticoGeneracional() {
-        tiempoInicio = System.currentTimeMillis();
+        this.tiempoInicio = System.currentTimeMillis();
         inicializaElite();
         iniciaConjunto();
         creaLRC();
@@ -221,8 +222,8 @@ public class AGG_OX2_Clase3_Grupo9 {
 
         boolean estaElite = false;
         for (int i = 0; i < poblacion.size() && !estaElite; i++) {
-            int contador = 0;
             contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
+            int contador = 0;
             for (int j = 0; j < poblacion.get(i).size(); j++) {
                 if (poblacion.get(i).get(j) == elite.get(j)) {
                     contador++;
@@ -237,6 +238,7 @@ public class AGG_OX2_Clase3_Grupo9 {
             cambiaAElite();
         }
     }
+
 
     private void cambiaAElite() {
         int indice = 0;

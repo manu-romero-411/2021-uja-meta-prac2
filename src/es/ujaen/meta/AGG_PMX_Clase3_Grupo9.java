@@ -234,8 +234,8 @@ public class AGG_PMX_Clase3_Grupo9 {
 
         boolean estaElite = false;
         for (int i = 0; i < poblacion.size() && !estaElite; i++) {
-            int contador = 0;
             contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
+            int contador = 0;
             for (int j = 0; j < poblacion.get(i).size(); j++) {
                 if (poblacion.get(i).get(j) == elite.get(j)) {
                     contador++;
@@ -463,5 +463,17 @@ public class AGG_PMX_Clase3_Grupo9 {
         }
         log.setModo(modoLog); // AHORA SE PUEDE PONER EN EL config.txt SI QUEREMOS QUE EL LOG SEA SalidaLog=log O SalidaLog=stdout
         log.guardaLog();
+    }
+    private boolean isVectorInArrayList(ArrayList<ArrayList<Integer>> array, ArrayList<Integer> vector){
+        boolean is = true;
+        for (int i = 0; i < array.size() && is; i++) {
+            for (int j = 0; j < array.get(i).size() && is; j++) {
+                if (array.get(i).get(j) != vector.get(j)) {
+                    is = false;
+                }
+            }
+        }
+        if (is) return true;
+        else return false;
     }
 }
