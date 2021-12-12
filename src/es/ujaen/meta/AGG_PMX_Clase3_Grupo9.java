@@ -166,20 +166,6 @@ public class AGG_PMX_Clase3_Grupo9 {
         }
     }
 
-    private void cambiaAElite() {
-        int indice = 0;
-        int peorCoste = Integer.MAX_VALUE;
-        for (int i = 0; i < poblacion.size(); i++) {
-            if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
-                indice = i;
-                peorCoste = calculaCosteConjunto(poblacion.get(i));
-            }
-        }
-        for (int i = 0; i < poblacion.get(indice).size(); i++) {
-            poblacion.get(indice).set(i, elite.get(i));
-        }
-    }
-
     private int calculaCosteConjunto(ArrayList<Integer> conjunto) {
         int coste = 0;
         for (int i = 0; i < conjunto.size(); i++) {
@@ -190,12 +176,15 @@ public class AGG_PMX_Clase3_Grupo9 {
         return coste;
     }
 
+    //Selecciona a los individuos de la poblacion mediante un torneo de tamaño tamTorneoSeleccion
     private ArrayList<ArrayList<Integer>> seleccion() {
         nuevaElite(poblacion);
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
         ArrayList<Integer> torneos = new ArrayList<>();
         while (seleccionados.size() < vecesSeleccion) {
+            
+            //Comprobacion de que los aleatorios generados no se repitan
             do {
                 torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!aleatoriosBien(torneos));
@@ -208,6 +197,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         return seleccionados;
     }
 
+    //Busca el mejor del torneo dado
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
         ArrayList<Integer> mejor = new ArrayList<>();
         for (int i = 0; i < conjunto.size(); i++) {
@@ -225,6 +215,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         return mejor;
     }
 
+    //Reemplaza toda la poblacion, pero si el elite no esta lo incluye por el peor de la nueva generacion
     private void reemplazamiento(ArrayList<ArrayList<Integer>> nuevaPob) {
         for (int i = 0; i < nuevaPob.size(); i++) {
             for (int j = 0; j < nuevaPob.get(i).size(); j++) {
@@ -251,6 +242,23 @@ public class AGG_PMX_Clase3_Grupo9 {
         }
     }
 
+    //Cambia el peor de la poblacion por el elite de la poblacion anterior
+    private void cambiaAElite() {
+        int indice = 0;
+        int peorCoste = Integer.MAX_VALUE;
+        for (int i = 0; i < poblacion.size(); i++) {
+            contEv++; // VAMOS A EVALUAR TODOS LOS ELEMENTOS DE LA POBLACIÓN EN BUSCA DEL MEJOR
+            if (peorCoste > calculaCosteConjunto(poblacion.get(i))) {
+                indice = i;
+                peorCoste = calculaCosteConjunto(poblacion.get(i));
+            }
+        }
+        for (int i = 0; i < poblacion.get(indice).size(); i++) {
+            poblacion.get(indice).set(i, elite.get(i));
+        }
+    }
+    
+    //Cruce PMX
     private ArrayList<ArrayList<Integer>> crucePMX(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         for (int i = 0; i < seleccionados.size(); i = i + 2) {
@@ -286,14 +294,17 @@ public class AGG_PMX_Clase3_Grupo9 {
 
             Queue<Integer> auxQueue1 = new LinkedList<>();
 
+            //Añade los valores de en medio a la cola
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxQueue1.add(padre2.get(j));
             }
 
+            //Añade los valores de la cola al vector
             for (int j = aleatorioA; j <= aleatorioB; j++) {
                 auxVec1.set(j, auxQueue1.poll());
             }
 
+            //Buscamos si estan los valores ya incluidos en el vector, si no estan los añadimos a la cola la posicion de estos
             for (int j = aleatorioB + 1, cont = 0; cont < auxVec1.size() - (aleatorioB - aleatorioA + 1); j++, cont++) {
                 boolean esta = true;
                 for (int k = 0; k < auxVec1.size() && esta; k++) {
@@ -308,6 +319,7 @@ public class AGG_PMX_Clase3_Grupo9 {
                 }
             }
 
+            //Añadimos los valores de las posiciones de la cola hasta que esta se acabe
             while (!auxQueue1.isEmpty()) {
                 boolean esta = true;
                 int aux = 0;
@@ -323,6 +335,7 @@ public class AGG_PMX_Clase3_Grupo9 {
                 }
             }
 
+            //Añadimos los valores en las posiciones que nos dieron los aleatorios
             for (int j = 0; j < posiciones.size(); j++) {
                 auxVec1.set(posiciones.get(j).snd, posiciones.get(j).fst);
             }
@@ -380,6 +393,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         return auxSel;
     }
 
+    //Se mutan los individuos pasados
     private void mutacion(ArrayList<ArrayList<Integer>> elementoAMutar) {
         for (int i = 0; i < elementoAMutar.size(); i++) {
             int pos1, pos2;
@@ -394,6 +408,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         }
     }
 
+    //Comprobacion de que los aleatorios no son iguales
     private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
         for (int i = 0; i < aleatorios.size() - 1; ++i) {
             for (int j = i + 1; j < aleatorios.size(); ++j) {
@@ -405,6 +420,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         return true;
     }
 
+    //Generador de numeros aleatorios
     private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
         ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
@@ -428,6 +444,7 @@ public class AGG_PMX_Clase3_Grupo9 {
         return aleatorios;
     }
 
+    //Generador de logs
     private void guardarLog(int generacion) {
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == -1) {

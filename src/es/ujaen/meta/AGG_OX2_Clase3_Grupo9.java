@@ -176,12 +176,15 @@ public class AGG_OX2_Clase3_Grupo9 {
         return coste;
     }
 
+    //Selecciona a los individuos de la poblacion mediante un torneo de tamaño tamTorneoSeleccion
     private ArrayList<ArrayList<Integer>> seleccion() {
         nuevaElite(poblacion);
         ArrayList<ArrayList<Integer>> seleccionados = new ArrayList<>();
 
         ArrayList<Integer> torneos = new ArrayList<>();
         while (seleccionados.size() < vecesSeleccion) {
+            
+            //Comprobacion de que los aleatorios generados no se repitan
             do {
                 torneos = generadorAleatorios(tamTorneoSeleccion, tamPoblacion);
             } while (!aleatoriosBien(torneos));
@@ -195,6 +198,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         return seleccionados;
     }
 
+    //Busca el mejor del torneo dado
     private ArrayList<Integer> mejorTorneo(ArrayList<Integer> torneos) {
         ArrayList<Integer> mejor = new ArrayList<>();
         for (int i = 0; i < conjunto.size(); i++) {
@@ -213,6 +217,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         return mejor;
     }
 
+    //Reemplaza toda la poblacion, pero si el elite no esta lo incluye por el peor de la nueva generacion
     private void reemplazamiento(ArrayList<ArrayList<Integer>> nuevaPob) {
         for (int i = 0; i < nuevaPob.size(); i++) {
             for (int j = 0; j < nuevaPob.get(i).size(); j++) {
@@ -239,7 +244,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         }
     }
 
-
+    //Cambia el peor de la poblacion por el elite de la poblacion anterior
     private void cambiaAElite() {
         int indice = 0;
         int peorCoste = Integer.MAX_VALUE;
@@ -254,6 +259,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         }
     }
 
+    //Cruce OX2
     private ArrayList<ArrayList<Integer>> cruceOX2(ArrayList<ArrayList<Integer>> seleccionados) {
         ArrayList<ArrayList<Integer>> auxSel = new ArrayList<>();
         for (int j = 0; j < seleccionados.size() - 1; j = j + 2) {
@@ -273,10 +279,12 @@ public class AGG_OX2_Clase3_Grupo9 {
             Queue<Integer> cruzados = new LinkedList<>();
             ArrayList<Integer> noEstan = new ArrayList<>();
 
+            //Creamos una cola aleatoria de booleanos
             for (int i = 0; i < padre1.size(); i++) {
                 boolPadre.add(random.nextBoolean());
             }
 
+            //Si en la posicion dada es 1 no añade al vector nuevo, si no, se añaden a un vector
             for (int i = 0; i < padre1.size(); i++) {
                 if (boolPadre.poll()) {
                     auxVec1.set(i, padre1.get(i));
@@ -285,6 +293,7 @@ public class AGG_OX2_Clase3_Grupo9 {
                 }
             }
 
+            //Si no estan en el otro padre se añaden a la cola para añadirlos
             for (int i = 0; i < padre2.size(); i++) {
                 boolean noEsta = false;
                 for (int k = 0; k < noEstan.size() && !noEsta; k++) {
@@ -295,6 +304,7 @@ public class AGG_OX2_Clase3_Grupo9 {
                 }
             }
 
+            //Si la posicion esta vacia se añaden al vector
             for (int i = 0; i < auxVec1.size(); i++) {
                 if (auxVec1.get(i) == -1) {
                     auxVec1.set(i, cruzados.poll());
@@ -345,6 +355,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         return auxSel;
     }
 
+    //Se mutan los individuos pasados
     private void mutacion(ArrayList<ArrayList<Integer>> elementoAMutar) {
         for (int i = 0; i < elementoAMutar.size(); i++) {
             int pos1, pos2;
@@ -359,6 +370,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         }
     }
 
+    //Comprobacion de que los aleatorios no son iguales
     private static boolean aleatoriosBien(ArrayList<Integer> aleatorios) {
         for (int i = 0; i < aleatorios.size() - 1; ++i) {
             for (int j = i + 1; j < aleatorios.size(); ++j) {
@@ -370,6 +382,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         return true;
     }
 
+    //Generador de numeros aleatorios
     private ArrayList<Integer> generadorAleatorios(int cuantos, int tam) {
         ArrayList<Integer> aleatorios = new ArrayList<>();
         for (int i = 0; i < cuantos; ++i) {
@@ -393,6 +406,7 @@ public class AGG_OX2_Clase3_Grupo9 {
         return aleatorios;
     }
 
+    //Generador de logs
     private void guardarLog(int generacion) {
         String nombre = archivo.getNombre().split("/")[1];
         if (generacion == -1) {
