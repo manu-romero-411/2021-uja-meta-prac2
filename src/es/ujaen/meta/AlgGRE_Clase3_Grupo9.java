@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author admin
- */
 public class AlgGRE_Clase3_Grupo9 {
 
     private final long inicio;
@@ -40,7 +31,7 @@ public class AlgGRE_Clase3_Grupo9 {
         for (int i = 0; i < conjunto.size(); i++) {
             aux += conjunto.get(i) + "  ";
         }
-        System.out.println();
+        //System.out.println();
         return "GREEDY \nEl conjunto de archivos de datos " + archivo.getNombre() + " tiene un coste de " + costeConjunto
                 + " con un tiempo de ejecucion de: " + (fin - inicio) + " milisegundos y es el siguiente: \n" + aux + "\n";
     }

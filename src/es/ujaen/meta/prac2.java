@@ -1,13 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,8 +15,6 @@ public class prac2 {
     public static void main(String[] args) {
         Configurador config = new Configurador(args[0]);
         ArrayList<Archivodedatos> arrayA = new ArrayList<>();
-        Log log = new Log(config.getSalidaLog());
-        Random random = new Random(config.getSemillas().get(0));
         System.out.println(config.getArchivos());
 
         //Añade a la lista de archivos los diferentes archivos de datos
@@ -33,88 +23,92 @@ public class prac2 {
             arrayA.add(archivo);
         }
 
-        System.out.println("GREEDY");
-        for (int i = 0; i < arrayA.size(); i++) {
-            AlgGRE_Clase3_Grupo9 greedy = new AlgGRE_Clase3_Grupo9(arrayA.get(i));
-            greedy.calculaGreedy();
-            System.out.print(greedy.muestraDatos());
-            log.addTexto(greedy.muestraDatos());
-        }
-
-        System.out.println("");
-        log.addTexto("\n");
-        System.out.println("PRIMERO EL MEJOR IT");
-        for (int i = 0; i < arrayA.size(); i++) {
-            AlgPMDLBit_Clase3_Grupo9 primero = new AlgPMDLBit_Clase3_Grupo9(arrayA.get(i), config.getIteraciones());
-            primero.calculaPrimeroElMejor();
-            System.out.print(primero.muestraDatos());
-            log.addTexto(primero.muestraDatos());
-        }
-
-        System.out.println("");
-        log.addTexto("\n");
-        System.out.println("PRIMERO EL MEJOR RAN");
-        for (int i = 0; i < arrayA.size(); i++) {
-            AlgPMDLBrandom_Clase3_Grupo9 primeroAle = new AlgPMDLBrandom_Clase3_Grupo9(arrayA.get(i), config.getIteraciones(), random);
-            primeroAle.calculaPrimeroElMejor();
-            System.out.print(primeroAle.muestraDatos());
-            log.addTexto(primeroAle.muestraDatos());
-        }
-
-        System.out.println("");
-        log.addTexto("\n");
-        System.out.println("MULTIARRANQUE");
-        for (int i = 0; i < arrayA.size(); i++) {
-            AlgMA_Clase3_Grupo9 multiA = new AlgMA_Clase3_Grupo9(arrayA.get(i), config.getIteraciones(),
-                    config.getLonguitudLRC(), config.getCandidatosGreedy(), config.getTamLista(), config.getIteracionesEstrategica(), random);
-            multiA.calculaMultiarranque();
-            System.out.print(multiA.muestraDatos());
-            log.addTexto(multiA.muestraDatos());
-        }
-
-        log.guardaLog();
-    }
-
-    public static void guardarArchivo(String ruta, String texto) {
-        FileWriter fichero = null;
-        PrintWriter pw = null;
-        try {
-            fichero = new FileWriter(ruta);
-            pw = new PrintWriter(fichero);
-            pw.print(texto);
-        } catch (IOException e) {
-
-        } finally {
-            try {
-                if (null != fichero) {
-                    fichero.close();
+        // EJECUTAMOS LOS ALGORITMOS INDICADOS EN EL config.txt, CON LAS SEMILLAS INDICADAS, Y SOBRE LOS ARCHIVOS INDICADOS.
+        for (int i = 0; i < config.getSemillas().size(); ++i) {
+            Random random = new Random(config.getSemillas().get(i));
+            for (int j = 0; j < arrayA.size(); ++j) {
+                String nombre = arrayA.get(j).getNombre().split("/")[1];
+                if (config.getAlgoritmos()[0]){
+                    System.out.println("Ejecución " + i + " del algoritmo greedy para archivo " + arrayA.get(j).getNombre().split("/").toString());
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgGRE");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Greedy\n\n");
+                    AlgGRE_Clase3_Grupo9 greedy = new AlgGRE_Clase3_Grupo9(arrayA.get(j));
+                    greedy.calculaGreedy();
+                    System.out.print(greedy.muestraDatos());
+                    log.addTexto(greedy.muestraDatos());
+                    log.guardaLog();
                 }
-            } catch (IOException e2) {
+
+                if (config.getAlgoritmos()[1]){
+                    System.out.println("Ejecución " + i + " del algoritmo de búsqueda iterativa (DLB) del primer mejor para archivo " + arrayA.get(j).getNombre());
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgPMDLBit");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Primer Mejor Iterativo con DLB\n\n");
+                    AlgPMDLBit_Clase3_Grupo9 primero = new AlgPMDLBit_Clase3_Grupo9(arrayA.get(j), config.getIteraciones());
+                    primero.calculaPrimerMejor();
+                    System.out.print(primero.muestraDatos());
+                    log.addTexto(primero.muestraDatos());
+                    log.guardaLog();
+                }
+
+                if (config.getAlgoritmos()[2]){
+                    System.out.println("Ejecución " + i + " del algoritmo de búsqueda aleatoria (DLB) del primer mejor para archivo " + arrayA.get(j).getNombre());
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgPMDLBrandom");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Primer Mejor Aleatorio con DLB\n\n");
+                    AlgPMDLBrandom_Clase3_Grupo9 primeroAle = new AlgPMDLBrandom_Clase3_Grupo9(arrayA.get(j), config.getIteraciones(), random);
+                    primeroAle.calculaPrimeroElMejor();
+                    System.out.print(primeroAle.muestraDatos());
+                    log.addTexto(primeroAle.muestraDatos());
+                    log.guardaLog();
+                }
+
+                if (config.getAlgoritmos()[3]){
+                    System.out.println("Ejecución " + i + " del algoritmo multiarranque para archivo " + arrayA.get(j).getNombre());
+                    Log log=new Log("logs/" + nombre + "_" + config.getSemillas().get(i) + "_AlgMA");
+                    log.setModo(config.getSalidaLog());
+                    log.addTexto("Archivo de datos: " + arrayA.get(j).getNombre() + " | Algoritmo: Multiarranque\n\n");
+                    AlgMA_Clase3_Grupo9 multiA = new AlgMA_Clase3_Grupo9(arrayA.get(j), config.getIteraciones(),
+                            config.getLongitudLRC(), config.getCandidatosGreedy(), config.getTamLista(), config.getIteracionesEstrategica(), random);
+                    multiA.calculaMultiarranque();
+                    System.out.print(multiA.muestraDatos());
+                    log.addTexto(multiA.muestraDatos());
+                    log.guardaLog();
+                }
+
+                if (config.getAlgoritmos()[4]) {
+                    System.out.println("Ejecución " + i + " del algoritmo genético estacionario (cruce OX) para archivo " + arrayA.get(j).getNombre());
+                    AGE_OX_Clase3_Grupo9 genetico = new AGE_OX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
+                            config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
+                            config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario(), config.getSalidaLog());
+                    genetico.hazGeneticoEstacionario();
+                }
+
+                if (config.getAlgoritmos()[5]) {
+                    System.out.println("Ejecución " + i + " del algoritmo genético estacionario (cruce PMX) para archivo " + arrayA.get(j).getNombre());
+                    AGE_PMX_Clase3_Grupo9 genetico = new AGE_PMX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
+                            config.getGenNumEvaluaciones(), config.getGenProbCruceEstacionario(), config.getGenProbMutacion(), config.getGen_tamSeleccionEstacionario(),
+                            config.getGen_tamTorneoSeleccionEstacionario(), config.getGen_tamTorneoReemplazamientoEstacionario(), config.getGen_vecesTorneoReemplazamientoEstacionario(), config.getSalidaLog());
+                    genetico.hazGeneticoEstacionario();
+                }
+
+                if (config.getAlgoritmos()[6]) {
+                    System.out.println("Ejecución " + i + " del algoritmo genético generacional (cruce OX2) para archivo " + arrayA.get(j).getNombre());
+                    AGG_OX2_Clase3_Grupo9 genetico = new AGG_OX2_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
+                            config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
+                            config.getGen_tamTorneoSeleccionGeneracional(), config.getSalidaLog());
+                    genetico.hazGeneticoGeneracional();
+                }
+
+                if (config.getAlgoritmos()[7]) {
+                    System.out.println("Ejecución " + i + " del algoritmo genético generacional (cruce PMX) para archivo " + arrayA.get(j).getNombre());
+                    AGG_PMX_Clase3_Grupo9 genetico = new AGG_PMX_Clase3_Grupo9(random, config.getSemillas().get(i), config.getLongitudLRC(), arrayA.get(j), config.getGenTamPoblacion(),
+                            config.getGenNumEvaluaciones(), config.getGenProbCruceGeneracional(), config.getGenProbMutacion(), config.getGen_tamSeleccionGeneracional(),
+                            config.getGen_tamTorneoSeleccionGeneracional(), config.getSalidaLog());
+                    genetico.hazGeneticoGeneracional();
+                }
             }
         }
     }
-
-    public static void muestraArray(int array[]) {
-        for (int i = 0; i < array.length; i++) {
-            System.out.printf(array[i] + " ");
-        }
-        System.out.println("");
-    }
-
-    public static void muestraArray(ArrayList<Integer> array) {
-        for (int i = 0; i < array.size(); i++) {
-            System.out.printf(array.get(i) + " ");
-        }
-        System.out.println("");
-    }
-
-    public static void muestraMatriz(int matriz[][]) {
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz.length; j++) {
-                System.out.printf(matriz[i][j] + " ");
-            }
-            System.out.println("");
-        }
-    }
-
 }

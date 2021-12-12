@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.ujaen.meta;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- *
- * @author admin
- */
 public class AlgPMDLBrandom_Clase3_Grupo9 {
 
     private final long inicio;
@@ -37,24 +28,24 @@ public class AlgPMDLBrandom_Clase3_Grupo9 {
 
     // Calcula el primero el mejor random
     public void calculaPrimeroElMejor() {
-        AlgGRE_Clase3_Grupo9 greedyA = new AlgGRE_Clase3_Grupo9(archivo);
-        greedyA.calculaGreedy();
-        this.conjunto = greedyA.getConjunto();
-        this.mejorCoste = greedyA.getCosteConjunto();
-        System.out.println("El mejor coste de " + archivo.getNombre() + " es: " + mejorCoste);
-        for (int i = 0; i < conjunto.size(); i++) {
-            dlb.add(Boolean.FALSE);
-        }
+        AlgGRE_Clase3_Grupo9 greedy = new AlgGRE_Clase3_Grupo9(archivo);
+        greedy.calculaGreedy();
+        this.conjunto = greedy.getConjunto();
+        this.mejorCoste = greedy.getCosteConjunto();
+        iniciaDLB();
         mejora();
-        mejorCoste = greedyA.calculaCosteConjunto(conjunto, archivo.getMatriz1(), archivo.getMatriz2());
-        //muestraDatos();
+        mejorCoste = calculaCosteConjunto(conjunto);
+    }
+
+    private void iniciaDLB() {
+        for (int i = 0; i < conjunto.size(); i++) {
+            dlb.add(false);
+        }
     }
 
     private void mejora() {
         int ultMov = random.nextInt(dlb.size());
-        System.out.println("El valor de inicio es: " + ultMov);
         boolean dlbCompleto = false;
-        int cam = 0;
         int k = 0;
         while (k < iteraciones && !dlbCompleto) {
             int i = ultMov;
@@ -69,7 +60,6 @@ public class AlgPMDLBrandom_Clase3_Grupo9 {
                             dlb.set(j % dlb.size(), false);
                             flagMejora = true;
                             ultMov = conjunto.get(j % dlb.size());
-                            cam++;
                         }
                     }
                     contJ--;
@@ -85,7 +75,16 @@ public class AlgPMDLBrandom_Clase3_Grupo9 {
             ultMov = (ultMov + 1) % conjunto.size();
             k++;
         }
-        System.out.println("es.ujaen.meta.AlgPMDLBrandom_Clase3_Grupo9.calculaPrimeroElMejor(): " + cam);
+    }
+
+    public int calculaCosteConjunto(ArrayList<Integer> conjunto) {
+        int coste = 0;
+        for (int i = 0; i < conjunto.size(); i++) {
+            for (int j = 0; j < conjunto.size(); j++) {
+                coste += archivo.getMatriz1()[i][j] * archivo.getMatriz2()[conjunto.get(i)][conjunto.get(j)];
+            }
+        }
+        return coste;
     }
 
     public String muestraDatos() {
@@ -94,7 +93,7 @@ public class AlgPMDLBrandom_Clase3_Grupo9 {
         for (int i = 0; i < conjunto.size(); i++) {
             aux += conjunto.get(i) + "  ";
         }
-        System.out.println();
+        //System.out.println();
         return "PRIMERO EL MEJOR RANDOM \nEl conjunto de archivos de datos " + archivo.getNombre() + " tiene un coste de " + mejorCoste
                 + " con un tiempo de ejecucion de: " + (fin - inicio) + " milisegundos y es el siguiente: \n" + aux + "\n";
     }

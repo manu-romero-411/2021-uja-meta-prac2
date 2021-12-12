@@ -1,0 +1,293 @@
+function hazGeneticoEstacionario()
+	iniciaConjunto
+	creaLRC
+	creaPoblacionInicial
+	guardarLog(-1)
+	while contEV <= (evaluaciones - tamTorneoReemplazamiento) do
+		seleccionados <- matriz de enteros
+		torneoSel = seleccionados
+		for j <- 0 to torneoSel.tamaño do
+			seleccionados.añade(torneoSel[j])
+		end for 
+		if(aleatorio < probCruce) do
+			cruceOX(seleccionados)
+		end if
+		reemplazamiento(seleccionados)
+		contGen++
+	end while
+	guardarLog(evaluaciones - 1);
+end function
+
+function creaLRC() 
+	i = 0
+	while(i < longitudLRC) do
+		contenido = false
+		flujo = random(tamañoFlujos)
+		distancia = random(tamañoDistancias)
+		aux = Par(flujo, distancia)
+		for j <- 0 to LRC.tamaño && !contenido do
+			if(LRC[j].key == aux.key || LRC[j].value == aux.value) do
+				contenido = true
+			end if
+		end for
+		if(!contenido)
+			LRC[i] = aux
+			i++
+		end if
+	end while
+end function
+
+function creaPoblacionInicial()
+	for j <- 0 to tamPoblacion do
+		individuos <- vector de enteros
+		for i <- 0 to longitudLRC do
+			individuos[LRC[i].key] = individuos[LRC[i].value]
+		end for
+		for i <- 0 to conjunto.tamaño do
+			if(individuos[i] == -1) do
+				do
+					repetido = false
+					num = random(conjunto.tamaño)
+					for k <- 0 to i && !repetido do
+						if(num == individuos[k]) do
+							repetido = true
+						end if
+					end for
+					for k <- i+1 to conjunto.tamaño && !repetido do
+						if(num == individuos[k]) do
+							repetido = true
+						end if
+					end for
+					if(!repetido) do
+						individuos[i]=num
+					end if
+				while(individuos[i]==-1)
+			end if
+		end for
+		contEv++
+		poblacion[j]=individuos
+	end for
+	contGen++
+end function
+
+function calculaCosteConjunto(conjunto) -> entero
+	coste <- 0
+	for i <- 0 to conjunto.tamaño do
+		for j <- 0 to conjunto.tamaño do
+			coste += flujos[i][j] * distancias[conjunto[i]][conjunto[j]]
+		end for
+	end for
+	return coste
+end function
+
+function seleccion() -> matriz de enteros
+	seleccionados <- matriz de enteros
+	for i <- 0 to vecesSeleccion do
+		torneos <- vector de enteros
+		do
+			torneos = generadorArrayIntAleatorios(tamTorneoSeleccion, tamPoblacion)
+		while (!arrayIntAletoriosGeneradoBien(torneos))
+		seleccionados[i]=mejorTorneo(torneos))
+	end for
+	return seleccionados
+end function
+
+function mejorTorneo(torneos) -> vector de enteros
+	mejor <- vector de enteros
+	for i <- 0 to conjunto.tamaño do
+		mejor[i]=0
+	end for
+	mejorCoste = MIN_INTEGER
+	for i <- 0 to torneos.tamaño do
+		if(calculaCosteConjunto(poblacion[torneos[i]] > mejorCoste) do
+			mejor = poblacion[torneos[i]]
+			mejorCoste = calculaCosteConjunto(poblacion[torneos[i]]
+		end if
+	end for
+	return mejor
+end function
+
+function peorTorneo(torneos) -> vector de enteros
+	peor -> vector de enteros
+	for i <- conjunto.tamaño do
+		peor[i] = 0
+	end for
+	peorCoste = MAX_INTEGER
+	for i <- 0 to torneos.tamaño do
+		if(calculaCosteConjunto(poblacion[torneos[i]] < peorCoste)
+			peor = poblacion[torneos[i]]
+			peorCoste = calculaCosteConjunto(poblacion[torneos[i]]
+		end if
+	end for
+	return peor
+end function
+
+function reemplazamiento(cruzados)
+	seleccionados <- matriz de enteros
+	for i <- 0 to vecesTorneoReemplazamiento do
+		torneos <- vector de enteros
+		aleatorioDiferentes = false
+		while(!aleatorioDiferentes)
+			if(torneos.estaVacio)
+				for j <- 0 to tamTorneoReemplazamiento do
+					torneos[j] = random(tamPoblacion)
+				end for
+			end if
+			else
+				for j <- 0 to tamTorneoReemplazamiento do
+					torneos[j] = random(tamPoblacion)
+				end for
+			end else
+			aleatorioDiferentes = true
+			for j <- 0 to tamTorneoReemplazamiento && aleatorioDiferentes do
+				cont = tamTorneoReemplazamiento -1
+				for k <- j + 1 while cont > 0 && aleatorioDiferentes do
+					if(torneos[j] == torneos[k mod tamTorneoReemplazamiento]) do
+						aleatorioDiferentes = false
+					end if
+				end for
+			end for
+		end while
+		seleccionados[i] = peorTorneo(torneos)
+	end for
+	for i <- 0 to poblacion.tamaño do
+		for j <- 0 to seleccionados.tamaño do
+			contador = 0
+			for k <- 0 to seleccionados.tamaño do
+				if(poblacion[i][j] == seleccionados[j][k])
+					contador++
+				end if
+			end for
+			if(contador == seleccionados.tamaño)
+				reemplaza = false
+				for k <- 0 to cruzados.tamaño && !reemplaza do
+					if(reemplazaPoblacion(poblacion[i], cruzados[k])
+						cruzados.elimina(k)
+						reemplaza = true
+					end if
+				end for
+			end if
+		end for
+	end for
+end function
+
+function reemplazaPoblacion(seleccionado, cruzado) -> boolean
+	contEv++
+	if(calculaCosteConjunto(seleccionado) < calculaCosteConjunto(cruzado)) do
+		return false
+	end if
+	else
+		seleccionado = cruzado
+	end else
+	return true
+end function
+
+function cruceOX(seleccionados) -> matriz de enteros
+	auxSel <- matriz de enteros
+	for i <- 0 to seleccionados.tamaño incremento i=i+2 do
+		padre1 = seleccionados[i]
+		padre2 = seleccionados[i+1]
+		aleatorioA <- entero
+		aleatorioB <- entero
+		do
+			aleatorioA = random(seleccionados[i].tamaño - 2) + 1
+			aleatorioB = random(seleccionados[i].tamaño - 2) + 1
+		while (aleatorioA == aleatorioB)
+		if(aleatorioA > aleatorioB)
+			aux = aleatorioB
+			aleatorioB = aleatorioA
+			aleatorioA = aux
+		end if
+		auxQueue1 <- vector de enteros
+		auxVec1 <- vector de enteros
+		auxQueue2 <- vector de enteros
+		auxVec2 <- vector de enteros
+		for j <- aleatorioA to aleatorioB do
+			auxQueue1.añade(padre1[j])
+		end for
+		for j <- aleatorioA while !auxQueue1.estaVacio do
+			auxVec1[j] = auxQueue1.sacar
+		end for
+		for contador <- 0, contador2 = aleatorioB + 1 to padre1.tamaño do
+			esta = false
+			for j <- auxVec1.tamaño && !esta do
+				if(auxVec1[j] == padre2[contador2 mod padre1.tamaño])
+					esta = true
+				end if
+			end for
+			if (!esta)
+				auxQueue1[]=padre1[contador2 mod padre1.tamaño]
+			end if
+		end for
+		for j <- aleatorioB + 1 while !auxQueue1.estaVacio do
+			auxVec1[j] = auxQueue1[j]
+		end for
+		auxSel[i] = auxVec1;
+		for j <- aleatorioA to aleatorioB do 
+			auxQueue2.añade(padre2[j])
+		end for
+		for j <- aleatorioA while !auxQueue2.estaVacio do
+			auxVec2[j] = auxQueue2.sacar
+		end for
+		for contador <- 0, contador2 = aleatorioB + 1 to padre2.tamaño do
+			esta = false
+			for j <- auxVec2.tamaño && !esta do
+				if(auxVec2[j] == padre2[contador2 mod padre2.tamaño])
+					esta = true
+				end if
+			end for
+			if (!esta)
+				auxQueue2[]=padre2[contador2 mod padre2.tamaño]
+			end if
+		end for
+		auxSel[i+1] = auxVec2;
+	end for 
+	if(aleatorio < probMutacion)
+		mutacion(auxSel)
+	end if
+	return auxSel
+end function 
+
+function mutacion(elementoAMutar)
+	for i <- 0 to elementoAMutar.tamaño do 
+		pos1 <- entero
+		pos2 <- entero
+		do 
+			pos1 = aleatorio(elementoAMutar.tamaño)
+			pos2 = aleatorio(elementoAMutar.tamaño)
+		while(pos1 == pos2)
+		aux = elementoAMutar[i][pos1]
+		elementoAMutar[i][pos2]=elementoAMutar[i][pos1]
+		elementoAMutar[i][pos1]=aux
+	end for
+end function
+
+function aleatoriosBien(aleatorios)
+	for i <- 0 to aleatorios.tamaño do
+		for j <- 0 to aleatorios.tamaño do
+			if(aleatorios[i] == aleatorios[j])
+				return false
+			end if
+		end for
+	end for
+	return true
+end function
+
+function generadorAleatorios(cuantos, tam)
+	aleatorios <- vector de enteros
+	for i <- 0 to cuantos do
+		do
+			repetido = false
+			num = aleatorio(tam)
+			for j <- 0 to i && !repetido do
+				if(num == aleatorios[j])
+					repetido = true
+				end if
+			end for
+			if(!repetido)
+				aleatorio[i] = num
+			end if
+		while(aleatorio[i] == -1)
+	end for
+	return aleatorios
+end function
